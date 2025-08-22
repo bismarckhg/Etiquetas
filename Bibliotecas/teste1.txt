@@ -1,0 +1,12 @@
+ren Etiquetas.Bibliotecas.COLibArrayString Etiquetas.Bibliotecas.COLibArrayString
+ren Etiquetas.Bibliotecas.COLibString Etiquetas.Bibliotecas.COLibString
+ren Etiquetas.Bibliotecas.LibArrayBytes Etiquetas.Bibliotecas.LibArrayBytes
+ren Etiquetas.Bibliotecas.LibArrayChar Etiquetas.Bibliotecas.LibArrayChar
+ren Etiquetas.Bibliotecas.LibArrayString Etiquetas.Bibliotecas.LibArrayString
+ren Etiquetas.Bibliotecas.LibChar Etiquetas.Bibliotecas.LibChar
+ren Etiquetas.Bibliotecas.LibIdioma Etiquetas.Bibliotecas.LibIdioma
+ren Etiquetas.Bibliotecas.LibInt Etiquetas.Bibliotecas.LibInt
+ren Etiquetas.Bibliotecas.LibStrBuilder Etiquetas.Bibliotecas.LibStrBuilder
+ren Etiquetas.Bibliotecas.LibString Etiquetas.Bibliotecas.LibString
+ren Etiquetas.Bibliotecas.TaskCore Etiquetas.Bibliotecas.TaskCore
+ren Etiquetas.Bibliotecas.TcpClient Etiquetas.Bibliotecas.TcpClient

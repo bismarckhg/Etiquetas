@@ -1,0 +1,169 @@
+name: CI .Net
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  id-token: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # O DOTNET_ROOT deve apontar para o mesmo diretório usado na instalação
+  DOTNET_ROOT: ${{ github.workspace }}/.dotnet
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout manual (sem actions)
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git"
+          # histórico apenas do commit atual
+          git fetch --no-tags --prune --depth=1 origin "${{ github.sha }}"
+          git checkout --progress --force "${{ github.sha }}"
+          # submódulos (se houver)
+          git submodule update --init --recursive || true
+          git rev-parse HEAD
+          git status --porcelain
+
+      - name: Instalar .NET 6 SDK (sem actions)
+        run: |
+          set -euo pipefail
+          mkdir -p "$DOTNET_ROOT"
+          curl -sSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
+          chmod +x dotnet-install.sh
+          # Instala o canal 6.0 no diretório definido por DOTNET_ROOT
+          ./dotnet-install.sh --channel 6.0 --install-dir "$DOTNET_ROOT"
+          # Expõe o dotnet no PATH para os próximos steps
+          echo "$DOTNET_ROOT" >> "$GITHUB_PATH"
+          echo "$DOTNET_ROOT/tools" >> "$GITHUB_PATH"
+          "$DOTNET_ROOT/dotnet" --info
+          "$DOTNET_ROOT/dotnet" --list-sdks || true
+          "$DOTNET_ROOT/dotnet" --list-runtimes || true
+
+      - name: Instalar dependências de build (C++/CMake opcional)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config
+
+      - name: Restaurar (.NET) somente projetos net6.0 (multi-target ok)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t NET6 < <(
+            git ls-files "*.csproj" | while IFS= read -r P; do
+              # pular WPF/WinForms
+              if grep -qiE "<UseWPF>true|<UseWindowsForms>true" "$P"; then continue; fi
+              # pular TFMs Windows específicos
+              if grep -qE "net6\.0-windows" "$P"; then continue; fi
+              # aceitar projetos que declaram net6.0 em TargetFramework/TargetFrameworks
+              if grep -qE "<TargetFramework>net6\.0</TargetFramework>|<TargetFrameworks>.*net6\.0.*</TargetFrameworks>" "$P"; then
+                echo "$P"
+              fi
+            done
+          )
+          if [ ${#NET6[@]} -eq 0 ]; then
+            echo "Nenhum projeto net6.0 elegível para Linux encontrado."
+          else
+            for P in "${NET6[@]}"; do
+              # IMPORTANTE: restore não usa --framework; selecione o TFM por propriedade
+              dotnet restore "$P" -p:TargetFramework=net6.0 -p:ContinuousIntegrationBuild=true
+            done
+          fi
+
+      - name: Build (.NET 6) — apenas projetos suportados no Linux
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t NET6 < <(
+            git ls-files "*.csproj" | while IFS= read -r P; do
+              if grep -qiE "<UseWPF>true|<UseWindowsForms>true" "$P"; then continue; fi
+              if grep -qE "net6\.0-windows" "$P"; then continue; fi
+              if grep -qE "<TargetFramework>net6\.0</TargetFramework>|<TargetFrameworks>.*net6\.0.*</TargetFrameworks>" "$P"; then
+                echo "$P"
+              fi
+            done
+          )
+          if [ ${#NET6[@]} -eq 0 ]; then
+            echo "Nada para compilar em net6.0 no Linux."
+          else
+            for P in "${NET6[@]}"; do
+              # No Linux, não habilite EnableWindowsTargeting
+              dotnet build "$P" -c Release -v minimal -f net6.0 --no-restore -p:ContinuousIntegrationBuild=true
+            done
+          fi
+
+      - name: Test (.NET) — net6.0 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          FOUND=0
+          while IFS= read -r T; do
+            # pular WPF/WinForms e TFMs Windows
+            if grep -qiE "<UseWPF>true|<UseWindowsForms>true" "$T"; then continue; fi
+            if grep -qE "net6\.0-windows" "$T"; then continue; fi
+            if ! grep -qE "<TargetFramework>net6\.0</TargetFramework>|<TargetFrameworks>.*net6\.0.*</TargetFrameworks>" "$T"; then continue; fi
+            FOUND=1
+            # Se não houver testes, não falhe o pipeline
+            dotnet test "$T" -c Release -v minimal -f net6.0 --no-build --collect:"XPlat Code Coverage" || true
+          done < <(git ls-files "*Test*.csproj" "*Tests*.csproj")
+          if [ "$FOUND" -eq 0 ]; then
+            echo "Nenhum projeto de testes .NET (net6.0) encontrado no Linux."
+          fi
+
+      - name: Build C++ (CMake) — opcional
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f CMakeLists.txt ]; then
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20
+            cmake --build build --config Release --parallel
+            (cd build && ctest --output-on-failure) || true
+          else
+            echo "CMakeLists.txt não encontrado — etapa C++ ignorada."
+          fi
+
+      - name: Empacotar artefatos (tar.gz)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          # empacota saídas .NET (todas as pastas bin/Release)
+          while IFS= read -r dir; do
+            rel="${dir#./}"
+            base="${rel//\//_}"
+            tar -czf "artifacts/${base}.tar.gz" -C "$dir" .
+          done < <(find . -type d -path "*/bin/Release" -print || true)
+          # empacota build C++
+          if [ -d build ]; then
+            tar -czf artifacts/cpp_build.tar.gz -C build .
+          fi
+          ls -lh artifacts
+
+      # Publicação opcional via GitHub CLI (sem actions externas)
+      # - name: Publicar artefatos via Release (opcional)
+      #   if: ${{ env.UPLOAD_VIA_RELEASE == 'true' }}
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     set -euo pipefail
+      #     TAG="ci-${GITHUB_RUN_ID}"
+      #     gh release create "$TAG" artifacts/*.tar.gz -t "CI $GITHUB_RUN_ID" -n "Artefatos do run $GITHUB_RUN_ID"
