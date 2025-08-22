@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Arrays\" />
+    <Folder Include="Caracteres\" />
+    <Folder Include="Datas\" />
+    <Folder Include="Geral\" />
+    <Folder Include="Numericos\" />
+  </ItemGroup>
+
+</Project>

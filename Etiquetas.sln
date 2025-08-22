@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.LibDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas", "Bibliotecas\EtiquetasBibliotecas\Etiquetas.Bibliotecas.csproj", "{6639AA53-E136-D9C8-CDE5-11C114AE6E4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.Comum", "Bibliotecas\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj", "{C1CFAEE5-0965-B881-26E6-8AD1A7258C75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +165,10 @@ Global
 		{6639AA53-E136-D9C8-CDE5-11C114AE6E4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6639AA53-E136-D9C8-CDE5-11C114AE6E4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6639AA53-E136-D9C8-CDE5-11C114AE6E4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1CFAEE5-0965-B881-26E6-8AD1A7258C75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1CFAEE5-0965-B881-26E6-8AD1A7258C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1CFAEE5-0965-B881-26E6-8AD1A7258C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1CFAEE5-0965-B881-26E6-8AD1A7258C75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -193,6 +199,7 @@ Global
 		{B2C3D4E5-F6A1-4789-A0B1-C2D3E4F5A6B7} = {1A3670AE-63FB-4C51-86ED-00BDF3E68118}
 		{FA5AC039-2CB1-0365-AC6F-A47BFF33EE7A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{6639AA53-E136-D9C8-CDE5-11C114AE6E4A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C1CFAEE5-0965-B881-26E6-8AD1A7258C75} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D89711-8D06-47BC-80B4-ECCCC2E60B31}
