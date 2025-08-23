@@ -7,11 +7,17 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
     {
         public static bool Execute(string[] array, string contem)
         {
-            var contemVazio = EhStringNuloVazioComEspacosBrancoDBNull.Execute(contem);
-            var parametrosVazio = contemVazio && EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
-            var contemNaoVazio = !contemVazio;
-            var contemString = parametrosVazio || (contemNaoVazio && array.Any(x => string.Compare(x, contem).Equals(0)));
-            return contemString;
+            if (EhStringNuloVazioComEspacosBrancoDBNull.Execute(contem))
+            {
+                return EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
+            }
+
+            if (EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array))
+            {
+                return false;
+            }
+
+            return array.Any(x => string.Compare(x, contem, System.StringComparison.Ordinal) == 0);
         }
     }
 }
