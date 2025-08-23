@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
+    <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <PackageReference Include="System.Text.Json" Version="6.0.9" />
   </ItemGroup>
 
 </Project>
