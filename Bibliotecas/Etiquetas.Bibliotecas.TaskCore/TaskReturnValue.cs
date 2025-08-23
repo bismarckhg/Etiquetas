@@ -53,8 +53,6 @@ namespace Etiquetas.Bibliotecas.TaskCore
                     return ct;
                 if (CancellationController is CancellationTokenSource src)
                     return src.Token;
-                if (CancellationController is CancellationTokenManager mgr)
-                    return mgr.Token;
                 return CancellationToken.None;
             }
         }
@@ -95,14 +93,12 @@ namespace Etiquetas.Bibliotecas.TaskCore
             ArmazenaIdTask(parametros.RetornoIdTask());
             ArmazenaNomeTask(parametros.RetornoNomeTask());
             ArmazenaStatusTask(parametros.RetornoStatusTask());
-            ArmazenaCancellationToken(parametros.RetornoCancellationTokenManager());
+            ArmazenaCancellationToken(parametros.RetornoCancellationTokenSource());
             ArmazenaTaskCreationOptions(parametros.RetornoTaskCreationOptions());
             ArmazenaTimeOutMilliseconds(parametros.RetornoTimeOutMilliseconds());
             ArmazenaTasksGrupo(parametros.RetornoTasksGrupo());
             ArmazenaNomeClasseChamou(parametros.RetornoNomeClasseChamou());
 
-            var cancel = parametros.RetornoCancellationTokenManager();
-            var teste = cancel.IsCancellationRequested;
         }
 
         /// <summary>
@@ -210,12 +206,6 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <returns>Instância corrente para encadeamento.</returns>
         public override void ArmazenaCancellationToken(CancellationTokenSource cts) => this.CancellationController = cts;
 
-        /// <summary>
-        /// Define o gerenciador de token de cancelamento customizado.
-        /// </summary>
-        /// <param name="mgr">Gerenciador de token.</param>
-        /// <returns>Instância corrente para encadeamento.</returns>
-        public override void ArmazenaCancellationToken(CancellationTokenManager mgr) => CancellationController = mgr;
 
         /// <summary>
         /// Define as opções de criação da task.
@@ -356,8 +346,6 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <inheritdoc />
         public override int RetornoTimeOutMilliseconds() => this.TimeoutMilliseconds;
 
-        /// <inheritdoc />
-        public override CancellationTokenManager RetornoCancellationTokenManager() => CancellationController as CancellationTokenManager;
 
         /// <inheritdoc />
         public override CancellationTokenSource RetornoCancellationTokenSource() => CancellationController as CancellationTokenSource;
@@ -502,8 +490,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
                 return (v, p) => v is Guid g ? g : Guid.Parse(v.ToString());
             }
             // Casos específicos: cancelamento e opções de task
-            if (typeof(CancellationTokenManager).IsAssignableFrom(type) ||
-                typeof(CancellationTokenSource).IsAssignableFrom(type) ||
+            if (typeof(CancellationTokenSource).IsAssignableFrom(type) ||
                 type == typeof(CancellationToken) ||
                 type == typeof(TaskCreationOptions))
             {
