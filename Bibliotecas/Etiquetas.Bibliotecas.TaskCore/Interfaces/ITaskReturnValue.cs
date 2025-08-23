@@ -26,7 +26,7 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <summary>Estado atual da task.</summary>
         public abstract TaskState StatusTask { get; set; }
 
-        /// <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
+        /// <summary>Controlador de cancelamento (Token ou Source).</summary>
         public abstract object CancellationController { get; set; }
 
         /// <summary>Opções de criação da <see cref="Task"/>.</summary>
@@ -91,11 +91,6 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <param name="cancelToken">Fonte de token de cancelamento.</param>
         public abstract void ArmazenaCancellationToken(CancellationTokenSource cancelToken);
 
-        /// <summary>
-        /// Armazena um gerenciador de token de cancelamento customizado.
-        /// </summary>
-        /// <param name="cancelToken">Gerenciador de token de cancelamento.</param>
-        public abstract void ArmazenaCancellationToken(CancellationTokenManager cancelToken);
 
         /// <summary>
         /// Atribui um nome simbólico à tarefa.
@@ -171,11 +166,6 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <returns>Token de cancelamento.</returns>
         public abstract CancellationToken RetornoCancellationToken { get; }
 
-        /// <summary>
-        /// Recupera o token de cancelamento armazenado.
-        /// </summary>
-        /// <returns>Token de cancelamento.</returns>
-        public abstract CancellationTokenManager RetornoCancellationTokenManager();
 
         /// <summary>
         /// Recupera o token de cancelamento armazenado.

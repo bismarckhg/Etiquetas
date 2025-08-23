@@ -1,4 +1,4 @@
-﻿using Etiquetas.Bibliotecas.TaskCore.Interfaces;
+using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos;
+using Etiquetas.Bibliotecas.Comum.Caracteres;
 
 namespace Etiquetas.Bibliotecas.TaskCore
 {
@@ -115,7 +116,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
         // Campos internos
         /// <summary>Token de cancelamento do grupo.</summary>
-        private readonly CancellationTokenManager CtsGrupo;
+        protected readonly CancellationTokenSource CtsGrupo;
 
         /// <summary>
         /// 
@@ -205,7 +206,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <param name="nomeGrupo">Nome descritivo do grupo (opcional).</param>
         /// <param name="tokenExterno">Token externo para cancelamento (opcional).</param>
         public TasksGrupos(string nomeGrupo = null,
-                   CancellationTokenManager tokenExterno = null,
+                   CancellationTokenSource tokenExterno = null,
                    bool useSingleThread = false,
                    int maxDegreeOfParallelism = 0)
         {
@@ -214,10 +215,10 @@ namespace Etiquetas.Bibliotecas.TaskCore
             this.TasksRegistradas = 0;
             this.TasksPoolGroupCompleted = new TaskCompletionSource<bool>();
 
-            this.NomeGrupo = !Etiquetas.Bibliotecas.EhStringNuloVazioComEspacosBranco.Execute(nomeGrupo)
+            this.NomeGrupo = !EhStringNuloVazioComEspacosBranco.Execute(nomeGrupo)
                 ? nomeGrupo
                 : $"GrupoTasks_{DateTime.UtcNow:yyyyMMddHHmmssfff}";
-            this.CtsGrupo = tokenExterno ?? new CancellationTokenManager();
+            this.CtsGrupo = tokenExterno ?? new CancellationTokenSource();
 
             this.UseSingleThread = useSingleThread;
             this.SchedulerTask = UseSingleThread
@@ -290,7 +291,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
                 throw new ArgumentException($"Função já existe para ID {id}.", nameof(id));
             }
 
-            var tarefaNome = !Etiquetas.Bibliotecas.EhStringNuloVazioComEspacosBranco.Execute(nomeTask)
+            var tarefaNome = !EhStringNuloVazioComEspacosBranco.Execute(nomeTask)
                 ? nomeTask : $"TaskId{id}";
 
             if (!NomeParaId.TryAdd(tarefaNome, id))
@@ -300,7 +301,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             Etiquetas.Bibliotecas.TaskCore.TaskState statusTask = Situacoes.TryGetValue(id, out TaskState status) ? status : TaskState.AguardandoInicio;
 
-            var cancelToken = new CancellationTokenManager();
+            var cancelToken = new CancellationTokenSource();
 
             parametros.ArmazenaIdTask(id);
             parametros.ArmazenaTasksGrupo(this);
@@ -311,7 +312,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             if (!await AdicionaCancellationTokenSourceComTaskId(id, cancelToken).ConfigureAwait(false))
             {
-                throw new InvalidOperationException($"Não foi possível adicionar CancellationTokenManager para a Task com ID {id}.");
+                throw new InvalidOperationException($"Não foi possível adicionar CancellationTokenSource para a Task com ID {id}.");
             }
 
             if (!await RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(cancelToken).ConfigureAwait(false))
@@ -826,9 +827,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
             if (!ParametrosDict.TryGetValue(id, out var parametros))
                 throw new KeyNotFoundException($"Task ID {id} não encontrada.");
 
-            if (parametros.RetornoCancellationTokenManager() is CancellationTokenManager mgr)
-                mgr.Cancel();
-            else if (parametros.RetornoCancellationTokenSource() is CancellationTokenSource src)
+            if (parametros.RetornoCancellationTokenSource() is CancellationTokenSource src)
                 src.Cancel();
             else
                 throw new InvalidOperationException($"Token não encontrado para Task ID {id}.");
@@ -877,7 +876,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
                     return;
                 }
 
-                var tokenManager = parametros.RetornoCancellationTokenManager() as CancellationTokenManager;
+                var tokenManager = parametros.RetornoCancellationTokenSource() as CancellationTokenSource;
                 var token = tokenManager?.Token ?? CancellationToken.None;
 
                 // Agenda a execução conforme a configuração do grupo (single-thread ou não)
@@ -925,7 +924,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             try
             {
-                var tokenManager = parametros.RetornoCancellationTokenManager() as CancellationTokenManager;
+                var tokenManager = parametros.RetornoCancellationTokenSource() as CancellationTokenSource;
                 var token = tokenManager?.Token ?? CancellationToken.None;
 
                 // Executa a função original para obter a Task base
@@ -1173,11 +1172,11 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             // 3) Cria token individual com timeout
             var ctsIndividual = timeoutMs == Timeout.Infinite
-                ? new CancellationTokenManager()
-                : new CancellationTokenManager(timeoutMs);
+                ? new CancellationTokenSource()
+                : new CancellationTokenSource(timeoutMs);
 
             // 4) Linka token do grupo de forma assíncrona
-            await ctsIndividual.CreateLinkedTokensAsync(CtsGrupo).ConfigureAwait(false);
+            await RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(ctsIndividual).ConfigureAwait(false);
             parametros.ArmazenaCancellationToken(ctsIndividual);
 
             // 5) Executa a função ou gera Task faulted
@@ -1343,14 +1342,14 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
         #region "Administra Cancel Token"
 
-        protected override async Task<bool> AdicionaCancellationTokenSourceComTaskId(int id, CancellationTokenManager individualToken)
+        protected override async Task<bool> AdicionaCancellationTokenSourceComTaskId(int id, CancellationTokenSource individualToken)
         {
             var ok = await ArmazenaCancellationTokenSourcePeloTaskId(id, individualToken).ConfigureAwait(false);
 
             return ok;
         }
 
-        protected override async Task<bool> ArmazenaCancellationTokenSourcePeloTaskId(int id, CancellationTokenManager cancelToken)
+        protected override async Task<bool> ArmazenaCancellationTokenSourcePeloTaskId(int id, CancellationTokenSource cancelToken)
         {
             var tcs = new TaskCompletionSource<bool>();
 
@@ -1364,7 +1363,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
             return tcs.Task.Result;
         }
 
-        protected override async Task<bool> RelacionaTaskComCancellationTokenSourceAsync(int id, CancellationTokenManager cancelToken)
+        protected override async Task<bool> RelacionaTaskComCancellationTokenSourceAsync(int id, CancellationTokenSource cancelToken)
         {
             bool adicionado = false;
 
@@ -1381,7 +1380,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
             return adicionado;
         }
 
-        protected override async Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenManager cancelToken)
+        protected override async Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenSource cancelToken)
         {
             var token = this.CtsGrupo.Token.Register(() =>
             {
@@ -1390,7 +1389,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             // token realmente cancelável  ❗
             var registrou = cancelToken.Token.CanBeCanceled && !token.Equals(default);  // handle não-vazio
-            return registrou;
+            return await Task.FromResult(registrou);
         }
 
         #endregion

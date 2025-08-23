@@ -28,7 +28,7 @@ namespace Etiqueta.Bibliotecas.TaskCorePipe.Tests
             await pipeTask.AdicionarTask(1, async (p) => {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(10), p.RetornoCancellationTokenManager().Token);
+                    await Task.Delay(TimeSpan.FromSeconds(10), p.RetornoCancellationTokenSource().Token);
                 }
                 catch (OperationCanceledException)
                 {

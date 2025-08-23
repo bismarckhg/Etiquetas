@@ -27,7 +27,7 @@ namespace Etiqueta.Bibliotecas.TaskCorePipe.Tarefa
         /// </summary>
         public TasksGruposPipe(string nomeUnicoPipe,
                                string nomeGrupo = null,
-                               CancellationTokenManager tokenExterno = null,
+                               CancellationTokenSource tokenExterno = null,
                                bool useSingleThread = false,
                                int maxDegreeOfParallelism = 0)
             : base(nomeGrupo, tokenExterno, useSingleThread, maxDegreeOfParallelism)
@@ -53,19 +53,15 @@ namespace Etiqueta.Bibliotecas.TaskCorePipe.Tarefa
         /// <summary>
         /// Sobrescreve o registro de token para incluir o cancelamento bruto (BREAK).
         /// </summary>
-        protected override async Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenManager cancelToken)
+        protected override async Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenSource cancelToken)
         {
-            // Mantém o comportamento original (ligação com o STOP suave)
-            var registroSuaveOk = await base.RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(cancelToken);
+            // Link the task's token to both the group's soft stop and the pipe's hard break tokens.
+            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(this.CtsGrupo.Token, _ctsBruto.Token);
 
-            // Adiciona a ligação com o token de parada forçada (BREAK)
-            var registroBruto = _ctsBruto.Token.Register(() => {
-                // Aqui poderíamos adicionar lógica para indicar que foi um cancelamento forçado.
-                // Por exemplo, setando um status específico antes de cancelar.
-                cancelToken.Cancel();
-            });
+            // When the linked token is cancelled, cancel the task's actual token.
+            linkedCts.Token.Register(() => cancelToken.Cancel());
 
-            return registroSuaveOk;
+            return await Task.FromResult(true);
         }
 
         private StatusTarefa MapearEstadoParaStatusTarefa(Etiquetas.Bibliotecas.TaskCore.TaskState estado)
