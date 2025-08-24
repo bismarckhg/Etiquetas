@@ -19,14 +19,13 @@ namespace Etiquetas.Bibliotecas.Comum.Numericos
         {
             if (bytes == null)
             {
-                throw new Exception($"Tipo null invalido em OitoBytesInt64.");
+                throw new ArgumentNullException(nameof(bytes));
             }
 
             if ((bytes.Length - startIndex) < 8)
             {
-                throw new Exception($"Int64 utiliza no minimo 8 bytes. OitoBytesInt64.");
+                throw new ArgumentException("O array deve conter pelo menos 8 bytes a partir do índice inicial.", nameof(bytes));
             }
-            //return Execute(bytes[0], bytes[1], bytes[2], bytes[3]);
             return BitConverter.ToInt64(bytes, startIndex);
         }
     }
