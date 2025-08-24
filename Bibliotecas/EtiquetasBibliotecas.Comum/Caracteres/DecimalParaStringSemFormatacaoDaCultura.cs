@@ -4,7 +4,7 @@
     {
         public static string Execute(this decimal value)
         {
-            return value.ToString();
+            return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

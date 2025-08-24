@@ -9,8 +9,18 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
     public static class DefineEncoding
     {
+        static DefineEncoding()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         public static Encoding Execute(string nomeEncoding)
         {
+            if (string.IsNullOrWhiteSpace(nomeEncoding))
+            {
+                return Encoding.UTF8;
+            }
+
             var conversaoEncoding = Maiusculas.Execute(nomeEncoding);
             switch (conversaoEncoding)
             {
@@ -18,7 +28,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
                     return Encoding.ASCII;
                 case "UTF-8":
                 case "UTF8":
-                    return  Encoding.UTF8;
+                    return Encoding.UTF8;
                 case "UTF-16":
                 case "UTF16":
                 case "UNICODE":
@@ -29,7 +39,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
                 case "WINDOWS1252":
                 case "WINDOWS-1252":
                 case "1252":
-                    return  Encoding.GetEncoding(1252);
+                    return Encoding.GetEncoding(1252);
                 case "DOS LATIN-1":
                 case "MSDOS LATIN-1":
                 case "850":
@@ -41,7 +51,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
                 case "DOS-US":
                 case "DOS US":
                 case "437":
-                    return Encoding.GetEncoding(850);
+                    return Encoding.GetEncoding(437);
                 default:
                     return Encoding.UTF8;
             }
