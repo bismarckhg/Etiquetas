@@ -8,6 +8,15 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(string data, Dictionary<string, char> chrList)
         {
+            if (data == null)
+            {
+                return null;
+            }
+            if (chrList == null)
+            {
+                return data;
+            }
+
             // Inverte o dicionário para acessar pela chave de caractere
             var codeList = chrList.ToDictionary(x => x.Value, x => x.Key);
 

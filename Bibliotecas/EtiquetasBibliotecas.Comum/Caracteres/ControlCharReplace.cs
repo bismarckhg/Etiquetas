@@ -7,28 +7,41 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(string data, Dictionary<string, char> chrList)
         {
-            var result = new StringBuilder(data);
+            if (string.IsNullOrEmpty(data) || chrList == null || chrList.Count == 0)
+                return data;
+
+            StringBuilder result = new StringBuilder();
             int startIndex = 0;
 
             while (startIndex < data.Length)
             {
-                int openBracketIndex = IndexOf.PosicaoKMP(result, "[", startIndex);
-                int closeBracketIndex = (openBracketIndex != -1) ? IndexOf.PosicaoKMP(result, "]", openBracketIndex + 1) : -1;
-                var procura = new StringBuilder();
-
-                if (openBracketIndex == -1 || closeBracketIndex == -1)
+                int openBracketIndex = data.IndexOf('[', startIndex);
+                if (openBracketIndex == -1)
                 {
+                    result.Append(data.Substring(startIndex));
                     break;
                 }
 
-                for (int i = openBracketIndex; i < (closeBracketIndex + 1); i++)
+                int closeBracketIndex = data.IndexOf(']', openBracketIndex + 1);
+                if (closeBracketIndex == -1)
                 {
-                    procura.Append(result[i]);
+                    result.Append(data.Substring(startIndex));
+                    break;
                 }
 
-                result.Replace(procura.ToString(), chrList[procura.ToString()].ToString());
+                result.Append(data.Substring(startIndex, openBracketIndex - startIndex));
 
-                // Atualize o índice de início para após o colchete de fechamento
+                string key = data.Substring(openBracketIndex, closeBracketIndex - openBracketIndex + 1);
+
+                if (chrList.TryGetValue(key, out char value))
+                {
+                    result.Append(value);
+                }
+                else
+                {
+                    result.Append(key);
+                }
+
                 startIndex = closeBracketIndex + 1;
             }
 
