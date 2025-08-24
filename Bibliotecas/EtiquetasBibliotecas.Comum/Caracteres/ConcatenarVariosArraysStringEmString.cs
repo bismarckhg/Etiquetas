@@ -14,7 +14,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
                 return string.Empty;
 
             // Usando LINQ para mesclar todos os arrays e concatenar em uma única string
-            return string.Concat(arrays.SelectMany(array => array));
+            return string.Concat(arrays.Where(a => a != null).SelectMany(array => array));
         }
 
         public static string ExecuteStringBuilder(params string[][] arrays)
