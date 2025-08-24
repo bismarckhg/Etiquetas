@@ -16,10 +16,11 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
         /// </returns>
         public static bool Execute(string[] array)
         {
-            var vazio = array == null;
-            vazio = vazio || array.Length == 0;
-            vazio = vazio || array.Any(x => EhStringNuloVazioComEspacosBranco.Execute(x));
-            return vazio;
+            if (array == null || array.Length == 0)
+            {
+                return false;
+            }
+            return array.Any(x => EhStringNuloVazioComEspacosBranco.Execute(x));
         }
     }
 }
