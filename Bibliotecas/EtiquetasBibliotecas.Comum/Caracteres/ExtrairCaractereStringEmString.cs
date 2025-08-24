@@ -16,10 +16,11 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// </returns>
         public static string Execute(string texto, int posicao)
         {
-            var ehNuloTexto = EhStringNuloVazioComEspacosBranco.Execute(texto);
-            var textoOuPosicaoInvalida = ehNuloTexto || posicao >= texto.Length || posicao < 0;
-            var retornoCaractere = textoOuPosicaoInvalida ? string.Empty : ExtrairTexto.Execute(texto, posicao, 1);
-            return retornoCaractere;
+            if (string.IsNullOrEmpty(texto) || posicao < 0 || posicao >= texto.Length)
+            {
+                return string.Empty;
+            }
+            return texto[posicao].ToString();
         }
 
     }

@@ -17,10 +17,11 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// </returns>
         public static char Execute(string texto, int posicao)
         {
-            var ehNuloTexto = EhStringNuloVazioComEspacosBranco.Execute(texto);
-            var textoOuPosicaoInvalida = ehNuloTexto || posicao >= texto.Length || posicao < 0;
-            var retornoCaractere = textoOuPosicaoInvalida ? ' ' : texto[posicao];
-            return retornoCaractere;
+            if (string.IsNullOrEmpty(texto) || posicao < 0 || posicao >= texto.Length)
+            {
+                return ' ';
+            }
+            return texto[posicao];
         }
     }
 }
