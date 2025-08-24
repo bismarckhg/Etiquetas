@@ -4,12 +4,12 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static bool Execute(this char texto)
         {
-            return EhStringNuloVazioComEspacosBranco.Execute(texto.ToString());
+            return char.IsWhiteSpace(texto);
         }
 
         public static bool Execute(this System.DBNull texto)
         {
-            return (texto == System.DBNull.Value) || (texto is null);
+            return true;
         }
     }
 }

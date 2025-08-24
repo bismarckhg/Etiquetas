@@ -16,13 +16,12 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// </returns>
         public static bool Execute(this string texto)
         {
-            var retorno = (texto is null) || EhStringNuloVazioComEspacosBranco.Execute(texto);
-            return retorno;
+            return EhStringNuloVazioComEspacosBranco.Execute(texto);
         }
 
         public static bool Execute(this System.DBNull texto)
         {
-            return (texto == System.DBNull.Value) || (texto is null);
+            return true;
         }
 
     }
