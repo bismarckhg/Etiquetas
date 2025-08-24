@@ -19,6 +19,10 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// </returns>
         public static string Execute(this string texto, char caractere, char novoCaractere)
         {
+            if (texto == null)
+            {
+                return null;
+            }
             return texto.Replace(caractere, novoCaractere);
         }
     }
