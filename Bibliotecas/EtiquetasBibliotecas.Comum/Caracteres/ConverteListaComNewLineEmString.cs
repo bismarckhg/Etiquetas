@@ -10,8 +10,12 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(this List<string> lista)
         {
+            if (lista == null)
+            {
+                return string.Empty;
+            }
             var delimitador = Environment.NewLine;
-            return string.Join("", lista.Where(line => !EhStringNuloVazioComEspacosBranco.Execute(line.TrimEnd()) && line.TrimEnd() != delimitador));
+            return string.Join("", lista.Where(line => line != null && !EhStringNuloVazioComEspacosBranco.Execute(line.TrimEnd()) && line.TrimEnd() != delimitador));
         }
     }
 }
