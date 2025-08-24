@@ -18,11 +18,12 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
         /// </returns>
         public static bool Execute(char[] arrayChar, string texto)
         {
-            var textoVazio = StringEhNuloVazioComEspacosBranco.Execute(texto);
-            var parametrosVazio = textoVazio && ArrayCharEhNuloVazioComEspacosBrancoDBNull.Execute(arrayChar);
-            var textoNaoVazio = !textoVazio;
-            var resultado = parametrosVazio || (textoNaoVazio && texto.Any(caractere => ArrayCharPossuiUmCaractere.Execute(arrayChar, caractere)));
-            return resultado;
+            if (arrayChar == null || string.IsNullOrEmpty(texto))
+            {
+                return false;
+            }
+
+            return texto.Any(caractere => ArrayCharPossuiUmCaractere.Execute(arrayChar, caractere));
         }
 
     }
