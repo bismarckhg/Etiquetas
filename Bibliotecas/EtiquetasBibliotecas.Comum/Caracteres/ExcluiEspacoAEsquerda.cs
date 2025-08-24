@@ -10,6 +10,10 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(string texto)
         {
+            if (texto == null)
+            {
+                return null;
+            }
             return texto.TrimStart();
         }
     }
