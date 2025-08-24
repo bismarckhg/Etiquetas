@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Comum.Numericos
 {
-    public static class StringParaInt64OuLong
+    public static class StringParaInt64
     {
         public static Int64 Execute(string value)
         {

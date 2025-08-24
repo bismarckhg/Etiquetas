@@ -21,14 +21,13 @@ namespace Etiquetas.Bibliotecas.Comum.Numericos
         {
             if (bytes == null)
             {
-                throw new Exception($"Tipo null invalido em QuatroBytesInt32.");
+                throw new ArgumentNullException(nameof(bytes));
             }
 
             if ((bytes.Length - startIndex) < 4)
             {
-                throw new Exception($"Int32 utiliza no minimo 4 bytes. QuatroBytesInt32.");
+                throw new ArgumentException("O array deve conter pelo menos 4 bytes a partir do índice inicial.", nameof(bytes));
             }
-            //return Execute(bytes[0], bytes[1], bytes[2], bytes[3]);
             return BitConverter.ToInt32(bytes, startIndex);
         }
 
