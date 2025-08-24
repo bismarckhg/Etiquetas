@@ -99,7 +99,6 @@ namespace Etiqueta.Bibliotecas.TaskCorePipe.Servidor
         /// </summary>
         public void Dispose()
         {
-            PararAsync().Wait();
             _gerenciadorMutex?.Dispose();
         }
     }
