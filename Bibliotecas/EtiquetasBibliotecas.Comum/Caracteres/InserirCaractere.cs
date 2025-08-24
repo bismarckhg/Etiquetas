@@ -19,16 +19,15 @@
         /// </returns>
         public static string Execute(this string texto, char caractere, int posicao)
         {
-            if ((posicao + 1) == NumeroCaracteres.Execute(texto))
+            if (texto == null)
             {
-                var textoCaractere = ConcatenarTextoCaracter.Execute(texto, caractere);
-                return textoCaractere;
+                return null;
             }
-
-            var esquerda = ExtrairTextoEsquerda.Execute(texto, posicao);
-            var direita = ExtrairTextoDireita.Execute(texto, NumeroCaracteres.Execute(texto) - posicao);
-            var textoCaractereTexto = ConcatenarTextoCaracterTexto.Execute(esquerda, caractere, direita);
-            return textoCaractereTexto;
+            if (posicao < 0 || posicao > texto.Length)
+            {
+                return texto;
+            }
+            return texto.Insert(posicao, caractere.ToString());
         }
     }
 }

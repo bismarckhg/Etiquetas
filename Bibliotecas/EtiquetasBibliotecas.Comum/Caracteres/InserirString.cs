@@ -17,13 +17,21 @@
         /// <returns>
         /// Retorna string infromada com a string inserida na posicao.
         /// </returns>
-        public static string Execute(this string texto, string caractere, int posicao)
+        public static string Execute(this string texto, string stringAInserir, int posicao)
         {
-            if (posicao == NumeroCaracteres.Execute(texto))
-                return ConcatenarTexto.Execute(texto, caractere);
-            var esquerda = ExtrairTextoEsquerda.Execute(texto, posicao);
-            var direita = ExtrairTextoDireita.Execute(texto, NumeroCaracteres.Execute(texto) - posicao);
-            return ConcatenarTexto.Execute(esquerda, caractere, direita);
+            if (texto == null)
+            {
+                return null;
+            }
+            if (string.IsNullOrEmpty(stringAInserir))
+            {
+                return texto;
+            }
+            if (posicao < 0 || posicao > texto.Length)
+            {
+                return texto;
+            }
+            return texto.Insert(posicao, stringAInserir);
         }
     }
 }

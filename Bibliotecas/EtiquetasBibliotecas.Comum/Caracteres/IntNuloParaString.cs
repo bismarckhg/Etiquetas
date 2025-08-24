@@ -4,8 +4,7 @@
     {
         public static string Execute(this int? value)
         {
-            var retornoString = value == null ? string.Empty : value?.ToString();
-            return retornoString;
+            return value?.ToString() ?? string.Empty;
         }
     }
 }
