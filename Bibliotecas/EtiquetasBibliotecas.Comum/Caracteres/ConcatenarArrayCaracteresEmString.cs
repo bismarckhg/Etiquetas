@@ -4,8 +4,11 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(char[] array)
         {
-            string retornoString = string.Concat(new string(array));
-            return retornoString;
+            if (array == null)
+            {
+                return string.Empty;
+            }
+            return new string(array);
         }
     }
 }
