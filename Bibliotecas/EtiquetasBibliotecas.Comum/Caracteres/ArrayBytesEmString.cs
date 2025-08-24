@@ -10,17 +10,20 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(byte[] bytes, int bytesLidos, Encoding encoding)
         {
+            if (bytes == null) return null;
             return encoding.GetString(bytes, 0, bytesLidos);
         }
 
         public static string Execute(byte[] bytes, Encoding encoding)
         {
+            if (bytes == null) return null;
             return encoding.GetString(bytes, 0, bytes.Length);
         }
 
-        public static string Execute(byte[] bytes, int posicaoInicial, int posicaoFinal, Encoding encoding)
+        public static string Execute(byte[] bytes, int posicaoInicial, int count, Encoding encoding)
         {
-            return encoding.GetString(bytes, posicaoInicial, posicaoFinal);
+            if (bytes == null) return null;
+            return encoding.GetString(bytes, posicaoInicial, count);
         }
     }
 }
