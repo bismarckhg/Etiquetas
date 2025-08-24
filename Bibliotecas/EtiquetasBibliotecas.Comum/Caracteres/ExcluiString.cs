@@ -17,15 +17,11 @@
         /// </returns>
         public static string Execute(string texto, string textoASerExcluido)
         {
-            var retorno = texto;
-            var posicao = retorno.IndexOf(textoASerExcluido, 0, retorno.Length);
-            while (posicao > -1)
+            if (string.IsNullOrEmpty(texto) || string.IsNullOrEmpty(textoASerExcluido))
             {
-                retorno = retorno.Remove(posicao, textoASerExcluido.Length);
-                posicao = retorno.IndexOf(textoASerExcluido, 0, retorno.Length);
+                return texto;
             }
-
-            return retorno;
+            return texto.Replace(textoASerExcluido, string.Empty);
         }
     }
 }

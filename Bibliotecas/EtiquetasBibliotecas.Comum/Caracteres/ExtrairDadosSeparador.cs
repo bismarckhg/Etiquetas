@@ -19,12 +19,21 @@
         /// </returns>
         public static string Execute(this string texto, int ocorrencia, params string[] separadores)
         {
+            if (string.IsNullOrEmpty(texto))
+                return null;
+
+            if (separadores == null || separadores.Length == 0)
+                return texto;
+
+            if (ocorrencia < 1)
+                return null;
+
             var dados = texto.Split(separadores, System.StringSplitOptions.None);
             var posicao = ocorrencia - 1;
-            if (ocorrencia < 1)
-            {
+
+            if (posicao >= dados.Length)
                 return null;
-            }
+
             return dados[posicao];
         }
     }
