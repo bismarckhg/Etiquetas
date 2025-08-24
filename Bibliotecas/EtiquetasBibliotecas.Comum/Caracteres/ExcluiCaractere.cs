@@ -16,17 +16,11 @@
         /// </returns>
         public static string Execute(string texto, char caractere)
         {
-            string retorno = texto;
-            int tamanhoRetorno = NumeroCaracteres.Execute(retorno);
-            int posicao = retorno.IndexOf(caractere, 0, tamanhoRetorno);
-            while (posicao > -1)
+            if (string.IsNullOrEmpty(texto))
             {
-                retorno = retorno.Remove(posicao, 1);
-                tamanhoRetorno = NumeroCaracteres.Execute(retorno);
-                posicao = retorno.IndexOf(caractere, 0, tamanhoRetorno);
+                return texto;
             }
-
-            return retorno;
+            return texto.Replace(caractere.ToString(), string.Empty);
         }
     }
 }

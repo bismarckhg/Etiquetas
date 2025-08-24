@@ -16,17 +16,22 @@
         /// </returns>
         public static string Execute(this string texto, string entreLetras)
         {
-            //char[]
-            //var letras = Biblioteca.LibArrayChar.ConverteStringParaArrayChar.Execute(texto);
-            var retorno = string.Empty;
+            if (string.IsNullOrEmpty(texto))
+                return texto;
 
-            foreach (var letra in texto)
+            if (string.IsNullOrEmpty(entreLetras))
+                return texto;
+
+            var sb = new System.Text.StringBuilder();
+            for (int i = 0; i < texto.Length; i++)
             {
-                retorno = ConcatenarTextoCaracter.Execute(retorno, letra);
-                retorno = ConcatenarTexto.Execute(retorno, entreLetras);
+                sb.Append(texto[i]);
+                if (i < texto.Length - 1) // Don't append after the last character
+                {
+                    sb.Append(entreLetras);
+                }
             }
-
-            return retorno;
+            return sb.ToString();
         }
     }
 }
