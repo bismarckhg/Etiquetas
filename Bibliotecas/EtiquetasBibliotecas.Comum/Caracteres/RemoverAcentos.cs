@@ -16,16 +16,22 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// </returns>
         public static string Execute(this string texto)
         {
-            if (EhStringNuloVazioComEspacosBranco.Execute(texto))
-            {
+            if (string.IsNullOrEmpty(texto))
                 return texto;
-            }
-            else
+
+            var normalizedString = texto.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
             {
-                //byte[]
-                var bytes = Encoding.GetEncoding("iso-8859-8").GetBytes(texto);
-                return Encoding.UTF8.GetString(bytes);
+                var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
             }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
