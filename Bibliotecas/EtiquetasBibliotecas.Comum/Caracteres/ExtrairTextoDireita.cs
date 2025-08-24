@@ -16,13 +16,17 @@
         /// </returns>
         public static string Execute(this string texto, int numeroCaracteres)
         {
-            if (numeroCaracteres <= 0)
-                return texto;
-
-            if (numeroCaracteres >= NumeroCaracteres.Execute(texto))
+            if (string.IsNullOrEmpty(texto) || numeroCaracteres <= 0)
+            {
                 return string.Empty;
+            }
 
-            return texto.Substring(NumeroCaracteres.Execute(texto) - numeroCaracteres, numeroCaracteres);
+            if (numeroCaracteres >= texto.Length)
+            {
+                return texto;
+            }
+
+            return texto.Substring(texto.Length - numeroCaracteres);
         }
     }
 }
