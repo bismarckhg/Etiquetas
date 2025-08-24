@@ -16,11 +16,11 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// </returns>
         public static bool Execute(this Char[] arrayChar)
         {
-            var arrayCharNulo = (arrayChar == null);
-            var arrayCharNuloOuVazio = arrayCharNulo || arrayChar.Length == 0;
-            arrayCharNuloOuVazio = arrayCharNuloOuVazio || arrayChar.All(x => EhStringNuloVazioComEspacosBranco.Execute(x.ToString()));
-            //Bibliotecas.COLibString.COEhStringNuloOuVazioOuComEspacosBranco.Execute(x.ToString()))
-            return arrayCharNuloOuVazio;
+            if (arrayChar == null || arrayChar.Length == 0)
+            {
+                return true;
+            }
+            return arrayChar.All(c => char.IsWhiteSpace(c));
         }
 
     }
