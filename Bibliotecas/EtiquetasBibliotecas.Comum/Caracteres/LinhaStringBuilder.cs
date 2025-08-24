@@ -6,27 +6,19 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(StringBuilder texto, int linhaTexto)
         {
-            var linha = new StringBuilder();
-            var posicaoInicialLinha = -1;
-            var numeroLinha = 0;
-            var numCaracteres = texto.Length;
-            for (int i = 0; i < numCaracteres; i++)
+            if (texto == null || linhaTexto < 1)
             {
-                if (posicaoInicialLinha > -1 && posicaoInicialLinha <= i)
-                {
-                    linha.Append(texto[i]);
-                }
-                var caractereAtual = texto[i];
-                if (caractereAtual == '\r')
-                {
-                    numeroLinha++;
-                    if (numeroLinha == linhaTexto)
-                    {
-                        posicaoInicialLinha = i + 1;
-                    }
-                }
+                return string.Empty;
             }
-            return linha.ToString();
+
+            string[] lines = texto.ToString().Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
+
+            if (linhaTexto > lines.Length)
+            {
+                return string.Empty;
+            }
+
+            return lines[linhaTexto - 1];
         }
     }
 }

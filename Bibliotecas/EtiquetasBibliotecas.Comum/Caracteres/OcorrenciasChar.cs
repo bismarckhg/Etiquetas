@@ -6,8 +6,11 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static int Execute(string texto, char caractere)
         {
-            int resultado = texto.Count(x => x.Equals(caractere));
-            return resultado;
+            if (string.IsNullOrEmpty(texto))
+            {
+                return 0;
+            }
+            return texto.Count(x => x == caractere);
         }
     }
 }
