@@ -4,15 +4,15 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(string texto, char caractere)
         {
-            if (EhStringNuloVazioComEspacosBranco.Execute(texto) && EhStringNuloVazioComEspacosBranco.Execute(caractere.ToString()))
+            if (string.IsNullOrEmpty(texto))
             {
-                return null;
+                return caractere.ToString();
             }
-            if ((ExtrairTextoDireita.Execute(texto, 1) ?? "") != ($"{caractere}" ?? ""))
+            if (texto[texto.Length - 1] != caractere)
             {
-                return $"{texto}{caractere}";
+                return texto + caractere;
             }
-            return $"{texto}";
+            return texto;
         }
 
     }
