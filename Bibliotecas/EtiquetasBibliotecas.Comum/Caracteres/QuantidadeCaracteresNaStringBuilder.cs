@@ -10,32 +10,37 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static int Execute(StringBuilder builder, char caractere)
         {
-            var numeroCaracteres = builder.Length;
-            var quantidade = 0;
-            var posicao = 0;
-            var indice = IndexOf.PosicaoKMP(builder, caractere, posicao);
-            while (indice > -1)
+            if (builder == null)
             {
-                posicao = indice+1;
-                quantidade++;
-                indice = IndexOf.PosicaoKMP(builder, caractere, posicao);
+                return 0;
             }
-            return quantidade;
+            int count = 0;
+            for (int i = 0; i < builder.Length; i++)
+            {
+                if (builder[i] == caractere)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
 
         public static int Execute(StringBuilder builder, string texto)
         {
-            var numeroCaracteres = builder.Length;
-            var quantidade = 0;
-            var posicao = 0;
-            var indice = IndexOf.PosicaoKMP(builder, texto, posicao);
-            while (indice > -1)
+            if (builder == null || string.IsNullOrEmpty(texto))
             {
-                posicao = indice + 1;
-                quantidade++;
-                indice = IndexOf.PosicaoKMP(builder, texto, posicao);
+                return 0;
             }
-            return quantidade;
+
+            string source = builder.ToString();
+            int count = 0;
+            int i = 0;
+            while ((i = source.IndexOf(texto, i)) != -1)
+            {
+                count++;
+                i += texto.Length;
+            }
+            return count;
         }
 
     }
