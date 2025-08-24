@@ -19,27 +19,17 @@
         /// </returns>
         public static string Execute(this string texto, int posicao, int numeroCaracteres)
         {
-            if (posicao < 0)
+            if (string.IsNullOrEmpty(texto) || numeroCaracteres <= 0 || posicao < 0 || posicao >= texto.Length)
             {
                 return string.Empty;
             }
 
-            if (numeroCaracteres <= 0)
+            if (posicao + numeroCaracteres > texto.Length)
             {
-                return string.Empty;
+                return texto.Substring(posicao);
             }
 
-            if (posicao >= NumeroCaracteres.Execute(texto))
-            {
-                return string.Empty;
-            }
-
-            var valido = ((posicao + numeroCaracteres) <= NumeroCaracteres.Execute(texto));
-            var retorno = valido
-                ? texto.Substring(posicao, numeroCaracteres)
-                : texto.Substring(posicao, NumeroCaracteres.Execute(texto));
-
-            return retorno;
+            return texto.Substring(posicao, numeroCaracteres);
         }
     }
 }
