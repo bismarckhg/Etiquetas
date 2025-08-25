@@ -1,0 +1,9 @@
+ConcatenarArrayStringEmStringTests.cs
+ConverteInt64EmOitoBytesTests.cs
+OitoBytesEmInt64Tests.cs
+PlaceholderTests.cs
+QuatroBytesEmInt32Tests.cs
+StringParaInt16NuloTests.cs
+StringParaInt64Tests.cs
+StringParaIntNuloTests.cs
+StringParaIntTests.cs

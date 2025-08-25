@@ -1,0 +1,7 @@
+ConverteInt64EmOitoBytes.cs
+OitoBytesEmInt64.cs
+QuatroBytesEmInt32.cs
+StringParaInt.cs
+StringParaInt16Nulo.cs
+StringParaInt64.cs
+StringParaIntNulo.cs
