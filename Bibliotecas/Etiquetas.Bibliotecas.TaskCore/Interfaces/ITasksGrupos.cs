@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
@@ -256,12 +257,12 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
 
         #region "Adiministra Cancel Token"
 
-        protected abstract Task<bool> AdicionaCancellationTokenSourceComTaskId(int id, CancellationTokenManager individualToken);
-        protected abstract Task<bool> ArmazenaCancellationTokenSourcePeloTaskId(int id, CancellationTokenManager cancelToken);
+        protected abstract Task<bool> AdicionaCancellationTokenSourceComTaskId(int id, CancellationTokenSource individualToken);
+        protected abstract Task<bool> ArmazenaCancellationTokenSourcePeloTaskId(int id, CancellationTokenSource cancelToken);
 
-        protected abstract Task<bool> RelacionaTaskComCancellationTokenSourceAsync(int id, CancellationTokenManager cancelToken);
+        protected abstract Task<bool> RelacionaTaskComCancellationTokenSourceAsync(int id, CancellationTokenSource cancelToken);
 
-        protected abstract Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenManager cancelToken);
+        protected abstract Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenSource cancelToken);
 
         #endregion
 
