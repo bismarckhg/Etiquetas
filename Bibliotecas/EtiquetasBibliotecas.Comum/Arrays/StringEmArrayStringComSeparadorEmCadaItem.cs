@@ -7,7 +7,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
     {
         public static string[] Execute(string texto, char separador)
         {
-            string pattern = string.Format(@"\{0}.*?(?=\{0}|$)", separador);
+            string pattern = string.Format(@"{0}.*?(?={0}|$)", Regex.Escape(separador.ToString()));
             return Regex.Matches(texto, pattern, RegexOptions.Singleline)
                         .Cast<Match>()
                         .Select(match => match.Value)

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\Bibliotecas\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Geral\" />
+  </ItemGroup>
+
 </Project>

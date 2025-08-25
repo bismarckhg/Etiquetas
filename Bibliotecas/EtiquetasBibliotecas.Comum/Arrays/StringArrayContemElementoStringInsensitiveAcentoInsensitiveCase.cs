@@ -8,7 +8,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
     {
         public static bool Execute(string[] array, string contem)
         {
-            var contemVazio = EhStringNuloVazioComEspacosBrancoDBNull.Execute(contem);
+            var contemVazio = EhStringNuloVazioComEspacosBranco.Execute(contem);
             var parametrosVazio = contemVazio && EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
             var contemNaoVazio = !contemVazio;
             var culturaAtual = CultureInfo.CurrentCulture;
