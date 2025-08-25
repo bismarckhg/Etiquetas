@@ -16,9 +16,17 @@
         /// </returns>
         public static string Execute(this string texto, int numeroCaracteres)
         {
-            var esquerda = ExtrairTextoEsquerda.Execute(texto, numeroCaracteres);
-            var direita = ExtrairTextoDireita.Execute(texto, NumeroCaracteres.Execute(texto) - (numeroCaracteres + 1));
-            return ConcatenarTexto.Execute(esquerda, direita);
+            if (string.IsNullOrEmpty(texto) || numeroCaracteres <= 0)
+            {
+                return texto;
+            }
+
+            if (numeroCaracteres >= texto.Length)
+            {
+                return string.Empty;
+            }
+
+            return texto.Substring(0, texto.Length - numeroCaracteres);
         }
     }
 }
