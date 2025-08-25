@@ -16,7 +16,17 @@
         /// </returns>
         public static string Execute(this string texto, int numeroCaracteres)
         {
-            return ExtrairTextoDireita.Execute(texto, NumeroCaracteres.Execute(texto) - numeroCaracteres);
+            if (string.IsNullOrEmpty(texto) || numeroCaracteres <= 0)
+            {
+                return texto;
+            }
+
+            if (numeroCaracteres >= texto.Length)
+            {
+                return string.Empty;
+            }
+
+            return texto.Substring(numeroCaracteres);
         }
     }
 }

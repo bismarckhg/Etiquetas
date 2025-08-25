@@ -14,7 +14,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
         {
             // Split para dividir a string em linhas Unix e Windows
             var options = filtrarLinhasVazias ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None;
-            return dados.Split(new string[] { Environment.NewLine, "\n" }, options);
+            return dados.Split(new string[] { "\r\n", "\n" }, options);
         }
 
         public static string[] ComMarcadorFinalLinhaUnixWindows(string dados, bool filtrarLinhasVazias = true)

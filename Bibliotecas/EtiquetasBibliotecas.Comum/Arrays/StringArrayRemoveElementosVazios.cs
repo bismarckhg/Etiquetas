@@ -7,21 +7,11 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
     {
         public static string[] Execute(string[] array)
         {
-            bool retorno = array is null;
-            retorno = retorno && EhArrayStringNuloVazioComEspacosBranco.Execute(array);
-
-            if (retorno)
+            if (array == null)
             {
-                return new string[] { string.Empty };
+                return new string[0];
             }
-
-            var novoArray = array.Where(x => !EhStringNuloVazioComEspacosBranco.Execute(x)).ToArray();
-            bool novoRetorno = !retorno && !EhArrayStringNuloVazioComEspacosBranco.Execute(novoArray);
-            if (novoRetorno)
-            {
-                return novoArray;
-            }
-            return array;
+            return array.Where(x => !EhStringNuloVazioComEspacosBranco.Execute(x)).ToArray();
         }
 
     }
