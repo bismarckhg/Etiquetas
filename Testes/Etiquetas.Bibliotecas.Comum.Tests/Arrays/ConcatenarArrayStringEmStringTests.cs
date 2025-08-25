@@ -1,7 +1,7 @@
 using Xunit;
 using Etiquetas.Bibliotecas.Comum.Arrays;
 
-namespace Etiqueta.Bibliotecas.LibArrayString.Tests
+namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
 {
     public class ConcatenarArrayStringEmStringTests
     {
