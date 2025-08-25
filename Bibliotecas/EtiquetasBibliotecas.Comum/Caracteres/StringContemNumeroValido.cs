@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
     public static class StringContemNumeroValido
@@ -5,7 +7,9 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         public static bool Execute(string texto)
         {
             var naoEhNuloOuVazio = !EhStringNuloVazioComEspacosBranco.Execute(texto);
-            var ehNumerico = naoEhNuloOuVazio && decimal.TryParse(texto, out decimal test);
+            // Using a specific set of NumberStyles for consistent parsing.
+            var styles = NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
+            var ehNumerico = naoEhNuloOuVazio && decimal.TryParse(texto, styles, CultureInfo.InvariantCulture, out _);
             return ehNumerico;
         }
     }

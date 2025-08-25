@@ -4,11 +4,13 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
     public static class StringPossuiSomenteLetras
     {
-        public static bool Execute(string array)
+        public static bool Execute(string texto)
         {
-            var naoEhNuloOuVazio = !EhStringNuloVazioComEspacosBranco.Execute(array);
-            var possuiLetras = naoEhNuloOuVazio && array.All(x => char.IsLetter(x));
-            return possuiLetras;
+            if (string.IsNullOrEmpty(texto))
+            {
+                return false;
+            }
+            return texto.All(char.IsLetter);
         }
 
     }

@@ -4,7 +4,11 @@
     {
         public static string Execute(string texto, char caractere, char novoCaractere)
         {
-            return texto.Replace(caractere.ToString(), novoCaractere.ToString());
+            if (string.IsNullOrEmpty(texto))
+            {
+                return texto;
+            }
+            return texto.Replace(caractere, novoCaractere);
         }
     }
 }
