@@ -10,6 +10,9 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static string Execute(this int numero, int tamanho)
         {
+            if (tamanho < 0)
+                tamanho = 0;
+
             if (tamanho > 9)
                 tamanho = 9;
 

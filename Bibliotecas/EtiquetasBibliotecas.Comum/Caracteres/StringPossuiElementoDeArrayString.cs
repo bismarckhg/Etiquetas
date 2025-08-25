@@ -6,7 +6,12 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static bool Execute(this string texto, string[] searchItens)
         {
-            return Array.Exists(searchItens, element => texto.IndexOf(element) > -1);
+            if (string.IsNullOrEmpty(texto) || searchItens == null || searchItens.Length == 0)
+            {
+                return false;
+            }
+
+            return Array.Exists(searchItens, element => element != null && texto.Contains(element));
         }
     }
 }

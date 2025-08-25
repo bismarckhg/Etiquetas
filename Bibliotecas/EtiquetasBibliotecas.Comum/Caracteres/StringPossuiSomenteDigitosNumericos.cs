@@ -6,9 +6,11 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
     {
         public static bool Execute(this string texto)
         {
-            var naoEhNuloOuVazio = !EhStringNuloVazioComEspacosBrancoDBNull.Execute(texto);
-            var ehNumerico = naoEhNuloOuVazio && texto.All(char.IsDigit);
-            return ehNumerico;
+            if (string.IsNullOrEmpty(texto))
+            {
+                return false;
+            }
+            return texto.All(char.IsDigit);
         }
 
     }
