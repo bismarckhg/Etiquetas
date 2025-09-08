@@ -7,247 +7,251 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
     public static class StringEmArrayStringComSeparadorEmCadaItem
     {
-        // ------------------------------------------------------------
-        // 1) UM separador de 1 char (char/string com length==1)
-        // ------------------------------------------------------------
-        /// <summary>
-        /// Divide por um separador de 1 caractere, mantendo-o no início.
-        /// Ex.: "A^B^C" -> ["A", "^B", "^C"]
-        /// </summary>
-        public static string[] Execute(string texto, char separador)
+        // ------------------ Facade (4 cenários) ------------------
+
+        public static string[] Executa(string texto, char separador, bool removeEmptyEntries = true)
         {
             if (texto == null) throw new ArgumentNullException(nameof(texto));
-            var partes = new List<string>(8);
+            var sepChars = new[] { separador };
+            return Core(texto, sepChars, null, removeEmptyEntries);
+        }
 
-            int n = texto.Length, i = 0;
+        public static string[] Executa(string texto, string separador, bool removeEmptyEntries = true)
+        {
+            if (texto == null) throw new ArgumentNullException(nameof(texto));
+            if (separador == null) throw new ArgumentNullException(nameof(separador));
+            if (separador.Length == 0) return FiltrarVazios(new[] { texto }, removeEmptyEntries);
 
-            // prólogo (antes do primeiro separador)
-            while (i < n && texto[i] != separador) i++;
-            if (i > 0) partes.Add(texto.Substring(0, i));
-            if (i >= n) return partes.ToArray();
+            if (separador.Length == 1)
+                return Executa(texto, separador[0], removeEmptyEntries);
 
-            int inicioSegmento = i; // aponta para o separador
-            i++; // avança
+            var sepsStr = new[] { separador };
+            return Core(texto, null, sepsStr, removeEmptyEntries);
+        }
 
-            while (i < n)
+        public static string[] Executa(string texto, char[] separadoresChar, bool removeEmptyEntries = true)
+        {
+            if (texto == null) throw new ArgumentNullException(nameof(texto));
+            if (separadoresChar == null || separadoresChar.Length == 0)
+                return FiltrarVazios(new[] { texto }, removeEmptyEntries);
+
+            // Dedup com tabela booleana (sem List/HashSet)
+            var mapa = new bool[ushort.MaxValue + 1];
+            int unicos = 0;
+            for (int i = 0; i < separadoresChar.Length; i++)
             {
-                if (texto[i] == separador)
+                char c = separadoresChar[i];
+                if (!mapa[c]) { mapa[c] = true; unicos++; }
+            }
+            var seps = new char[unicos];
+            for (int c = 0, k = 0; c <= ushort.MaxValue; c++)
+                if (mapa[c]) seps[k++] = (char)c;
+
+            return Core(texto, seps, null, removeEmptyEntries);
+        }
+
+        public static string[] Executa(string texto, string[] separadoresString, bool removeEmptyEntries = true)
+        {
+            if (texto == null) throw new ArgumentNullException(nameof(texto));
+            if (separadoresString == null || separadoresString.Length == 0)
+                return FiltrarVazios(new[] { texto }, removeEmptyEntries);
+
+            // Normaliza: remove nulos/vazios, dedup, separa 1-char de multi, ordena multi por tamanho desc
+            // Passo 1: filtra nulos/vazios
+            int validos = 0;
+            for (int i = 0; i < separadoresString.Length; i++)
+                if (!string.IsNullOrEmpty(separadoresString[i])) validos++;
+
+            if (validos == 0) return FiltrarVazios(new[] { texto }, removeEmptyEntries);
+
+            var tmp = new string[validos];
+            for (int i = 0, k = 0; i < separadoresString.Length; i++)
+                if (!string.IsNullOrEmpty(separadoresString[i])) tmp[k++] = separadoresString[i];
+
+            // Passo 2: ordena ordinal para deduplicar contíguos
+            Array.Sort(tmp, StringComparer.Ordinal);
+
+            // Passo 3: remove duplicatas (in-place)
+            int u = 1;
+            for (int i = 1; i < tmp.Length; i++)
+                if (!string.Equals(tmp[i], tmp[u - 1], StringComparison.Ordinal))
+                    tmp[u++] = tmp[i];
+
+            // Passo 4: particiona em chars e multi
+            int qtdChar = 0;
+            for (int i = 0; i < u; i++) if (tmp[i].Length == 1) qtdChar++;
+
+            var sepsChar = qtdChar > 0 ? new char[qtdChar] : null;
+            var sepsMulti = (u - qtdChar) > 0 ? new string[u - qtdChar] : null;
+
+            for (int i = 0, ci = 0, mi = 0; i < u; i++)
+            {
+                var s = tmp[i];
+                if (s.Length == 1) sepsChar[ci++] = s[0];
+                else sepsMulti[mi++] = s;
+            }
+
+            // Passo 5: ordena multi por tamanho desc (depois ordinal p/ determinismo)
+            if (sepsMulti != null)
+                Array.Sort(sepsMulti, (a, b) =>
                 {
-                    partes.Add(texto.Substring(inicioSegmento, i - inicioSegmento));
-                    inicioSegmento = i;
+                    int cmp = b.Length.CompareTo(a.Length);
+                    return cmp != 0 ? cmp : string.CompareOrdinal(a, b);
+                });
+
+            return Core(texto, sepsChar, sepsMulti, removeEmptyEntries);
+        }
+
+        // ------------------ Núcleo sem List/HashSet ------------------
+
+        /// <summary>
+        /// Realiza a divisão mantendo separadores no INÍCIO, preferindo sempre o separador MAIS LONGO.
+        /// </summary>
+        private static string[] Core(string texto, char[] sepChars, string[] sepMulti, bool removeEmptyEntries)
+        {
+            int n = texto.Length;
+
+            // Tabela de 1-char (O(1)) — evita List/HashSet
+            var isCharSep = new bool[ushort.MaxValue + 1];
+            if (sepChars != null)
+                for (int i = 0; i < sepChars.Length; i++)
+                    isCharSep[sepChars[i]] = true;
+
+            // Pré-computa dados de multi
+            char[] multiFirst = null;
+            int[] multiLen = null;
+            if (sepMulti != null && sepMulti.Length > 0)
+            {
+                multiFirst = new char[sepMulti.Length];
+                multiLen = new int[sepMulti.Length];
+                for (int i = 0; i < sepMulti.Length; i++)
+                {
+                    multiFirst[i] = sepMulti[i][0];
+                    multiLen[i] = sepMulti[i].Length;
                 }
-                i++;
             }
 
-            partes.Add(texto.Substring(inicioSegmento));
-            return partes.ToArray();
-        }
+            // ---------- Passo 1: contar segmentos ----------
+            int firstIdx = -1;
+            int ocorr = 0;
 
-        // ------------------------------------------------------------
-        // 2) UM separador string (>= 2 caracteres)
-        // ------------------------------------------------------------
-        /// <summary>
-        /// Divide por um separador string (>=2), mantendo-o no início.
-        /// Usa comparação ordinal por padrão; habilite ignorarCase se precisar.
-        /// </summary>
-        public static string[] Execute(string texto, string separador, bool ignorarCase = false)
-        {
-            if (texto == null) throw new ArgumentNullException(nameof(texto));
-            if (string.IsNullOrEmpty(separador)) return new[] { texto };
-
-            var comp = ignorarCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-            var partes = new List<string>(8);
-
-            int n = texto.Length, m = separador.Length, i = 0;
-            int idx = texto.IndexOf(separador, i, comp);
-            if (idx < 0) return new[] { texto };
-
-            if (idx > 0) partes.Add(texto.Substring(0, idx));
-            int inicioSegmento = idx;
-
-            i = idx + m;
-            while (i <= n - m)
+            int iPos = 0;
+            while (iPos < n)
             {
-                int prox = texto.IndexOf(separador, i, comp);
-                if (prox < 0) break;
-                partes.Add(texto.Substring(inicioSegmento, prox - inicioSegmento));
-                inicioSegmento = prox;
-                i = prox + m;
-            }
-
-            partes.Add(texto.Substring(inicioSegmento));
-            return partes.ToArray();
-        }
-
-        // ------------------------------------------------------------
-        // 3) VÁRIOS separadores de 1 char (char[] / string[] de 1 char)
-        // ------------------------------------------------------------
-        /// <summary>
-        /// Divide por qualquer separador de 1 char, mantendo-o no início.
-        /// Ex.: '^','|','#' -> "A^B|C#D" => ["A","^B","|C","#D"]
-        /// </summary>
-        public static string[] Execute(string texto, params char[] separadores)
-        {
-            if (texto == null) throw new ArgumentNullException(nameof(texto));
-            if (separadores == null || separadores.Length == 0) return new[] { texto };
-
-            var set = new HashSet<char>(separadores);
-            var partes = new List<string>(8);
-
-            int n = texto.Length, i = 0;
-
-            // prólogo
-            while (i < n && !set.Contains(texto[i])) i++;
-            if (i > 0) partes.Add(texto.Substring(0, i));
-            if (i >= n) return partes.ToArray();
-
-            int inicioSegmento = i;
-            i++;
-
-            while (i < n)
-            {
-                if (set.Contains(texto[i]))
+                int len;
+                if (TentaMatch(texto, n, iPos, isCharSep, sepMulti, multiFirst, multiLen, out len))
                 {
-                    partes.Add(texto.Substring(inicioSegmento, i - inicioSegmento));
-                    inicioSegmento = i;
-                }
-                i++;
-            }
-
-            partes.Add(texto.Substring(inicioSegmento));
-            return partes.ToArray();
-        }
-
-        /// <summary>
-        /// Conforto: passa separadores como strings de 1 char cada.
-        /// </summary>
-        public static string[] Èxecute(string texto, params string[] separadores1Char)
-        {
-            if (separadores1Char == null || separadores1Char.Length == 0)
-                return new[] { texto };
-
-            var lista = new List<char>(separadores1Char.Length);
-            for (int k = 0; k < separadores1Char.Length; k++)
-                if (!string.IsNullOrEmpty(separadores1Char[k]))
-                    lista.Add(separadores1Char[k][0]);
-
-            // remove duplicados
-            var set = new HashSet<char>(lista);
-            var arr = new char[set.Count];
-            set.CopyTo(arr);
-
-            return DividirVariosChars(texto, arr);
-        }
-
-        // ------------------------------------------------------------
-        // 4) VÁRIOS separadores com tamanhos variados (string[])
-        //    Sem regex; tenta primeiro os MAIORES para resolver sobreposições (ex.: "||" vs "|").
-        // ------------------------------------------------------------
-        /// <summary>
-        /// Divide por vários separadores string (tamanhos variados), mantendo-os no início.
-        /// </summary>
-        public static string[] Execute(string texto, string[] separadores, bool ignorarCase = false)
-        {
-            if (texto == null) throw new ArgumentNullException(nameof(texto));
-            if (separadores == null || separadores.Length == 0) return new[] { texto };
-
-            // normaliza: remove vazios/duplicados e ordena por tamanho DESC
-            var listaNorm = new List<string>();
-            var visto = new HashSet<string>(ignorarCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
-            for (int s = 0; s < separadores.Length; s++)
-            {
-                var sp = separadores[s];
-                if (string.IsNullOrEmpty(sp)) continue;
-                if (visto.Add(sp)) listaNorm.Add(sp);
-            }
-            listaNorm.Sort((a, b) => b.Length.CompareTo(a.Length)); // maior primeiro
-            if (listaNorm.Count == 0) return new[] { texto };
-
-            var comp = ignorarCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-            // Mapa: 1º caractere -> lista de candidatos que começam com ele (já em ordem por tamanho desc)
-            var mapa = new Dictionary<char, List<string>>();
-            for (int idx = 0; idx < listaNorm.Count; idx++)
-            {
-                string s = listaNorm[idx];
-                char chave = ignorarCase ? char.ToUpperInvariant(s[0]) : s[0];
-                List<string> lst;
-                if (!mapa.TryGetValue(chave, out lst))
-                {
-                    lst = new List<string>();
-                    mapa[chave] = lst;
-                }
-                lst.Add(s);
-            }
-
-            var partes = new List<string>(8);
-            int n = texto.Length, i = 0;
-
-            // prólogo (até o primeiro separador)
-            while (i < n && !TentaMatch(texto, i, mapa, comp, out _)) i++;
-            if (i > 0) partes.Add(texto.Substring(0, i));
-            if (i >= n) return partes.ToArray();
-
-            int inicioSegmento = i;
-
-            while (i < n)
-            {
-                int lenSep;
-                if (TentaMatch(texto, i, mapa, comp, out lenSep))
-                {
-                    if (i != inicioSegmento)
-                    {
-                        // Fechamos o segmento anterior imediatamente antes do novo separador
-                        partes.Add(texto.Substring(inicioSegmento, i - inicioSegmento));
-                        inicioSegmento = i;
-                    }
-                    // pular o tamanho do separador detectado para evitar rematch no mesmo ponto
-                    i += (lenSep > 0 ? lenSep : 1);
+                    if (firstIdx < 0) firstIdx = iPos;
+                    ocorr++;
+                    iPos += len > 0 ? len : 1;
                 }
                 else
                 {
-                    i++;
+                    iPos++;
                 }
             }
 
-            partes.Add(texto.Substring(inicioSegmento));
-            return partes.ToArray();
-
-            // ---- função local (C# 7.0+) ----
-            bool TentaMatch(string txt, int idx, Dictionary<char, List<string>> mp, StringComparison cmp, out int len)
+            if (firstIdx < 0)
             {
-                len = 0;
-                if (idx >= txt.Length) return false;
+                // Sem separadores
+                if (removeEmptyEntries && n == 0) return new string[0];
+                return new[] { texto };
+            }
 
-                char chave = (cmp == StringComparison.OrdinalIgnoreCase)
-                           ? char.ToUpperInvariant(txt[idx])
-                           : txt[idx];
+            int totalSegmentos = (firstIdx > 0 ? 1 : 0) + ocorr;
+            if (totalSegmentos == 0) return new string[0];
 
-                List<string> candidatos;
-                if (!mp.TryGetValue(chave, out candidatos)) return false;
+            // ---------- Passo 2: preencher array ----------
+            var resultado = new string[totalSegmentos];
+            int k = 0;
 
-                // candidatos já em ordem por tamanho desc
-                for (int c = 0; c < candidatos.Count; c++)
+            if (firstIdx > 0) resultado[k++] = texto.Substring(0, firstIdx);
+
+            int inicioSegmento = firstIdx;
+            iPos = firstIdx;
+            while (iPos < n)
+            {
+                // pos atual iPos DEVE estar num separador
+                int lenAtual;
+                if (!TentaMatch(texto, n, iPos, isCharSep, sepMulti, multiFirst, multiLen, out lenAtual))
                 {
-                    string s = candidatos[c];
-                    int m = s.Length;
-                    if (idx + m <= txt.Length && string.Compare(txt, idx, s, 0, m, cmp) == 0)
+                    // segurança (não deve acontecer): avança
+                    iPos++;
+                    continue;
+                }
+
+                // encontra início do PRÓXIMO separador (ou fim do texto)
+                int scan = iPos + (lenAtual > 0 ? lenAtual : 1);
+                while (scan < n)
+                {
+                    int lenNext;
+                    if (TentaMatch(texto, n, scan, isCharSep, sepMulti, multiFirst, multiLen, out lenNext))
+                        break;
+                    scan++;
+                }
+
+                // segmento atual: [inicioSegmento .. scan)
+                resultado[k++] = texto.Substring(inicioSegmento, scan - inicioSegmento);
+                inicioSegmento = scan;
+                iPos = scan;
+                if (scan >= n) break;
+            }
+
+            // removeEmptyEntries (apenas ""), sem List
+            return FiltrarVazios(resultado, removeEmptyEntries);
+        }
+
+        /// <summary>
+        /// Tenta casar qualquer separador em txt[idx], preferindo multi (mais longos) antes de 1 char.
+        /// </summary>
+        private static bool TentaMatch(
+            string txt, int n, int idx,
+            bool[] isCharSep,
+            string[] sepMulti, char[] multiFirst, int[] multiLen,
+            out int len)
+        {
+            len = 0;
+            if (idx >= n) return false;
+
+            // 1) multi (ordenados por tamanho desc) — checa só os que têm o mesmo primeiro char
+            if (sepMulti != null)
+            {
+                char c = txt[idx];
+                for (int i = 0; i < sepMulti.Length; i++)
+                {
+                    if (multiFirst[i] != c) continue;
+                    int m = multiLen[i];
+                    if (idx + m <= n && string.Compare(txt, idx, sepMulti[i], 0, m, StringComparison.Ordinal) == 0)
                     {
                         len = m;
                         return true;
                     }
                 }
-                return false;
             }
 
-            //public static string[] Execute(string texto, char separador)
-            //{
-            //    string pattern = string.Format(@"{0}.*?(?={0}|$)", Regex.Escape(separador.ToString()));
-            //    return Regex.Matches(texto, pattern, RegexOptions.Singleline)
-            //                .Cast<Match>()
-            //                .Select(match => match.Value)
-            //                .ToArray();
-            //}
+            // 2) 1-char
+            if (isCharSep[txt[idx]])
+            {
+                len = 1;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static string[] FiltrarVazios(string[] partes, bool removeEmptyEntries)
+        {
+            if (!removeEmptyEntries) return partes;
+            int n = partes.Length;
+            int count = 0;
+            for (int i = 0; i < n; i++)
+                if (!string.IsNullOrEmpty(partes[i])) count++;
+
+            if (count == n) return partes;
+            var arr = new string[count];
+            for (int i = 0, k = 0; i < n; i++)
+                if (!string.IsNullOrEmpty(partes[i])) arr[k++] = partes[i];
+            return arr;
         }
     }
 }
