@@ -9,7 +9,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
         public static bool Execute(string[] array, string contem)
         {
             var contemVazio = EhStringNuloVazioComEspacosBranco.Execute(contem);
-            var parametrosVazio = contemVazio && EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
+            var parametrosVazio = contemVazio && EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(array);
             var contemNaoVazio = !contemVazio;
             var culturaAtual = CultureInfo.CurrentCulture;
             var contemString = parametrosVazio || (contemNaoVazio && array.Any(x => string.Compare(x, contem, CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase).Equals(0)));

@@ -9,10 +9,10 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
         {
             if (EhStringNuloVazioComEspacosBrancoDBNull.Execute(contem))
             {
-                return EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
+                return EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(array);
             }
 
-            if (EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array))
+            if (EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(array))
             {
                 return false;
             }

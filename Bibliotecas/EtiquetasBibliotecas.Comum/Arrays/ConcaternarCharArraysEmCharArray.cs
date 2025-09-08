@@ -1,4 +1,3 @@
-using Etiquetas.Bibliotecas.Comum.Caracteres;
 using System.Linq;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays

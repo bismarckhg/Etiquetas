@@ -6,7 +6,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
     {
         public static string[] Execute(string[] array, string elemento)
         {
-            if (EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array))
+            if (EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(array))
             {
                 var arrayNovo = new string[] { elemento };
                 return arrayNovo;

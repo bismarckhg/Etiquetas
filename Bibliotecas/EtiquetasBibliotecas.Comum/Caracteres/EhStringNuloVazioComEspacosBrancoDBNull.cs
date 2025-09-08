@@ -21,7 +21,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
 
         public static bool Execute(this System.DBNull texto)
         {
-            return true;
+            return (texto == System.DBNull.Value) || (texto is null);
         }
 
     }

@@ -19,7 +19,8 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             //d = d.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             //var retorno = array is null;
 
-            var retorno = array == null;
+            var retorno = array is null;
+            retorno = array == null;
             retorno = retorno || array.Length == 0;
             retorno = retorno || array.All(x => EhStringNuloVazioComEspacosBranco.Execute(x));
             return retorno;

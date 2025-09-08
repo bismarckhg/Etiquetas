@@ -12,7 +12,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             char[] input = null;
 
             // Act
-            var result = ArrayCharEhNuloVazioComEspacosBrancoDBNull.Execute(input);
+            var result = EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(input);
 
             // Assert
             Assert.True(result);
@@ -25,7 +25,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             var input = new char[] { };
 
             // Act
-            var result = ArrayCharEhNuloVazioComEspacosBrancoDBNull.Execute(input);
+            var result = EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(input);
 
             // Assert
             Assert.True(result);
@@ -38,7 +38,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             var input = new char[] { ' ', ' ', '\t' };
 
             // Act
-            var result = ArrayCharEhNuloVazioComEspacosBrancoDBNull.Execute(input);
+            var result = EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(input);
 
             // Assert
             Assert.True(result);
@@ -51,7 +51,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             var input = new char[] { 'a', 'b', 'c' };
 
             // Act
-            var result = ArrayCharEhNuloVazioComEspacosBrancoDBNull.Execute(input);
+            var result = EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(input);
 
             // Assert
             Assert.False(result);
@@ -64,7 +64,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             var input = new char[] { ' ', 'a', ' ' };
 
             // Act
-            var result = ArrayCharEhNuloVazioComEspacosBrancoDBNull.Execute(input);
+            var result = EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(input);
 
             // Assert
             Assert.False(result);

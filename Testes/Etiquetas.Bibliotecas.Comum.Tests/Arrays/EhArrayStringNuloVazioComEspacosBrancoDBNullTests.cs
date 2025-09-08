@@ -55,7 +55,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             string[] array = null;
 
             // Act
-            bool result = EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
+            bool result = EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(array);
 
             // Assert
             Assert.True(result);
@@ -68,7 +68,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             string[] array = { "a", "b" };
 
             // Act
-            bool result = EhArrayStringNuloOuVazioOuComEspacosBrancoOuDBNull.Execute(array);
+            bool result = EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(array);
 
             // Assert
             Assert.False(result);

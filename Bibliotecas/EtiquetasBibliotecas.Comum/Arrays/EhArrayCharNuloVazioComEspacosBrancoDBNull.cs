@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Etiquetas.Bibliotecas.Comum.Caracteres
+namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
     public static class EhArrayCharNuloVazioComEspacosBrancoDBNull
     {
@@ -15,7 +15,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// Continuação da verificação de que a variável possui DBNull. Verificada dessa forma se a variável original
         /// possui declaração com var.
         /// </returns>
-        public static bool Execute(this Char[] arrayChar)
+        public static bool Execute(this char[] arrayChar)
         {
             var vazio = EhArrayCharNuloVazioComEspacosBranco.Execute(arrayChar);
             return vazio;

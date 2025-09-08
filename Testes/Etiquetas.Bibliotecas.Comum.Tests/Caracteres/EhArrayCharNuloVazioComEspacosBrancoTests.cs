@@ -1,5 +1,5 @@
 using Xunit;
-using Etiquetas.Bibliotecas.Comum.Caracteres;
+using Etiquetas.Bibliotecas.Comum.Arrays;
 
 namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
 {

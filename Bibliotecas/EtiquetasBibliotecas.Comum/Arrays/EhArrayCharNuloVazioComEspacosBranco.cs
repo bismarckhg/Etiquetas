@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Etiquetas.Bibliotecas.Comum.Caracteres
+namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
     public static class EhArrayCharNuloVazioComEspacosBranco
     {
@@ -14,7 +14,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         /// <returns>
         /// True se a array char[] estiver nula, ou com todos os elementos em branco ou com espaço. Caso contrario false.
         /// </returns>
-        public static bool Execute(this Char[] arrayChar)
+        public static bool Execute(this char[] arrayChar)
         {
             if (arrayChar == null || arrayChar.Length == 0)
             {
