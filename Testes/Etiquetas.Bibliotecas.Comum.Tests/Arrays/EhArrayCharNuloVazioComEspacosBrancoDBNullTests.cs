@@ -3,7 +3,7 @@ using Etiquetas.Bibliotecas.Comum.Arrays;
 
 namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
 {
-    public class ArrayCharEhNuloVazioComEspacosBrancoDBNullTests
+    public class EhArrayCharNuloVazioComEspacosBrancoDBNullTests
     {
         [Fact]
         public void Execute_ComArrayNulo_RetornaTrue()

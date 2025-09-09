@@ -9,27 +9,27 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
     {
         // ------------------ Facade (4 cenários) ------------------
 
-        public static string[] Executa(string texto, char separador, bool removeEmptyEntries = true)
+        public static string[] Execute(string texto, char separador, bool removeEmptyEntries = true)
         {
             if (texto == null) throw new ArgumentNullException(nameof(texto));
             var sepChars = new[] { separador };
             return Core(texto, sepChars, null, removeEmptyEntries);
         }
 
-        public static string[] Executa(string texto, string separador, bool removeEmptyEntries = true)
+        public static string[] Execute(string texto, string separador, bool removeEmptyEntries = true)
         {
             if (texto == null) throw new ArgumentNullException(nameof(texto));
             if (separador == null) throw new ArgumentNullException(nameof(separador));
             if (separador.Length == 0) return FiltrarVazios(new[] { texto }, removeEmptyEntries);
 
             if (separador.Length == 1)
-                return Executa(texto, separador[0], removeEmptyEntries);
+                return Execute(texto, separador[0], removeEmptyEntries);
 
             var sepsStr = new[] { separador };
             return Core(texto, null, sepsStr, removeEmptyEntries);
         }
 
-        public static string[] Executa(string texto, char[] separadoresChar, bool removeEmptyEntries = true)
+        public static string[] Execute(string texto, char[] separadoresChar, bool removeEmptyEntries = true)
         {
             if (texto == null) throw new ArgumentNullException(nameof(texto));
             if (separadoresChar == null || separadoresChar.Length == 0)
@@ -50,7 +50,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             return Core(texto, seps, null, removeEmptyEntries);
         }
 
-        public static string[] Executa(string texto, string[] separadoresString, bool removeEmptyEntries = true)
+        public static string[] Execute(string texto, string[] separadoresString, bool removeEmptyEntries = true)
         {
             if (texto == null) throw new ArgumentNullException(nameof(texto));
             if (separadoresString == null || separadoresString.Length == 0)

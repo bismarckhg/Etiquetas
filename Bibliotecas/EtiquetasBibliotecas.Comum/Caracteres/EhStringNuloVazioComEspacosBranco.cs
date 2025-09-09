@@ -15,7 +15,7 @@
         /// </returns>
         public static bool Execute(this string texto)
         {
-            var retorno = string.IsNullOrWhiteSpace(texto);
+            var retorno = texto is null || string.IsNullOrWhiteSpace(texto);
             return retorno;
         }
 
