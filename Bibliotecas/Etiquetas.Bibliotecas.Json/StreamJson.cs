@@ -3,40 +3,36 @@ using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Etiquetas.Bibliotecas.Json
+namespace Etiquetas.Bibliotecas.Streams.Core
 {
     /// <summary>
     /// Fornece uma implementação de stream para ler e escrever objetos em formato JSON.
     /// </summary>
     /// <typeparam name="T">O tipo de objeto a ser serializado ou desserializado.</typeparam>
-    public class StreamJson<T> : StreamStreamBase, IStreamLeitura<T>, IStreamEscrita<T> where T : class
+    public class StreamJson<T> : StreamBaseTXT, IStreamLeitura<T>, IStreamEscrita<T> where T : class
     {
-        private readonly string _caminhoArquivo;
-        private readonly JsonSerializerSettings _settings;
+        private readonly JsonSerializerSettings JsonSettings;
 
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="StreamJson{T}"/>.
         /// </summary>
         /// <param name="caminhoArquivo">O caminho completo para o arquivo JSON.</param>
         /// <param name="settings">Configurações opcionais do Json.NET.</param>
-        public StreamJson(string caminhoArquivo, JsonSerializerSettings settings = null)
+        public StreamJson(JsonSerializerSettings settings = null)
         {
-            if (string.IsNullOrWhiteSpace(caminhoArquivo))
-                throw new ArgumentNullException(nameof(caminhoArquivo));
-
-            _caminhoArquivo = caminhoArquivo;
-
             // Padrão: JSON identado, mantendo nomes como no C# (sem camelCase).
-            _settings = settings ?? new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                NullValueHandling = NullValueHandling.Include,
-                ContractResolver = new DefaultContractResolver()
-            };
+            JsonSettings = settings ?? new JsonSerializerSettings();
+            JsonSettings.Formatting = Formatting.Indented;
+            JsonSettings.NullValueHandling = NullValueHandling.Include;
+            JsonSettings.ContractResolver = new DefaultContractResolver();
+            
         }
 
         /// <summary>
@@ -44,19 +40,47 @@ namespace Etiquetas.Bibliotecas.Json
         /// </summary>
         public async Task<T> LerAsync(params object[] parametros)
         {
-            if (!File.Exists(_caminhoArquivo))
+            if (!File.Exists(NomeECaminhoArquivo))
                 return null;
 
-            var jsonString = await Task.Run(
-                () => File.ReadAllText(_caminhoArquivo, Encoding.UTF8)
-            ).ConfigureAwait(false);
+            //var jsonString = await Task.Run(
+            //    () => File.ReadAllText(_caminhoArquivo, Encoding.UTF8)
+            //).ConfigureAwait(false);
 
-            if (string.IsNullOrWhiteSpace(jsonString))
+            var cancellationToken = CancellationToken.None;
+            var encoding = Encoding.UTF8;
+
+            foreach (var item in parametros)
+            {
+                if (item is CancellationToken ct)
+                {
+                    cancellationToken = ct;
+                }
+
+                if (item is Encoding enc)
+                {
+                    encoding = enc;
+                }
+            }
+
+            var jsonString = string.Empty;
+            using (var sr = new StreamReader(
+                FS,
+                encoding,
+                detectEncodingFromByteOrderMarks: false
+                )
+            )   // ANSI não usa BOM; força 1252 ))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                jsonString = await sr.ReadToEndAsync().ConfigureAwait(false);
+            }
+
+            if (EhStringNuloVazioComEspacosBranco.Execute(jsonString))
                 return null;
 
             try
             {
-                return JsonConvert.DeserializeObject<T>(jsonString, _settings);
+                return JsonConvert.DeserializeObject<T>(jsonString, JsonSettings);
             }
             catch (JsonException)
             {
@@ -72,36 +96,19 @@ namespace Etiquetas.Bibliotecas.Json
         {
             if (dados == null) throw new ArgumentNullException(nameof(dados));
 
-            var dir = Path.GetDirectoryName(_caminhoArquivo);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+            //var dir = Path.GetDirectoryName(NomeECaminhoArquivo);
+            //if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            //    Directory.CreateDirectory(dir);
 
-            var jsonString = JsonConvert.SerializeObject(dados, _settings);
+            var jsonString = JsonConvert.SerializeObject(dados, JsonSettings);
 
             // UTF-8 sem BOM para padronizar entre .NET Framework e .NET Core
             var utf8SemBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
             await Task.Run(
-                () => File.WriteAllText(_caminhoArquivo, jsonString, utf8SemBom)
+                () => File.WriteAllText(NomeECaminhoArquivo, jsonString, utf8SemBom)
             ).ConfigureAwait(false);
         }
-
-        public override bool EstaAberto() => !string.IsNullOrEmpty(_caminhoArquivo);
-
-        public override bool PossuiDados()
-        {
-            try
-            {
-                return File.Exists(_caminhoArquivo) && new FileInfo(_caminhoArquivo).Length > 0;
-            }
-            catch (FileNotFoundException)
-            {
-                return false;
-            }
-        }
-
-        public override Task ConectarAsync(params object[] parametros) => Task.CompletedTask;
-        public override Task FecharAsync() => Task.CompletedTask;
 
         protected override void Dispose(bool disposing)
         {

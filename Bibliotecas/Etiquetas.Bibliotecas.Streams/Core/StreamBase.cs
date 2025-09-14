@@ -7,9 +7,9 @@ namespace Etiquetas.Bibliotecas.Streams.Core
     /// <summary>
     /// Fornece uma implementação base para as classes de stream, cuidando do gerenciamento de descarte (Dispose).
     /// </summary>
-    public abstract class StreamStreamBase : IStreamConexao
+    public abstract class StreamBase : IStreamConexao
     {
-        private bool stDisposed = false;
+        protected bool stDisposed = false;
 
         /// <summary>
         /// Implementação virtual do método EstaAberto. As classes derivadas devem sobrescrevê-lo.
@@ -71,7 +71,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         /// <summary>
         /// Finalizador (Destrutor) para garantir a liberação de recursos não gerenciados.
         /// </summary>
-        ~StreamStreamBase()
+        ~StreamBase()
         {
             Dispose(false);
         }

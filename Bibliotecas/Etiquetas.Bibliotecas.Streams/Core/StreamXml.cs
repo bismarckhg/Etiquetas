@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Etiquetas.Bibliotecas.Xml
+namespace Etiquetas.Bibliotecas.Streams.Core
 {
     /// <summary>
     /// Fornece uma implementação de stream para leitura e escrita de arquivos XML.
