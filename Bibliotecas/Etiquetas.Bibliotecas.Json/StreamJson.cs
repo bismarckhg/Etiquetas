@@ -1,3 +1,4 @@
+using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Newtonsoft.Json;
@@ -32,7 +33,6 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             JsonSettings.Formatting = Formatting.Indented;
             JsonSettings.NullValueHandling = NullValueHandling.Include;
             JsonSettings.ContractResolver = new DefaultContractResolver();
-            
         }
 
         /// <summary>

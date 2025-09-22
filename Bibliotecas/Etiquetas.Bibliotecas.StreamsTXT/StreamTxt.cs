@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.StreamsTXT
 {
-    public class StreamTxt : StreamBase, IStreamLeitura<string[]>, IStreamEscrita<string>
+    public class StreamTxt : StreamBaseTXT, IStreamLeitura<string[]>, IStreamEscrita<string>
     {
         private readonly string _caminhoArquivo;
 
