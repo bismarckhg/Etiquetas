@@ -1,4 +1,5 @@
 using Etiquetas.Bibliotecas.Json;
+using Etiquetas.Bibliotecas.Streams.Core;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,11 +19,12 @@ namespace Etiquetas.Bibliotecas.Json.Tests
         public async Task EscreverAsync_DeveCriarEGravarDadosNoArquivo()
         {
             var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.json");
-            var streamJson = new StreamJson<DataObject>(filePath);
+            var streamJson = new StreamJson<DataObject>();
             var data = new DataObject { Id = 1, Name = "Test" };
 
             try
             {
+                await streamJson.ConectarAsync(filePath);
                 await streamJson.EscreverAsync(data);
 
                 Assert.True(File.Exists(filePath));
@@ -48,11 +50,12 @@ namespace Etiquetas.Bibliotecas.Json.Tests
         public async Task LerAsync_DeveLerEDeserializarDadosDoArquivo()
         {
             var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.json");
-            var streamJson = new StreamJson<DataObject>(filePath);
+            var streamJson = new StreamJson<DataObject>();
             var data = new DataObject { Id = 1, Name = "Test" };
 
             try
             {
+                await streamJson.ConectarAsync(filePath);
                 await streamJson.EscreverAsync(data);
 
                 var readData = await streamJson.LerAsync();

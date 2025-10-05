@@ -1,11 +1,7 @@
-﻿using Etiquetas.Bibliotecas;
-using Etiquetas.Bibliotecas.Streams.Core;
+﻿using Etiquetas.Bibliotecas.Comum.Caracteres;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Streams.Core
@@ -19,7 +15,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         protected FileAccess AcessoArquivo { get; set; }
         protected FileShare CompartilhamentoArquivo { get; set; }
 
-        public override Task ConectarAsync(params object[] parametros)
+        public override async Task ConectarAsync(params object[] parametros)
         {
             if (stDisposed)
             {
@@ -33,8 +29,8 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             if (!EhStringNuloVazioComEspacosBranco.Execute(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            FS = new FileStream(NomeECaminhoArquivo, ModoArquivo, AcessoArquivo, CompartilhamentoArquivo);
-            return Task.CompletedTask;
+
+            FS = await Task.Run(() => Task.FromResult(new FileStream(NomeECaminhoArquivo, ModoArquivo, AcessoArquivo, CompartilhamentoArquivo)));
         }
 
         protected void ParametrosNecessariosConectarAsync(params object[] parametros)
