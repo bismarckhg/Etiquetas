@@ -1,0 +1,61 @@
+﻿Para etiquetas pequenas (30 × 21 mm) em impressoras térmicas, as fontes do Windows que costumam “aguentar” melhor tamanhos minúsculos são:
+
+* **Tahoma** — ótima legibilidade em 203 dpi.
+* **Arial Narrow** — mais estreita, ajuda a caber mais texto sem perder leitura.
+
+### Tamanho mínimo seguro (guia rápido)
+
+* **Impressoras 203 dpi** (Zebra GK/GX, Argox, TSC, etc.):
+  **6 pt** para texto geral (≈ 2,1 mm de corpo). Se precisar apertar muito, **5 pt em negrito** pode funcionar, mas teste.
+* **Impressoras 300 dpi:** **5 pt** já fica legível; **4,5–5 pt em negrito** para textos críticos.
+* **Impressoras 600 dpi:** dá para ir a **4 pt**.
+
+### Dicas práticas
+
+* Prefira **negrito** nos tamanhos mínimos (especialmente em 203 dpi).
+* Evite fontes largas ou muito finas (ex.: Verdana é larga; Times pode ficar “quebrada” em 203 dpi).
+* Se houver opção, use as **fontes nativas da impressora** (bitmap internas do driver/linguagem ZPL/EPL/TSPL). Elas rendem melhor que TrueType em tamanhos micro.
+* Desative antisserrilhamento/dithering no driver (imprimir como “preto puro/line art”) para não borrar letras pequenas.
+
+Em **203 dpi**, a menor fonte do Windows que ainda fica **confiável** para ler em etiqueta **30 × 21 mm** é:
+
+* **Tahoma 6 pt (negrito)** — minha escolha nº 1 para minúsculo em 203 dpi.
+* Alternativa “apertada”: **Arial Narrow 5,5–6 pt** (melhor quando precisa caber mais caracteres na largura).
+
+Abaixo de **5 pt** a leitura humana começa a sofrer (principalmente com acentos e hastes finas).
+
+### Preset pronto para 30 × 21 mm (203 dpi)
+
+* **Tamanho da mídia:** 30 × 21 mm → **240 × 168 dots**.
+* **Margens úteis:** 2 mm laterais (~16 dots) e 1,5 mm topo/rodapé (~12 dots).
+* **Texto**
+
+  * Título/descrição: **Tahoma 6 pt bold** (≈ **17 dots** de altura).
+  * Linha auxiliar (variação/lote): **Tahoma 5,5 pt bold** (≈ **15–16 dots**).
+  * Detalhes menores: **Tahoma 5 pt bold** (use UPPERCASE quando possível).
+  * **Evite** fontes “light”, **Calibri/Times** (ficam tremidas em 203 dpi).
+* **Código de barras** (se tiver)
+
+  * Use **objeto nativo** do software (não fonte TrueType).
+  * **X-dimension:** **2 dots** (≈ **0,25 mm**).
+  * **Altura:** **10–12 mm** (≈ **80–96 dots**).
+  * **Quiet zones:** ≥ **2,5 mm** por lado (≈ **20 dots**).
+  * **Simbologia:** costuma ir bem com **Code 128** (modo C para numérico) ou **EAN-13**, conforme a aplicação.
+* **Driver/qualidade**
+
+  * Renderização como **preto puro / line art** (sem antisserrilhamento).
+  * **Velocidade:** 2–4 ips; **Temperatura/Escuridão:** suba até ficar nítido sem “engordar”.
+  * Se disponível, prefira **fontes internas** da impressora (bitmap/vetoriais nativas) para textos críticos; rendem melhor que TrueType em microtamanho.
+
+### Regra de bolso (203 dpi)
+
+| Tamanho  | Altura aprox. (mm) |                   Altura em dots |
+| -------- | -----------------: | -------------------------------: |
+| **6 pt** |        **2,12 mm** |                          **~17** |
+| 5,5 pt   |            1,94 mm |                           ~15–16 |
+| 5 pt     |            1,76 mm |                              ~14 |
+| 4,5 pt   |            1,59 mm |        ~13 (somente CAPS, curto) |
+| 4 pt     |            1,41 mm | ~11 (não recomendado em 203 dpi) |
+
+*Fonte: Aproximadamente 72 pontos por polegada (1 pt ≈ 0,3528 mm); 203 dpi = 203 dots por polegada (1 dot ≈ 0,1254 mm).*
+

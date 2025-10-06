@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
+using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 
 namespace Etiquetas.Bibliotecas.Streams.Core
 {
@@ -14,32 +15,31 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         /// <summary>
         /// Implementação virtual do método EstaAberto. As classes derivadas devem sobrescrevê-lo.
         /// </summary>
-        public virtual bool EstaAberto() => false;
+        public abstract bool EstaAberto();
 
         /// <summary>
         /// Implementação virtual do método PossuiDados. As classes derivadas devem sobrescrevê-lo.
         /// </summary>
-        public virtual bool PossuiDados() => false;
+        public abstract bool PossuiDados();
 
         /// <summary>
         /// Implementação virtual do método ConectarAsync. As classes derivadas podem sobrescrevê-lo.
         /// </summary>
         /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
         /// <returns>Uma tarefa que representa a operação de conexão.</returns>
-        public virtual Task ConectarAsync(params object[] parametros)
-        {
-            // No-op by default
-            return Task.FromResult(0);
-        }
+        public abstract Task ConectarAsync(params object[] parametros);
+
+        /// <summary>
+        /// Implementação virtual do método ConectarAsync. As classes derivadas podem sobrescrevê-lo.
+        /// </summary>
+        /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
+        /// <returns>Uma tarefa que representa a operação de conexão.</returns>
+        public abstract Task ConectarAsync(ITaskParametros parametros);
 
         /// <summary>
         /// Implementação virtual do método FecharAsync. As classes derivadas podem sobrescrevê-lo.
         /// </summary>
-        public virtual Task FecharAsync()
-        {
-            // No-op by default
-            return Task.FromResult(0);
-        }
+        public abstract Task FecharAsync();
 
         /// <summary>
         /// Realiza a liberação de recursos.

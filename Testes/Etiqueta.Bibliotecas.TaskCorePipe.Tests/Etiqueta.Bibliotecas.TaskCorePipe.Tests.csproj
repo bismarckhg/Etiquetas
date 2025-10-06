@@ -13,8 +13,4 @@
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Bibliotecas\Etiqueta.Bibliotecas.TaskCorePipe\Etiqueta.Bibliotecas.TaskCorePipe.csproj" />
-  </ItemGroup>
-
 </Project>

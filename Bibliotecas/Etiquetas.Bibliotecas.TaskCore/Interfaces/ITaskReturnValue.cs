@@ -29,6 +29,9 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <summary>Controlador de cancelamento (Token ou Source).</summary>
         public abstract object CancellationController { get; set; }
 
+        /// <summary>Definição de Encoding para Textos.</summary>
+        public abstract Encoding EncodingTexto { get; set; }
+
         /// <summary>Opções de criação da <see cref="Task"/>.</summary>
         public abstract TaskCreationOptions TaskCreationOptions { get; set; }
         public abstract TasksGrupos GrupoTasks { get; set; }
@@ -91,6 +94,12 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <param name="cancelToken">Fonte de token de cancelamento.</param>
         public abstract void ArmazenaCancellationToken(CancellationTokenSource cancelToken);
 
+        /// <summary>
+        /// Define a fonte de token de cancelamento.
+        /// </summary>
+        /// <param name="encoding">Fonte de token de cancelamento.</param>
+        /// <returns>Instância corrente para encadeamento.</returns>
+        public abstract void ArmazenaEncoding(Encoding encoding);
 
         /// <summary>
         /// Atribui um nome simbólico à tarefa.
@@ -166,6 +175,11 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <returns>Token de cancelamento.</returns>
         public abstract CancellationToken RetornoCancellationToken { get; }
 
+        /// <summary>
+        /// Recupera o Encoding do Texto.
+        /// </summary>
+        /// <returns>Encoding.</returns>
+        public abstract Encoding RetornoEncoding { get; }
 
         /// <summary>
         /// Recupera o token de cancelamento armazenado.

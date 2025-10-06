@@ -1,3 +1,4 @@
+using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Streams.Interfaces
@@ -15,5 +16,14 @@ namespace Etiquetas.Bibliotecas.Streams.Interfaces
         /// <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
         /// <returns>Uma tarefa que representa a operação de escrita.</returns>
         Task EscreverAsync(T dados, params object[] parametros);
+
+        /// <summary>
+        /// Escreve dados no stream de forma assíncrona.
+        /// </summary>
+        /// <param name="dados">O objeto de dados a ser escrito.</param>
+        /// <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
+        /// <returns>Uma tarefa que representa a operação de escrita.</returns>
+        Task EscreverAsync(ITaskParametros parametros);
+
     }
 }

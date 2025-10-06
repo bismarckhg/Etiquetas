@@ -24,7 +24,6 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="StreamJson{T}"/>.
         /// </summary>
-        /// <param name="caminhoArquivo">O caminho completo para o arquivo JSON.</param>
         /// <param name="settings">Configurações opcionais do Json.NET.</param>
         public StreamJson(JsonSerializerSettings settings = null)
         {
@@ -81,6 +80,10 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             try
             {
                 return JsonConvert.DeserializeObject<T>(jsonString, JsonSettings);
+            }
+            catch(OperationCanceledException)
+            {
+
             }
             catch (JsonException)
             {

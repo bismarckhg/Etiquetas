@@ -39,6 +39,9 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         public override object CancellationController { get; set; }
 
+        /// <summary>Definição de Encoding para Textos.</summary>
+        public override Encoding EncodingTexto { get; set; } = Encoding.UTF8;
+
         /// <summary>
         /// Grupo de tarefas associado à instância atual.
         /// </summary>
@@ -56,6 +59,11 @@ namespace Etiquetas.Bibliotecas.TaskCore
                 return CancellationToken.None;
             }
         }
+
+        /// <summary>
+        /// Retorno do Encoding de texto.
+        /// </summary>
+        public override Encoding RetornoEncoding => EncodingTexto;
 
         /// <summary>Opções de criação da <see cref="Task"/>.</summary>
         public override TaskCreationOptions TaskCreationOptions { get; set; }
@@ -206,6 +214,12 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <returns>Instância corrente para encadeamento.</returns>
         public override void ArmazenaCancellationToken(CancellationTokenSource cts) => this.CancellationController = cts;
 
+        /// <summary>
+        /// Define a fonte de token de cancelamento.
+        /// </summary>
+        /// <param name="encoding">Fonte de token de cancelamento.</param>
+        /// <returns>Instância corrente para encadeamento.</returns>
+        public override void ArmazenaEncoding(Encoding encoding) => this.EncodingTexto = encoding;
 
         /// <summary>
         /// Define as opções de criação da task.

@@ -4,10 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36121.58
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bibliotecas", "Bibliotecas", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Bibliotecas\Etiquetas.Bibliotecas.Documentos\Etiquetas.Bibliotecas.Comum.csproj = Bibliotecas\Etiquetas.Bibliotecas.Documentos\Etiquetas.Bibliotecas.Comum.csproj
+		Bibliotecas\Etiquetas.Bibliotecas.TaskCorePipe\Etiquetas.Bibliotecas.TaskCorePipe.csproj = Bibliotecas\Etiquetas.Bibliotecas.TaskCorePipe\Etiquetas.Bibliotecas.TaskCorePipe.csproj
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.TaskCore", "Bibliotecas\Etiquetas.Bibliotecas.TaskCore\Etiquetas.Bibliotecas.TaskCore.csproj", "{06EC6891-C088-FC6D-2BBE-D6263E9E1344}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiqueta.Bibliotecas.TaskCorePipe", "Bibliotecas\Etiqueta.Bibliotecas.TaskCorePipe\Etiqueta.Bibliotecas.TaskCorePipe.csproj", "{A1B2C3D4-E5F6-4789-A0B1-C2D3E4F5A6B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.Streams", "Bibliotecas\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj", "{9F020754-569B-0283-BD4E-C13E651D646B}"
 EndProject
@@ -51,10 +53,6 @@ Global
 		{06EC6891-C088-FC6D-2BBE-D6263E9E1344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06EC6891-C088-FC6D-2BBE-D6263E9E1344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06EC6891-C088-FC6D-2BBE-D6263E9E1344}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1B2C3D4-E5F6-4789-A0B1-C2D3E4F5A6B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1B2C3D4-E5F6-4789-A0B1-C2D3E4F5A6B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1B2C3D4-E5F6-4789-A0B1-C2D3E4F5A6B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1B2C3D4-E5F6-4789-A0B1-C2D3E4F5A6B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F020754-569B-0283-BD4E-C13E651D646B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F020754-569B-0283-BD4E-C13E651D646B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F020754-569B-0283-BD4E-C13E651D646B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,7 +119,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{06EC6891-C088-FC6D-2BBE-D6263E9E1344} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{A1B2C3D4-E5F6-4789-A0B1-C2D3E4F5A6B7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{9F020754-569B-0283-BD4E-C13E651D646B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{A97C6DB0-3BAD-F93A-D7E8-D0D6F91ADC35} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{63D97F96-98D7-61D8-2BFA-301D0504E802} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}

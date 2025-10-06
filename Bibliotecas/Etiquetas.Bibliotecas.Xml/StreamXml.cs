@@ -1,5 +1,6 @@
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
+using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
 using System.IO;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Etiquetas.Bibliotecas.Xml
     /// <summary>
     /// Fornece uma implementação de stream para leitura e escrita de arquivos XML.
     /// </summary>
-    public class StreamXml : StreamBase, IStreamLeitura<XDocument>, IStreamEscrita<XDocument>
+    public class StreamXml : StreamBase, IStreamLeitura<string>, IStreamEscrita<string>
     {
         private readonly string _caminhoArquivo;
 
@@ -41,7 +42,7 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        public async Task<XDocument> LerAsync(params object[] parametros)
+        public async Task<TL> LerAsync(params object[] parametros)
         {
             if (!File.Exists(_caminhoArquivo))
             {
@@ -102,6 +103,16 @@ namespace Etiquetas.Bibliotecas.Xml
         {
             // Nenhuma recurso não gerenciado para liberar neste modelo.
             base.Dispose(disposing);
+        }
+
+        Task<string> IStreamLeitura<string>.LerAsync(params object[] parametros)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> LerAsync(ITaskParametros parametros)
+        {
+            throw new NotImplementedException();
         }
     }
 }
