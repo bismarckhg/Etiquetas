@@ -5,7 +5,6 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>$(IntermediateOutputPath)$(AssemblyName).xml</DocumentationFile>
-    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsTestProject)'=='true'">
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

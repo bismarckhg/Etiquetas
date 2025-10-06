@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.Json</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.Bibliotecas.Streams.Core.StreamJson`1">
+            <summary>
+            Fornece uma implementação de stream para ler e escrever objetos em formato JSON.
+            </summary>
+            <typeparam name="T">O tipo de objeto a ser serializado ou desserializado.</typeparam>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamJson`1.#ctor(Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Streams.Core.StreamJson`1"/>.
+            </summary>
+            <param name="caminhoArquivo">O caminho completo para o arquivo JSON.</param>
+            <param name="settings">Configurações opcionais do Json.NET.</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamJson`1.LerAsync(System.Object[])">
+            <summary>
+            Lê e desserializa um objeto de um arquivo JSON de forma assíncrona.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamJson`1.EscreverAsync(`0,System.Object[])">
+            <summary>
+            Serializa e escreve um objeto em um arquivo JSON de forma assíncrona.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.TTFRenderizacao</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.Bibliotecas.TTFRenderizacao.Desenvolvimento.SatoTtfPrinter">
+            <summary>
+            Versão CORRIGIDA - Renderização otimizada para impressoras térmicas
+            .NET Framework 4.7.2, C# 7.3
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.TTFRenderizacao.Producao.SatoTtfPrinter">
+            <summary>
+            VERSÃO DE PRODUÇÃO - Renderização de fontes TTF para SATO CL4NX 203 dpi via SBPL
+            .NET Framework 4.7.2, C# 7.3
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TTFRenderizacao.Producao.SatoTtfPrinter.PrintTextAsGraphic(System.String,System.String,System.String,System.Single,System.Boolean,System.Int32,System.Int32,System.Double,System.Double)">
+            <summary>
+            Imprime texto usando fonte TTF como gráfico SBPL.
+            </summary>
+            <param name="printerName">Nome da impressora no Windows</param>
+            <param name="text">Texto a ser impresso</param>
+            <param name="fontName">Nome da fonte TrueType (ex: "Arial", "Microsoft Sans Serif")</param>
+            <param name="fontSizePt">Tamanho da fonte em pontos</param>
+            <param name="isBold">Se true, usa negrito</param>
+            <param name="positionX_dots">Posição X em dots</param>
+            <param name="positionY_dots">Posição Y em dots</param>
+            <param name="labelWidthMm">Largura da etiqueta em milímetros</param>
+            <param name="labelHeightMm">Altura da etiqueta em milímetros</param>
+            <returns>True se a impressão foi enviada com sucesso</returns>
+        </member>
+    </members>
+</doc>

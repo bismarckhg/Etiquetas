@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.Armazem</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1">
+            <summary>
+            Implementação thread-safe de stack assíncrono FIFO
+            Segue o princípio da Responsabilidade Única (SRP) e Interface Segregation (ISP)
+            </summary>
+            <typeparam name="T">Tipo dos itens no stack</typeparam>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.HasItems">
+            <summary>
+            Verifica se o stack tem itens
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.Count">
+            <summary>
+            Quantidade de itens no stack
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.#ctor">
+            <summary>
+            Construtor do AsyncStack
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.EnqueueAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Adiciona um item ao stack de forma assíncrona
+            </summary>
+            <param name="item">Item a ser adicionado</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.DequeueAsync(System.Threading.CancellationToken)">
+            <summary>
+            Remove e retorna um item do stack de forma assíncrona
+            </summary>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Item removido do stack</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.TryDequeue(`0@)">
+            <summary>
+            Tenta remover um item sem aguardar (não-bloqueante)
+            </summary>
+            <param name="item">Item removido, se houver</param>
+            <returns>True se conseguiu remover um item, False caso contrário</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.ClearAsync">
+            <summary>
+            Limpa todos os itens do stack
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.OnItemAdded(`0)">
+            <summary>
+            Dispara o evento ItemAdded de forma thread-safe
+            </summary>
+            <param name="item">Item adicionado</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.ThrowIfDisposed">
+            <summary>
+            Verifica se o objeto foi descartado
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.Dispose">
+            <summary>
+            Libera os recursos utilizados
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.Dispose(System.Boolean)">
+            <summary>
+            Libera os recursos utilizados
+            </summary>
+            <param name="disposing">Indica se está sendo chamado pelo Dispose</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Core.AsyncStack`1.Finalize">
+            <summary>
+            Finalizer
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Armazem.Interfaces.IAsyncStack`1">
+            <summary>
+            Interface para stack assíncrono thread-safe seguindo padrão FIFO
+            </summary>
+            <typeparam name="T">Tipo dos itens no stack</typeparam>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Interfaces.IAsyncStack`1.EnqueueAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Adiciona um item ao stack de forma assíncrona
+            </summary>
+            <param name="item">Item a ser adicionado</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Armazem.Interfaces.IAsyncStack`1.DequeueAsync(System.Threading.CancellationToken)">
+            <summary>
+            Remove e retorna um item do stack de forma assíncrona
+            </summary>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Item removido do stack</returns>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.Armazem.Interfaces.IAsyncStack`1.HasItems">
+            <summary>
+            Verifica se o stack tem itens
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.Armazem.Interfaces.IAsyncStack`1.Count">
+            <summary>
+            Quantidade de itens no stack
+            </summary>
+        </member>
+        <member name="E:Etiquetas.Bibliotecas.Armazem.Interfaces.IAsyncStack`1.ItemAdded">
+            <summary>
+            Evento disparado quando um novo item é adicionado
+            </summary>
+        </member>
+    </members>
+</doc>

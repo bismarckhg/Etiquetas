@@ -8,7 +8,7 @@
         /// <param name="texto">
         /// Texto string a receber outra string.
         /// </param>
-        /// <param name="caractere">
+        /// <param name="stringAInserir">
         /// String a ser inserida em outra string.
         /// </param>
         /// <param name="posicao">

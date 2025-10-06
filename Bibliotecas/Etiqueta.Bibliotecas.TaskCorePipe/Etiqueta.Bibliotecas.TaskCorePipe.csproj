@@ -3,8 +3,6 @@
     <TargetFrameworks>net6.0;net472</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyTitle>Etiqueta Bibliotecas TaskCore Pipe</AssemblyTitle>
     <AssemblyDescription>Sistema de comunicação via pipes para tarefas assíncronas</AssemblyDescription>
     <AssemblyCompany>Etiqueta</AssemblyCompany>

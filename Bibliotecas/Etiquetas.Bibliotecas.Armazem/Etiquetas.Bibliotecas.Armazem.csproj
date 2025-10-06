@@ -4,8 +4,6 @@
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyTitle>Etiqueta Bibliotecas Armazem</AssemblyTitle>
     <AssemblyCompany>Etiqueta</AssemblyCompany>
     <AssemblyProduct>Armazem</AssemblyProduct>

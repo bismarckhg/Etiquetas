@@ -1,0 +1,867 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiqueta.Bibliotecas.TaskCorePipe</name>
+    </assembly>
+    <members>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe">
+            <summary>
+            Gerencia a conexão de baixo nível para um pipe nomeado.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe.EstaConectado">
+            <summary>
+            Indica se o pipe está atualmente conectado.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe.#ctor(System.String,System.Int32)">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe"/>.
+            </summary>
+            <param name="nomePipe">O nome do pipe para a conexão.</param>
+            <param name="maximoServidores">O número máximo de servidores permitidos para o pipe.</param>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe.AguardarConexaoAsync(System.Threading.CancellationToken)">
+            <summary>
+            Inicia o servidor de pipe e aguarda por uma conexão de cliente.
+            </summary>
+            <param name="cancellationToken">Token para cancelar a espera por conexão.</param>
+            <returns>O stream do pipe conectado.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe.Desconectar">
+            <summary>
+            Desconecta o cliente atual e fecha o stream do pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorConexaoPipe.Dispose">
+            <summary>
+            Libera os recursos do pipe.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorSeguranca">
+            <summary>
+            Fornece funcionalidades de segurança, como autenticação e criptografia.
+            (Placeholder para implementação futura)
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorSeguranca.Autenticar">
+            <summary>
+            Valida as credenciais ou o token de um cliente.
+            </summary>
+            <returns>True se a autenticação for bem-sucedida.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorSeguranca.Criptografar(System.Byte[])">
+            <summary>
+            Criptografa os dados a serem enviados.
+            </summary>
+            <param name="dados">Os dados em texto plano.</param>
+            <returns>Os dados criptografados.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorSeguranca.Descriptografar(System.Byte[])">
+            <summary>
+            Descriptografa os dados recebidos.
+            </summary>
+            <param name="dadosCriptografados">Os dados criptografados.</param>
+            <returns>Os dados em texto plano.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorTimeout">
+            <summary>
+            Fornece funcionalidade para executar tarefas com um timeout.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.GerenciadorTimeout.ExecutarComTimeoutAsync``1(System.Threading.Tasks.Task{``0},System.TimeSpan)">
+            <summary>
+            Executa uma tarefa com um timeout especificado.
+            </summary>
+            <typeparam name="TResult">O tipo de resultado da tarefa.</typeparam>
+            <param name="tarefa">A tarefa a ser executada.</param>
+            <param name="timeout">O tempo máximo de espera.</param>
+            <returns>O resultado da tarefa.</returns>
+            <exception cref="T:System.TimeoutException">Lançada se a tarefa não for concluída dentro do tempo especificado.</exception>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ProtocoloMensagem">
+            <summary>
+            Gerencia a formatação e o parsing de mensagens de acordo com o protocolo do pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ProtocoloMensagem.#ctor(Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.ISerializadorMensagem)">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ProtocoloMensagem"/>.
+            </summary>
+            <param name="serializador">A implementação do serializador a ser usada para as mensagens.</param>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ProtocoloMensagem.EscreverMensagemAsync(System.IO.Stream,Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe)">
+            <summary>
+            Escreve uma mensagem formatada com cabeçalho de tamanho no stream.
+            </summary>
+            <param name="stream">O stream para escrever a mensagem.</param>
+            <param name="mensagem">O objeto MensagemPipe a ser enviado.</param>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ProtocoloMensagem.LerMensagemAsync(System.IO.Stream)">
+            <summary>
+            Lê uma mensagem formatada com cabeçalho de tamanho do stream.
+            </summary>
+            <param name="stream">O stream para ler a mensagem.</param>
+            <returns>O objeto MensagemPipe lido, ou null se o stream for fechado.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.SerializadorJson">
+            <summary>
+            Implementação de um serializador de mensagens usando Newtonsoft.Json.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.SerializadorJson.#ctor">
+            <summary>
+            Construtor que inicializa as configurações do serializador JSON.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.SerializadorJson.Deserializar``1(System.String)">
+            <summary>
+            Deserializa uma string JSON para um objeto do tipo especificado.
+            </summary>
+            <typeparam name="T">O tipo do objeto de destino.</typeparam>
+            <param name="dados">A string JSON a ser deserializada.</param>
+            <returns>O objeto deserializado.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.SerializadorJson.Serializar``1(``0)">
+            <summary>
+            Serializa um objeto para uma representação em string JSON.
+            </summary>
+            <typeparam name="T">O tipo do objeto a ser serializado.</typeparam>
+            <param name="objeto">O objeto a ser serializado.</param>
+            <returns>A representação do objeto em string JSON.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ValidadorMensagem">
+            <summary>
+            Fornece métodos para validar mensagens do protocolo de pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Comunicacao.ValidadorMensagem.EhValida(Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe,System.Collections.Generic.List{System.String}@)">
+            <summary>
+            Valida uma MensagemPipe e seu payload.
+            </summary>
+            <param name="mensagem">A mensagem a ser validada.</param>
+            <param name="erros">Uma lista de erros de validação encontrados.</param>
+            <returns>True se a mensagem for válida, False caso contrário.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta">
+            <summary>
+            Define códigos de resposta padronizados, inspirados em HTTP status codes,
+            para indicar o resultado de uma operação via pipe.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.Success">
+            <summary>
+            O comando foi executado com sucesso. (Análogo a HTTP 200 OK)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.Accepted">
+            <summary>
+            O comando foi aceito para processamento, mas a conclusão não é imediata. (Análogo a HTTP 202 Accepted)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.NoContent">
+            <summary>
+            O comando foi executado com sucesso, mas não há conteúdo para retornar. (Análogo a HTTP 204 No Content)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.BadRequest">
+            <summary>
+            A requisição está malformada ou contém parâmetros inválidos. (Análogo a HTTP 400 Bad Request)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.TaskNotFound">
+            <summary>
+            A tarefa ou recurso especificado não foi encontrado. (Análogo a HTTP 404 Not Found)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.RequestTimeout">
+            <summary>
+            O tempo para processar a requisição expirou. (Análogo a HTTP 408 Request Timeout)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.Conflict">
+            <summary>
+            O comando não pôde ser executado devido a um conflito com o estado atual do recurso. (Análogo a HTTP 409 Conflict)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.InternalServerError">
+            <summary>
+            Ocorreu um erro interno inesperado no servidor/tarefa. (Análogo a HTTP 500 Internal Server Error)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.ServiceUnavailable">
+            <summary>
+            O serviço está temporariamente indisponível. (Análogo a HTTP 503 Service Unavailable)
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.CodigoResposta.GatewayTimeout">
+            <summary>
+            A comunicação com um serviço upstream falhou. (Análogo a HTTP 504 Gateway Timeout)
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Enums.NivelPrioridade">
+            <summary>
+            Define os níveis de prioridade para comandos ou mensagens.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.NivelPrioridade.Baixa">
+            <summary>
+            Prioridade baixa, para operações não urgentes.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.NivelPrioridade.Normal">
+            <summary>
+            Prioridade padrão para a maioria das operações.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.NivelPrioridade.Alta">
+            <summary>
+            Prioridade alta, para operações importantes.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.NivelPrioridade.Critica">
+            <summary>
+            Prioridade crítica, para operações que devem ser executadas imediatamente.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa">
+            <summary>
+            Define os possíveis estados de uma tarefa durante seu ciclo de vida no sistema de pipe.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.Inicializando">
+            <summary>
+            A tarefa está sendo criada e configurada.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.PipeConectando">
+            <summary>
+            A tarefa está tentando estabelecer a conexão de pipe com o servidor.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.PipeConectado">
+            <summary>
+            A conexão de pipe foi estabelecida e está funcional.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.Executando">
+            <summary>
+            A lógica principal da tarefa está em execução normal.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.AguardandoComando">
+            <summary>
+            A tarefa está ativa e aguardando comandos via pipe.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.ProcessandoComando">
+            <summary>
+            A tarefa está processando um comando recebido via pipe.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.ParandoSuave">
+            <summary>
+            A tarefa está executando uma parada suave (graceful shutdown).
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.ParandoBruto">
+            <summary>
+            A tarefa está executando uma parada forçada (forced termination).
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.PipeDesconectado">
+            <summary>
+            A conexão de pipe com a tarefa foi perdida.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.Finalizada">
+            <summary>
+            A tarefa foi completada com sucesso.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.Erro">
+            <summary>
+            A tarefa terminou com um erro.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.StatusTarefa.Cancelada">
+            <summary>
+            A tarefa foi cancelada pelo usuário ou sistema.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoComando">
+            <summary>
+            Define os tipos de comandos que podem ser enviados através do sistema de pipe.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoComando.STOP">
+            <summary>
+            Solicita a parada suave (graceful shutdown) de uma tarefa.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoComando.BREAK">
+            <summary>
+            Solicita a parada forçada (forced termination) de uma tarefa.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoComando.PING">
+            <summary>
+            Realiza uma verificação de saúde (health check) para verificar se a tarefa está responsiva.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoComando.STATUS">
+            <summary>
+            Solicita o estado detalhado de uma tarefa específica.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoComando.LIST">
+            <summary>
+            Solicita a lista de todas as tarefas gerenciadas pelo servidor.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro">
+            <summary>
+            Categoriza os tipos de erros que podem ocorrer no sistema.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro.Configuracao">
+            <summary>
+            Erro relacionado a arquivos ou parâmetros de configuração.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro.Comunicacao">
+            <summary>
+            Erro relacionado à comunicação via pipe (conexão, etc.).
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro.Recurso">
+            <summary>
+            Erro relacionado a recursos do sistema (memória, disco, etc.).
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro.Seguranca">
+            <summary>
+            Erro relacionado à autenticação ou permissões.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro.LogicaNegocio">
+            <summary>
+            Erro na lógica de negócio da tarefa.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoErro.Indeterminado">
+            <summary>
+            Um erro que não se encaixa nas outras categorias.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem">
+            <summary>
+            Define os tipos de mensagens trocadas no protocolo de pipe.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem.Command">
+            <summary>
+            Uma mensagem que representa um comando a ser executado.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem.Response">
+            <summary>
+            Uma mensagem que representa a resposta a um comando.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem.Status">
+            <summary>
+            Uma mensagem contendo uma atualização de status.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem.Error">
+            <summary>
+            Uma mensagem que representa um erro ocorrido.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem.Heartbeat">
+            <summary>
+            Uma mensagem de pulsação para verificar a conectividade.
+            </summary>
+        </member>
+        <member name="F:Etiqueta.Bibliotecas.TaskCorePipe.Enums.TipoMensagem.Notification">
+            <summary>
+            Uma mensagem de notificação geral.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IComandoPipe">
+            <summary>
+            Define a estrutura para comandos que podem ser enviados através de pipes.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IComandoPipe.Comando">
+            <summary>
+            O tipo de comando a ser executado (ex: STOP, PING).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IComandoPipe.Parametros">
+            <summary>
+            Parâmetros ou dados necessários para a execução do comando.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IGerenciadorMutex">
+            <summary>
+            Define o contrato para um gerenciador de Mutex global.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IGerenciadorMutex.Adquirir(System.TimeSpan)">
+            <summary>
+            Tenta adquirir o lock do Mutex.
+            </summary>
+            <param name="timeout">O tempo máximo de espera para adquirir o lock.</param>
+            <returns>True se o lock foi adquirido, False caso contrário.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IGerenciadorMutex.Liberar">
+            <summary>
+            Libera o lock do Mutex.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IMonitorRecursos">
+            <summary>
+            Define o contrato para um monitor de recursos do sistema ou de uma tarefa.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IMonitorRecursos.ObterMetricasAsync">
+            <summary>
+            Obtém as métricas de performance atuais.
+            </summary>
+            <returns>Um objeto contendo as métricas de performance.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeControlador">
+            <summary>
+            Define o contrato para o servidor pipe controlador, que gerencia todas as tarefas e a comunicação.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeControlador.IniciarAsync">
+            <summary>
+            Inicia o servidor, que começa a escutar por conexões e comandos.
+            </summary>
+            <returns>Uma tarefa que representa a operação de inicialização.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeControlador.PararAsync">
+            <summary>
+            Para o servidor e libera todos os recursos.
+            </summary>
+            <returns>Uma tarefa que representa a operação de parada.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeControlador.EnviarComandoAsync(System.String,Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IComandoPipe)">
+            <summary>
+            Envia um comando para uma tarefa específica.
+            </summary>
+            <param name="nomePipe">O nome do pipe da tarefa de destino.</param>
+            <param name="comando">O comando a ser enviado.</param>
+            <returns>A resposta da tarefa.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeTarefa">
+            <summary>
+            Define o contrato para o pipe de uma tarefa individual.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeTarefa.IniciarAsync">
+            <summary>
+            Inicia o pipe da tarefa, que começa a escutar por comandos do servidor.
+            </summary>
+            <returns>Uma tarefa que representa a operação de inicialização.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeTarefa.PararAsync">
+            <summary>
+            Para o pipe da tarefa e libera os recursos.
+            </summary>
+            <returns>Uma tarefa que representa a operação de parada.</returns>
+        </member>
+        <member name="E:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IPipeTarefa.ComandoRecebido">
+            <summary>
+            Evento acionado quando um comando é recebido do servidor.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.ISerializadorMensagem">
+            <summary>
+            Define o contrato para serialização e deserialização de mensagens trocadas via pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.ISerializadorMensagem.Serializar``1(``0)">
+            <summary>
+            Serializa um objeto para uma representação em string (ex: JSON).
+            </summary>
+            <typeparam name="T">O tipo do objeto a ser serializado.</typeparam>
+            <param name="objeto">O objeto a ser serializado.</param>
+            <returns>A representação do objeto em string.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.ISerializadorMensagem.Deserializar``1(System.String)">
+            <summary>
+            Deserializa uma string para um objeto do tipo especificado.
+            </summary>
+            <typeparam name="T">O tipo do objeto de destino.</typeparam>
+            <param name="dados">A string a ser deserializada.</param>
+            <returns>O objeto deserializado.</returns>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IStatusTarefa">
+            <summary>
+            Define o contrato para informações de status de tarefas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IStatusTarefa.IdTarefa">
+            <summary>
+            Identificador único da tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IStatusTarefa.NomeTarefa">
+            <summary>
+            Nome descritivo da tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IStatusTarefa.Status">
+            <summary>
+            O estado atual da tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IStatusTarefa.TempoDeExecucao">
+            <summary>
+            Tempo total de execução da tarefa.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ComandoPipe">
+            <summary>
+            Representa um comando específico a ser executado, enviado como payload de uma MensagemPipe.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ComandoPipe.Comando">
+            <summary>
+            O tipo de comando a ser executado.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ComandoPipe.Parametros">
+            <summary>
+            Parâmetros específicos para o comando. Pode ser um objeto, um dicionário, etc.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe">
+            <summary>
+            Contém as configurações para um pipe de comunicação.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe.NomePipe">
+            <summary>
+            Nome base para o pipe. O nome final pode ser sufixado com um ID único.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe.TimeoutLeitura">
+            <summary>
+            Timeout para operações de leitura no pipe.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe.TimeoutEscrita">
+            <summary>
+            Timeout para operações de escrita no pipe.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe.BufferEntrada">
+            <summary>
+            Tamanho do buffer de entrada do pipe em bytes.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe.BufferSaida">
+            <summary>
+            Tamanho do buffer de saída do pipe em bytes.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe.#ctor">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.ConfiguracaoPipe"/> com valores padrão.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe">
+            <summary>
+            Representa a estrutura base de uma mensagem trocada via pipe.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.IdMensagem">
+            <summary>
+            Identificador único da mensagem (GUID).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.TipoMensagem">
+            <summary>
+            Tipo da mensagem (Command, Response, etc.).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.Timestamp">
+            <summary>
+            Timestamp de criação da mensagem.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.IdOrigem">
+            <summary>
+            Identificador do componente de origem da mensagem.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.IdDestino">
+            <summary>
+            Identificador do componente de destino da mensagem.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.Payload">
+            <summary>
+            Conteúdo (payload) da mensagem, pode ser um comando, uma resposta, etc.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MensagemPipe.#ctor">
+            <summary>
+            Construtor padrão que inicializa o Id e o Timestamp da mensagem.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa">
+            <summary>
+            Contém metadados sobre o desempenho e a execução de uma tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa.IdTarefa">
+            <summary>
+            Identificador único da tarefa (GUID).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa.TimestampInicio">
+            <summary>
+            Timestamp de criação e início de execução.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa.TempoDeCpu">
+            <summary>
+            Tempo total de CPU utilizado pela tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa.PicoMemoriaUsada">
+            <summary>
+            Pico de utilização de memória (em bytes).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa.ComandosProcessados">
+            <summary>
+            Número de comandos processados pela tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetadadosTarefa.UltimaRespostaPing">
+            <summary>
+            Última resposta a um comando PING.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance">
+            <summary>
+            Coleta métricas de desempenho para um componente ou sistema.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance.CpuUsoMedio">
+            <summary>
+            Utilização média de CPU (em porcentagem).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance.MemoriaDeTrabalho">
+            <summary>
+            Memória de trabalho atual (em bytes).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance.ThreadsAtivas">
+            <summary>
+            Número de threads ativas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance.HandlesAbertos">
+            <summary>
+            Número de handles abertos pelo processo.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance.BytesLidosPipe">
+            <summary>
+            Total de bytes lidos do pipe.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.MetricasPerformance.BytesEscritosPipe">
+            <summary>
+            Total de bytes escritos no pipe.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.RespostaPipe">
+            <summary>
+            Representa a resposta a um comando, enviada como payload de uma MensagemPipe.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.RespostaPipe.CodigoResposta">
+            <summary>
+            O código de resposta que indica o resultado da operação.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.RespostaPipe.Dados">
+            <summary>
+            Os dados de resposta da operação. Pode ser nulo se não houver dados a retornar.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.RespostaPipe.MensagemErro">
+            <summary>
+            Uma mensagem descritiva sobre o resultado, especialmente útil em caso de erro.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe">
+            <summary>
+            Contém informações detalhadas sobre o estado atual de uma tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe.IdTarefa">
+            <summary>
+            Identificador único da tarefa (GUID).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe.NomeTarefa">
+            <summary>
+            Nome descritivo da tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe.Status">
+            <summary>
+            O estado atual da tarefa no ciclo de vida.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe.TempoDeExecucao">
+            <summary>
+            Tempo de execução total da tarefa até o momento.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe.UltimaAtividade">
+            <summary>
+            Timestamp da última atividade registrada para a tarefa.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Bibliotecas.TaskCorePipe.Modelos.StatusTarefaPipe.Metadados">
+            <summary>
+            Informações adicionais ou metadados sobre a tarefa.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.GerenciadorMutexGlobal">
+            <summary>
+            Implementa um Mutex global para garantir uma única instância do servidor.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.GerenciadorMutexGlobal.#ctor(System.String)">
+            <summary>
+            Cria uma instância do gerenciador de mutex com um nome global único.
+            </summary>
+            <param name="nomeMutex">O nome do mutex. Deve ser único no sistema.</param>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.GerenciadorMutexGlobal.Adquirir(System.TimeSpan)">
+            <summary>
+            Tenta adquirir o lock do Mutex.
+            </summary>
+            <param name="timeout">O tempo máximo de espera para adquirir o lock.</param>
+            <returns>True se o lock foi adquirido, False caso contrário.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.GerenciadorMutexGlobal.Liberar">
+            <summary>
+            Libera o lock do Mutex se foi adquirido.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.GerenciadorMutexGlobal.Dispose">
+            <summary>
+            Libera os recursos do Mutex.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador">
+            <summary>
+            Servidor central que gerencia tarefas assíncronas e a comunicação com elas via pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador.#ctor">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="T:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador"/>.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador.IniciarAsync">
+            <summary>
+            Inicia o servidor, garantindo que apenas uma instância esteja ativa, e prepara para operar.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador.PararAsync">
+            <summary>
+            Para o servidor, liberando o mutex global.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador.EnviarComandoAsync(System.String,Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IComandoPipe)">
+            <summary>
+            Envia um comando para uma tarefa específica através de seu pipe.
+            </summary>
+            <param name="nomePipe">O nome do pipe da tarefa de destino.</param>
+            <param name="comando">O comando a ser enviado.</param>
+            <returns>Um objeto de resposta da tarefa.</returns>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Servidor.ServidorPipeControlador.Dispose">
+            <summary>
+            Libera os recursos utilizados pelo servidor, incluindo o mutex.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa">
+            <summary>
+            Implementa a lógica de alto nível para o pipe de uma tarefa individual.
+            </summary>
+        </member>
+        <member name="E:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa.ComandoRecebido">
+            <summary>
+            Evento acionado quando um comando é recebido do servidor.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa.#ctor(System.String)">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="T:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa"/>.
+            </summary>
+            <param name="nomePipe">O nome do pipe que este gerenciador irá escutar.</param>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa.IniciarAsync">
+            <summary>
+            Inicia o loop de escuta do pipe em uma tarefa de background.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa.PararAsync">
+            <summary>
+            Sinaliza para o loop de escuta parar e aguarda sua conclusão.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.GerenciadorPipeTarefa.Dispose">
+            <summary>
+            Libera os recursos, garantindo que a tarefa de escuta seja parada.
+            </summary>
+        </member>
+        <member name="T:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.TasksGruposPipe">
+            <summary>
+            Estende TasksGrupos com a capacidade de comunicação via pipe nomeado.
+            Cada instância desta classe representa uma tarefa que pode ser controlada externamente.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.TasksGruposPipe.#ctor(System.String,System.String,System.Threading.CancellationTokenSource,System.Boolean,System.Int32)">
+            <summary>
+            Construtor que inicializa a tarefa com pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.TasksGruposPipe.IniciarExecucao">
+            <summary>
+            Inicia a execução das tarefas e também o listener do pipe e o cronômetro.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.TasksGruposPipe.RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(System.Threading.CancellationTokenSource)">
+            <summary>
+            Sobrescreve o registro de token para incluir o cancelamento bruto (BREAK).
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.TasksGruposPipe.ProcessarComandoRecebidoAsync(Etiqueta.Bibliotecas.TaskCorePipe.Interfaces.IComandoPipe)">
+            <summary>
+            Processa os comandos recebidos do pipe.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Bibliotecas.TaskCorePipe.Tarefa.TasksGruposPipe.Dispose">
+            <summary>
+            Sobrescreve o método Dispose para garantir que os recursos do pipe e do cronômetro sejam liberados.
+            </summary>
+        </member>
+    </members>
+</doc>

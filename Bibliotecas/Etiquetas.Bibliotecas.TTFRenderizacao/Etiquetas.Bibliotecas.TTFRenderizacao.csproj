@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFrameworks>net6.0;net472</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyTitle>Etiqueta Bibliotecas Armazem</AssemblyTitle>
-    <AssemblyCompany>Etiqueta</AssemblyCompany>
-    <AssemblyProduct>TaskCore</AssemblyProduct>
+    <AssemblyTitle>Etiquetas Bibliotecas</AssemblyTitle>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
+    <AssemblyProduct>TTFRenderizacao</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
@@ -23,12 +24,5 @@
     <DebugType>full</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
-  </ItemGroup>
 
 </Project>

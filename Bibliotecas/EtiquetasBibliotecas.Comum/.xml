@@ -1,0 +1,490 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.Comum</name>
+    </assembly>
+    <members>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayCharPossuiAlgumCaractereEmString.Execute(System.Char[],System.String)">
+            <summary>
+            Verifica em string se possui algum caractere de char[] (array char).
+            </summary>
+            <param name="arrayChar">
+            Char[] (array char) com os caracteres de busca.
+            </param>
+            <param name="texto">
+            String a ser verificada se possui algum caractere de char[] (array char).
+            </param>
+            <returns>
+            True se a string tiver algum dos caracteres em char[] (array char). Caso contrario false.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayCharPossuiUmCaractere.Execute(System.Char[],System.Char)">
+            <summary>
+            Verifica em char[] (Array char) informada pois um char(cararctere).
+            </summary>
+            <param name="arrayChar">
+            Char[] (array char) a ser verificada.
+            </param>
+            <param name="caractere">
+            Char a ser procurado no array.
+            </param>
+            <returns>
+            True se a array char[] possuir o caractere informado. Caso contrario false.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayStringPossuiAlgumElementoVazioOuComEspaco.Execute(System.String[])">
+            <summary>
+            Verifica se string[] (Array string) informada possui elementos com Nulo, ou em branco(ou vazio) ou com caractere de espaço.
+            </summary>
+            <param name="array">
+            string a ser verificada.
+            </param>
+            <returns>
+            True se a array string[] estiver com um ou todos os elementos com nulo, em branco ou com espaço. Caso contrario false.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConverteStringParaArrayChar.Execute(System.String)">
+            <summary>
+            Converte uma string em um Array do tipo Char
+            </summary>
+            <param name="texto">
+            String a ser convertida.
+            </param>
+            <returns>
+            retorna null se string nula. Caso contrário converte para Array do tipo Char.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayCharNuloVazioComEspacosBranco.Execute(System.Char[])">
+            <summary>
+            Verifica se char[] (Array string) informada esta Nula, ou em branco(ou vazio) ou com caractere de espaço.
+            </summary>
+            <param name="arrayChar">
+            Char a ser verificada.
+            </param>
+            <returns>
+            True se a array char[] estiver nula, ou com todos os elementos em branco ou com espaço. Caso contrario false.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(System.Char[])">
+            <summary>
+            Verifica se char[] (Array string) informada esta com Nula, ou em branco(ou vazio) ou com caractere de espaço.
+            </summary>
+            <param name="arrayChar">
+            Char a ser verificada.
+            </param>
+            <returns>
+            True se a array char[] estiver nula, ou com todos os elementos em branco ou com espaço. Caso contrario false.
+            Continuação da verificação de que a variável possui DBNull. Verificada dessa forma se a variável original
+            possui declaração com var.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBranco.Execute(System.String[])">
+            <summary>
+            Verifica se string[] (Array string) informada esta Nula, ou em branco(ou vazio) ou com caracteres de espaços.
+            </summary>
+            <param name="array">
+            String[] (Array string)  a ser verificada.
+            </param>
+            <returns>
+            True se a array string[] estiver nula, ou com todos os elementos em branco ou com espaços. Caso contrario false.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(System.String[])">
+            <summary>
+            Verifica se string[] (Array string) informada esta com Nula, ou em branco(ou vazio) ou com caractere de espaço.
+            </summary>
+            <param name="array">
+            string a ser verificada.
+            </param>
+            <returns>
+            True se a array string[] estiver nula, ou com todos os elementos em branco ou com espaço. Caso contrario false.
+            Continuação da verificação de que a variável possui DBNull. Verificada dessa forma se a variável original
+            possui declaração com var.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Core(System.String,System.Char[],System.String[],System.Boolean)">
+            <summary>
+            Realiza a divisão mantendo separadores no INÍCIO, preferindo sempre o separador MAIS LONGO.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.TentaMatch(System.String,System.Int32,System.Int32,System.Boolean[],System.String[],System.Char[],System.Int32[],System.Int32@)">
+            <summary>
+            Tenta casar qualquer separador em txt[idx], preferindo multi (mais longos) antes de 1 char.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.AlteraCaractere.Execute(System.String,System.Char,System.Char)">
+            <summary>
+            Substitui no Texto informado, o caracter pelo novo caractere.
+            </summary>
+            <param name="texto">
+            Texto string informado contendo o texto a ser substituido.
+            </param>
+            <param name="caractere">
+            char informado que devera ser substituido do texto.
+            </param>
+            <param name="novoCaractere">
+            char informado que devera substituir do texto.
+            </param>
+            <returns>
+            Retorna string com o texto já substituido.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.AlteraTexto.Execute(System.String,System.String,System.String)">
+            <summary>
+            Substitui no Texto informado, parte do texto informado pelo novo conteudo também informado.
+            </summary>
+            <param name="texto">
+            Texto string informado contendo o texto a ser substituido.
+            </param>
+            <param name="parteTexto">
+            String informado com parte do texto a ser substituido.
+            </param>
+            <param name="novoConteudo">
+            String informado com novo texto a ser substituido.
+            </param>
+            <returns>
+            Retorna string com o texto já substituido.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTexto.Execute(System.String[])">
+            <summary>
+            Concatena string's em uma unica string.
+            </summary>
+            <param name="texto">
+            Um ou mais parametros String para concatenar em outra string.
+            </param>
+            <returns>
+            Retorna string concatenada por 1 ou mais parametros.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConverteArrayCharEmString.Execute(System.Char[])">
+            <summary>
+            Converte um Array do tipo Char em String
+            </summary>
+            <param name="arrayChar">
+            String a ser convertida.
+            </param>
+            <returns>
+            retorna null se string nula. Caso contrário converte para Array do tipo Char.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.EhStringNuloVazioComEspacosBranco.Execute(System.String)">
+            <summary>
+            Verifica se string informada esta com Nulo, ou em branco(ou vazio) ou com caracteres de espaço.
+            </summary>
+            <param name="texto">
+            string a ser verificada.
+            </param>
+            <returns>
+            True se a string estiver nula, ou em branco ou com espaços. Caso contrario false.
+            Continuação da verificação de que a variável possui DBNull. Verificada dessa forma se a variável original
+            possui declaração com var e tiver sido carregada com DBNull.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.EhStringNuloVazioComEspacosBrancoDBNull.Execute(System.String)">
+            <summary>
+            Verifica se string informada esta com Nulo, ou em branco(ou vazio) ou com caracteres de espaço.
+            </summary>
+            <param name="texto">
+            string a ser verificada.
+            </param>
+            <returns>
+            True se a string estiver nula, ou em branco ou com espaços. Caso contrario false.
+            Continuação da verificação de que a variável possui DBNull. Verificada dessa forma se a variável original
+            possui declaração com var e tiver sido carregada com DBNull.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.EntreLetras.Execute(System.String,System.String)">
+            <summary>
+            Insere uma string entre letras de outra string.
+            </summary>
+            <param name="texto">
+            String a receber outra string entre seus caracteres(letras).
+            </param>
+            <param name="entreLetras">
+            String a ser inserida entre os caracteres(letras) da outra string.
+            </param>
+            <returns>
+            Retorna string inserida entre letras(caracteres).
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExcluiCaractere.Execute(System.String,System.Char)">
+            <summary>
+            Retira da string informada os caracteres iguais ao caractere informado.
+            </summary>
+            <param name="texto">
+            string informada com os caracteres a serem extraidos.
+            </param>
+            <param name="caractere">
+            caractere a ser extraido da string.
+            </param>
+            <returns>
+            Retorna  o restante da string sem os caracteres retirados.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExcluiString.Execute(System.String,System.String)">
+            <summary>
+            Retira da string informada os caracteres iguais ao caractere informado.
+            </summary>
+            <param name="texto">
+            string informada com texto para ser retirado com conteudo de outra string.
+            </param>
+            <param name="textoASerExcluido">
+            string a ser extraido da string texto.
+            </param>
+            <returns>
+            Retorna o restante da string texto sem a string retirada.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExtrairCaractereStringEmString.Execute(System.String,System.Int32)">
+            <summary>
+            Retira da string informada o caracter na posicao informada.
+            </summary>
+            <param name="texto">
+            string informada com o caracter a ser extraido.
+            </param>
+            <param name="posicao">
+            posicao do caractere na string a ser extraido.
+            </param>
+            <returns>
+            Retorna o caractere da string em formato string.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExtrairCharEmString.Execute(System.String,System.Int32)">
+            <summary>
+            Retira da string informada o caracter na posicao informada.
+            </summary>
+            <param name="texto">
+            string informada com o caracter a ser extraido.
+            </param>
+            <param name="posicao">
+            posicao do caractere na string a ser extraido.
+            </param>
+            <returns>
+            Retorna o caractere da string em formato char.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExtrairDadosSeparador.Execute(System.String,System.Int32,System.String[])">
+            <summary>
+            Insere uma string entre letras de outra string.
+            </summary>
+            <param name="texto">
+            String completa para extração do texto.
+            </param>
+            <param name="ocorrencia">
+            Quantidade do Separador para escolha da parte da string a ser extraida.
+            </param>
+            <param name="separadores">
+            String[] (array) que indica separadores da string de texto.
+            </param>
+            <returns>
+            Retorna string serparada pelo numero de ocorrencia dos separadores.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExtrairTexto.Execute(System.String,System.Int32,System.Int32)">
+            <summary>
+            Extrair o Texto posicao da string informada.
+            </summary>
+            <param name="texto">
+            string de texto  completa para ser extraida.
+            </param>
+            /// <param name="posicao">
+            Numero inteiro com a posicao de caracteres dentro do texto a ser extraido.
+            </param>
+            <param name="numeroCaracteres">
+            Numero inteiro com a quantidade de caracteres dentro do texto a ser extraido depois da posicao.
+            </param>
+            <returns>
+            Retorna o string extraida conforme o numeroCaracteres informado.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExtrairTextoDireita.Execute(System.String,System.Int32)">
+            <summary>
+            Extrair o texto a Direita da string informada
+            </summary>
+            <param name="texto">
+            string de texto a ser extraida.
+            </param>
+            <param name="numeroCaracteres">
+            Numero inteiro com a quantidade de caracteres mais a direita dentro do texto a ser extraido.
+            </param>
+            <returns>
+            Retorna o string extraida conforme o numeroCaracteres informado.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ExtrairTextoEsquerda.Execute(System.String,System.Int32)">
+            <summary>
+            Extrair o Texto a Esquerda da string informada.
+            </summary>
+            <param name="texto">
+            string de texto a ser extraida.
+            </param>
+            <param name="numeroCaracteres">
+            Numero inteiro com a quantidade de caracteres mais a esquerda dentro do texto a ser extraido.
+            </param>
+            <returns>
+            Retorna o string extraida conforme o numeroCaracteres informado.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.GuidEmString.Execute(System.Guid)">
+            <summary>
+            Obtem Globally Unique Identifier - GUID e converte erm string
+            </summary>
+            <param name="guid">
+            Globally Unique Identifier - GUID 
+            </param>
+            <returns>
+            retorna Globally Unique Identifier - GUID em string
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.InserirCaractere.Execute(System.String,System.Char,System.Int32)">
+            <summary>
+            Insere o caractere na posicao informada da string.
+            </summary>
+            <param name="texto">
+            string que tera o caractere inserido.
+            </param>
+            <param name="caractere">
+            caractere do tipo char a ser inserido.
+            </param>
+            <param name="posicao">
+            Numero inteiro informando a posicao de inserção do caractere na string.
+            </param>
+            <returns>
+            Retorna string com caractere inserido na posicao inteira informada.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.InserirString.Execute(System.String,System.String,System.Int32)">
+            <summary>
+            Inserir string em outra string na posicao informada.
+            </summary>
+            <param name="texto">
+            Texto string a receber outra string.
+            </param>
+            <param name="stringAInserir">
+            String a ser inserida em outra string.
+            </param>
+            <param name="posicao">
+            Inteiro com a posicao no texto informado para inserir outro texto.
+            </param>
+            <returns>
+            Retorna string infromada com a string inserida na posicao.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.RemoverAcentos.Execute(System.String)">
+            <summary>
+            Remove da string os caracteres especiais e de acentuação, que compartilham a iso-8859-8. São retirados ao
+            converter o string em UTF8.
+            </summary>
+            <param name="texto">
+            Texto informado com caracteres especiais e/ou de acentuação.
+            </param>
+            <returns>
+            Retorna string sem os caracteres especiais e/ou acentuação. Texto string retornado em UTF-8.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.RemoverEspacosEntrePalavras.Execute(System.String)">
+            <summary>
+            Remove os espaços entre as palavras da string informada.
+            </summary>
+            <param name="texto">
+            String informada com espaços entre palavras.
+            </param>
+            <returns>
+            Retorna string sem os espaços entre palavras.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.RemoveTexto.Execute(System.String,System.Int32,System.Int32)">
+            <summary>
+            Remove parte da string na posicao e tamanho informada.
+            </summary>
+            <param name="texto">
+            Texto string original outra string.
+            </param>
+            <param name="posicao">
+            Inteiro com a posicao inicial da string a ser removida.
+            </param>
+            <param name="tamanho">
+            Inteiro com o tamanho do texto informado para ser removido.
+            </param>
+            <returns>
+            Retorna string com texto removido.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.RepeteCaracter.Execute(System.Char,System.Int32)">
+            <summary>
+            Repete caractere em uma string.
+            </summary>
+            <param name="caractere">
+            caractere a ser repetido.
+            </param>
+            <param name="repete">
+            Inteiro com a quantidade de caracteres a ser repetido na string.
+            </param>
+            <returns>
+            Retorna string com caracteres repetidos.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.RetiraCaracterDireita.Execute(System.String,System.Int32)">
+            <summary>
+            Retira da string informada os caracyetes mais a direita, conforme a quantidade informada.
+            </summary>
+            <param name="texto">
+            string informada com os caracteres a serem extraidos.
+            </param>
+            <param name="numeroCaracteres">
+            Numero inteiro com a quantidade de caracteres a direita a ser excluido.
+            </param>
+            <returns>
+            Retorna a string com o restante dos caracteres depois de retirar os mais a esquerda.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.RetiraCaracterEsquerda.Execute(System.String,System.Int32)">
+            <summary>
+            Retira da string informada os caracteres mais a esquerda , conforme a quantidade informada.
+            </summary>
+            <param name="texto">
+            string informada com os caracteres a serem extraidos.
+            </param>
+            <param name="numeroCaracteres">
+            Numero inteiro com quantidade de caracteres a esquerda a ser excluido.
+            </param>
+            <returns>
+            Retorna a string com o restante dos caracteres depois de retirar os mais a esquerda.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.StringBuilderParaString.Execute(System.Text.StringBuilder)">
+            <summary>
+            Converte StringBuilder para String
+            </summary>
+            <param name="texto">
+            String a receber outra string entre seus caracteres(letras).
+            </param>
+            <returns>
+            Retorna string convertida da StringBuilder
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.StringEmChar.Execute(System.String)">
+            <summary>
+            Converte o primeiro caracter de uma string em um tipo Char
+            </summary>
+            <param name="conteudo">
+            String a ser convertida.
+            </param>
+            <returns>
+            retorna null se string nula. Caso contrário converte para Array do tipo Char.
+            </returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.StringEmCharNull.Execute(System.String)">
+            <summary>
+            Converte o primeiro caracter de uma string em um tipo Char?
+            </summary>
+            <param name="conteudo">
+            String a ser convertida.
+            </param>
+            <returns>
+            retorna null se string ou vazia nula. Caso contrário converte para Array do tipo Char.
+            </returns>
+        </member>
+    </members>
+</doc>
