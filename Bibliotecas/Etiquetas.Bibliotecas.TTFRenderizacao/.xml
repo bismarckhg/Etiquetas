@@ -31,5 +31,11 @@
             <param name="labelHeightMm">Altura da etiqueta em milímetros</param>
             <returns>True se a impressão foi enviada com sucesso</returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.TTFRenderizacao.Stable.SatoTtfPrinter">
+            <summary>
+            Versão CORRIGIDA - Renderização otimizada para impressoras térmicas
+            .NET Framework 4.7.2, C# 7.3
+            </summary>
+        </member>
     </members>
 </doc>
