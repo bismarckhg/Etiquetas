@@ -52,11 +52,9 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// Disparado em <see cref="IGrupoTasks.SubscribeProcessos()"/> no OnCompleted.
         /// </summary>
         public abstract event Action Finalizacao;
-        //public abstract event EventosTasksAsync Finalizacao;
-
         /// <summary>
         /// Adiciona uma nova task ao grupo, validando ID, função, parâmetros e nome.
-        /// <see cref="GrupoTasks.AdicionarTask(int,Func<ITaskParametros,Task<ITaskReturnValue>>,ITaskParametros,string)"/> traz a implementação.
+        /// A implementação está em <c>GrupoTasks.AdicionarTask</c>.
         /// </summary>
         public abstract Task AdicionarTask(int id,
                                            Func<ITaskParametros, Task<ITaskReturnValue>> funcao,
@@ -65,7 +63,7 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
 
         /// <summary>
         /// Inicia a execução de todas as tasks adicionadas, montando os fluxos Rx.
-        /// Chama internamente <see cref="IGrupoTasks.MontarFluxoProcessos()"/> e <see cref="IGrupoTasks.MontarFluxoResultados(IObservable{KeyValuePair{int, Task{ITaskReturnValue}}})"/>.
+        /// Chama internamente <see cref="MontarFluxoProcessos()"/> e <see cref="MontarFluxoResultados(System.IObservable{System.Collections.Generic.KeyValuePair{int, System.Threading.Tasks.Task{ITaskReturnValue}}})"/>.
         /// </summary>
         public abstract void IniciarExecucao();
 
@@ -77,14 +75,12 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
 
         /// <summary>
         /// Cancela uma task específica pelo nome, sinalizando seu token individual.
-        /// Referenciado em <see cref="GrupoTasks.CancelarTaskPorNome(string)"/>.
+        /// Referenciado em <see cref="ITasksGrupos.CancelarTaskPorNome(string)"/>.
         /// </summary>
         public abstract void CancelarTaskPorNome(string nomeTask);
 
-        /// <summary>
         /// Obtém o estado corrente de uma task (AguardandoInicio, EmProcessamento, etc.).
-        /// Usa <see cref="IGrupoTasks.UpdateTaskState(int, TaskState)"/> internamente.
-        /// </summary>
+        /// Usa <see cref="UpdateTaskState(int, TaskState)"/> internamente.
         public abstract TaskState ObterEstadoTask(int id);
 
         /// <summary>
