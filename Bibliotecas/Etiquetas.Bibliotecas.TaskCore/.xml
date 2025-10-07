@@ -32,6 +32,9 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationController">
             <summary>Controlador de cancelamento (Token ou Source).</summary>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.EncodingTexto">
+            <summary>Definição de Encoding para Textos.</summary>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.TaskCreationOptions">
             <summary>Opções de criação da <see cref="T:System.Threading.Tasks.Task"/>.</summary>
         </member>
@@ -92,6 +95,13 @@
             Armazena uma fonte de token de cancelamento para a tarefa.
             </summary>
             <param name="cancelToken">Fonte de token de cancelamento.</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaEncoding(System.Text.Encoding)">
+            <summary>
+            Define a fonte de token de cancelamento.
+            </summary>
+            <param name="encoding">Fonte de token de cancelamento.</param>
+            <returns>Instância corrente para encadeamento.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaNomeTask(System.String)">
             <summary>
@@ -166,6 +176,12 @@
             Recupera o token de cancelamento armazenado.
             </summary>
             <returns>Token de cancelamento.</returns>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoEncoding">
+            <summary>
+            Recupera o Encoding do Texto.
+            </summary>
+            <returns>Encoding.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoCancellationTokenSource">
             <summary>
@@ -268,11 +284,16 @@
             Disparado em <see cref="!:IGrupoTasks.SubscribeProcessos()"/> no OnCompleted.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.AdicionarTask(System.Int32,System.Func{Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros,System.Threading.Tasks.Task{Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue}},Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros,System.String)" -->
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.AdicionarTask(System.Int32,System.Func{Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros,System.Threading.Tasks.Task{Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue}},Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros,System.String)">
+            <summary>
+            Adiciona uma nova task ao grupo, validando ID, função, parâmetros e nome.
+            A implementação está em <c>GrupoTasks.AdicionarTask</c>.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.IniciarExecucao">
             <summary>
             Inicia a execução de todas as tasks adicionadas, montando os fluxos Rx.
-            Chama internamente <see cref="!:IGrupoTasks.MontarFluxoProcessos()"/> e <see cref="!:IGrupoTasks.MontarFluxoResultados(IObservable&lt;KeyValuePair&lt;int, Task&lt;ITaskReturnValue&gt;&gt;&gt;)"/>.
+            Chama internamente <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.MontarFluxoProcessos"/> e <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.MontarFluxoResultados(System.IObservable{System.Collections.Generic.KeyValuePair{System.Int32,System.Threading.Tasks.Task{Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue}}})"/>.
             </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelarGrupo">
@@ -284,14 +305,12 @@
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelarTaskPorNome(System.String)">
             <summary>
             Cancela uma task específica pelo nome, sinalizando seu token individual.
-            Referenciado em <see cref="!:GrupoTasks.CancelarTaskPorNome(string)"/>.
+            Referenciado em <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelarTaskPorNome(System.String)"/>.
             </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.ObterEstadoTask(System.Int32)">
-            <summary>
             Obtém o estado corrente de uma task (AguardandoInicio, EmProcessamento, etc.).
-            Usa <see cref="!:IGrupoTasks.UpdateTaskState(int, TaskState)"/> internamente.
-            </summary>
+            Usa <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.UpdateTaskState(System.Int32,Etiquetas.Bibliotecas.TaskCore.TaskState)"/> internamente.
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.AguardaTodasTasksAsync(System.Boolean)">
             <summary>
@@ -472,6 +491,9 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationController">
             <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.EncodingTexto">
+            <summary>Definição de Encoding para Textos.</summary>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.GrupoTasks">
             <summary>
             Grupo de tarefas associado à instância atual.
@@ -479,6 +501,11 @@
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationToken">
             <summary>Token de cancelamento efetivo, extraído do controlador.</summary>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoEncoding">
+            <summary>
+            Retorno do Encoding de texto.
+            </summary>
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.TaskCreationOptions">
             <summary>Opções de criação da <see cref="T:System.Threading.Tasks.Task"/>.</summary>
@@ -551,6 +578,13 @@
             Define a fonte de token de cancelamento.
             </summary>
             <param name="cts">Fonte de token de cancelamento.</param>
+            <returns>Instância corrente para encadeamento.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaEncoding(System.Text.Encoding)">
+            <summary>
+            Define a fonte de token de cancelamento.
+            </summary>
+            <param name="encoding">Fonte de token de cancelamento.</param>
             <returns>Instância corrente para encadeamento.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaTaskCreationOptions(System.Threading.Tasks.TaskCreationOptions)">

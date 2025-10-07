@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.TTFRe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.Contador", "Bibliotecas\Etiquetas.Bibliotecas.Contador\Etiquetas.Bibliotecas.Contador.csproj", "{6DF7EE74-EC7E-9DF2-1BA3-578C7B0CC59B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.Xml.Tests", "Testes\Etiquetas.Bibliotecas.Xml.Tests\Etiquetas.Bibliotecas.Xml.Tests.csproj", "{267A50F5-4CE8-1D5F-027D-366638CA7ADA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{6DF7EE74-EC7E-9DF2-1BA3-578C7B0CC59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DF7EE74-EC7E-9DF2-1BA3-578C7B0CC59B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DF7EE74-EC7E-9DF2-1BA3-578C7B0CC59B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +140,7 @@ Global
 		{F716AF65-3BBA-4450-A262-EF3E7607C7D5} = {1A3670AE-63FB-4C51-86ED-00BDF3E68118}
 		{E3467729-2905-D999-96A4-8A0CF8E3B5E3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{6DF7EE74-EC7E-9DF2-1BA3-578C7B0CC59B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{267A50F5-4CE8-1D5F-027D-366638CA7ADA} = {1A3670AE-63FB-4C51-86ED-00BDF3E68118}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D89711-8D06-47BC-80B4-ECCCC2E60B31}

@@ -1,3 +1,4 @@
+using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
@@ -61,17 +62,18 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
             }
         }
 
-        protected void ArrayObjectosParametrosLerEscreverAsync(params object[] parametros)
+        protected Task<string> ArrayObjectosParametrosLerEscreverAsync(params object[] parametros)
         {
+            var dados = string.Empty;
             if (parametros == null || parametros.Length == 0)
                 throw new ArgumentNullException("Parâmetros inválidos!");
 
             var pendente = new ConcurrentDictionary<Type, int>
             {
+                [typeof(string)] = 1,
                 [typeof(CancellationToken)] = 1,
                 [typeof(Encoding)] = 2
             };
-
             var lista = new ConcurrentDictionary<Type, int>();
             foreach (var item in parametros)
             {
@@ -79,6 +81,14 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
                 var posicao = 0;
                 switch (item)
                 {
+                    case string retorno:
+                        dados = EhStringNuloVazioComEspacosBranco.Execute(retorno)
+                               ? throw new ArgumentNullException("Dados Vazio ou nulo!")
+                               : retorno;
+                        ok = pendente.TryRemove(dados.GetType(), out posicao)
+                            ? lista.TryAdd(dados.GetType(), posicao)
+                            : throw new ArgumentException("Parametro Dados Duplicado!!");
+                        break;
                     case CancellationToken cancellationToken:
                         CancelToken = cancellationToken;
                         ok = pendente.TryRemove(cancellationToken.GetType(), out posicao)
@@ -104,12 +114,14 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
                     throw new ArgumentException($"Parâmetro obrigatório não fornecido: {nomeTipo}");
                 }
             }
+
+            return Task.FromResult(dados);
         }
 
-        public async Task EscreverAsync(string dados, params object[] parametros)
+        public async Task EscreverAsync(params object[] parametros)
         {
 
-            await Task.Run(() => ArrayObjectosParametrosLerEscreverAsync(parametros)).ConfigureAwait(false);
+            var dados = await Task.Run(() => ArrayObjectosParametrosLerEscreverAsync(parametros)).ConfigureAwait(false);
 
             // Replace AppendAllTextAsync with a workaround for older .NET versions.
             // await File.AppendAllTextAsync(_caminhoArquivo, dados + Environment.NewLine, Encoding.UTF8);

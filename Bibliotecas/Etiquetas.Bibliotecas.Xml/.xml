@@ -4,35 +4,46 @@
         <name>Etiquetas.Bibliotecas.Xml</name>
     </assembly>
     <members>
-        <member name="T:Etiquetas.Bibliotecas.Xml.StreamXml">
+        <member name="T:Etiquetas.Bibliotecas.Xml.StreamXml`1">
             <summary>
-            Fornece uma implementação de stream para leitura e escrita de arquivos XML.
+            Fornece uma implementação de FS para leitura e escrita de arquivos XML.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.#ctor(System.String)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.#ctor(System.Xml.XmlReaderSettings)">
             <summary>
-            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Xml.StreamXml"/>.
+            Inicializa uma nova instância da classe <see cref="!:StreamXml"/>.
             </summary>
-            <param name="caminhoArquivo">O caminho completo para o arquivo XML.</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.ConectarAsync(System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.#ctor(System.Xml.XmlWriterSettings)">
+            <summary>
+            Inicializa uma nova instância da classe <see cref="!:StreamXml"/>.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.ConectarAsync(System.Object[])">
             <summary>
             As conexões são tratadas por operação, então este método não realiza nenhuma ação.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.FecharAsync">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.FecharAsync">
             <summary>
             O fechamento é tratado por operação, então este método não realiza nenhuma ação.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.LerAsync(System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.LerAsync(System.Object[])">
             <summary>
             Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
             </summary>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
             <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EscreverAsync(System.Xml.Linq.XDocument,System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.LerAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+            <summary>
+            Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
+            </summary>
+            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
+            <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.EscreverAsync(System.Object[])">
             <summary>
             Escreve o <see cref="T:System.Xml.Linq.XDocument"/> fornecido para o arquivo de forma assíncrona.
             Se o arquivo já existir, ele será sobrescrito.
@@ -40,19 +51,27 @@
             <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EstaAberto">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.EscreverAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+            <summary>
+            Escreve o <see cref="T:System.Xml.Linq.XDocument"/> fornecido para o arquivo de forma assíncrona.
+            Se o arquivo já existir, ele será sobrescrito.
+            </summary>
+            <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
+            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.EstaAberto">
             <summary>
             Verifica se o arquivo XML existe no caminho especificado.
             </summary>
             <returns>Verdadeiro se o arquivo existir, caso contrário, falso.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.PossuiDados">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.PossuiDados">
             <summary>
             Verifica se o arquivo XML existe e não está vazio.
             </summary>
             <returns>Verdadeiro se o arquivo existir e tiver um tamanho maior que zero, caso contrário, falso.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.Dispose(System.Boolean)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.Dispose(System.Boolean)">
             <summary>
             Libera os recursos utilizados pela classe.
             </summary>

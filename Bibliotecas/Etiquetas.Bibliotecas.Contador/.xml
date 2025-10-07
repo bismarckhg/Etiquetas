@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.Contador</name>
+    </assembly>
+    <members>
+        <member name="T:SatoTtfPrinter.SatoStatus4Demo">
+            <summary>
+            Programa de demonstração completo do Status4 TCP
+            </summary>
+        </member>
+        <member name="T:SatoTtfPrinter.SatoStatus4TCP">
+            <summary>
+            Implementação completa do protocolo Status4 via TCP (Portas 1024/1025)
+            Baseado no manual CL4NX/CL6NX Programming Reference
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.Connect">
+            <summary>
+            Conecta nas portas 1024 (print) e 1025 (status)
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.Disconnect">
+            <summary>
+            Desconecta das portas
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.SendPrintCommand(System.Byte[])">
+            <summary>
+            Envia comando SBPL de impressão pela porta 1024
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.RequestStatus">
+            <summary>
+            Solicita status via comando ENQ (0x05) pela porta 1024
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.GetLastStatus">
+            <summary>
+            Obtém o último status recebido
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.GetRemainingLabels">
+            <summary>
+            Obtém o número de etiquetas restantes na fila
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.IsPrinterReady">
+            <summary>
+            Verifica se a impressora está pronta (sem erros críticos)
+            </summary>
+        </member>
+        <member name="M:SatoTtfPrinter.SatoStatus4TCP.WaitForPrintCompletion(System.Int32)">
+            <summary>
+            Aguarda até que todas as etiquetas sejam impressas
+            </summary>
+        </member>
+    </members>
+</doc>

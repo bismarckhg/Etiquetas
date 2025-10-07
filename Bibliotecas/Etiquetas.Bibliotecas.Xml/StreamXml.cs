@@ -2,29 +2,61 @@ using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Etiquetas.Bibliotecas.Xml
 {
     /// <summary>
-    /// Fornece uma implementação de stream para leitura e escrita de arquivos XML.
+    /// Fornece uma implementação de FS para leitura e escrita de arquivos XML.
     /// </summary>
-    public class StreamXml : StreamBase, IStreamLeitura<string>, IStreamEscrita<string>
+    public class StreamXml<T> : StreamBaseTXT, IStreamLeitura<T>, IStreamEscrita<T>
     {
-        private readonly string _caminhoArquivo;
+        private readonly XmlWriterSettings SettingsWriter;
+        private readonly XmlReaderSettings SettingsReader;
+
+        private CancellationToken CancelToken { get; set; }
+
+        private Encoding EncodingTexto { get; set; }
 
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="StreamXml"/>.
         /// </summary>
-        /// <param name="caminhoArquivo">O caminho completo para o arquivo XML.</param>
-        public StreamXml(string caminhoArquivo)
+        public StreamXml(XmlReaderSettings settings = null) : base()
         {
-            if (string.IsNullOrEmpty(caminhoArquivo))
-                throw new ArgumentNullException(nameof(caminhoArquivo));
-            _caminhoArquivo = caminhoArquivo;
+            this.CancelToken = CancellationToken.None;
+            this.EncodingTexto = Encoding.UTF8;
+
+            SettingsReader = settings ?? new XmlReaderSettings
+            {
+                IgnoreWhitespace = true,
+                IgnoreComments = true,
+                CloseInput = false
+            };
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="StreamXml"/>.
+        /// </summary>
+        public StreamXml(XmlWriterSettings settings = null) : base()
+        {
+            this.CancelToken = CancellationToken.None;
+            this.EncodingTexto = Encoding.UTF8;
+
+            SettingsWriter = settings ?? new XmlWriterSettings
+            {
+                Encoding = this.EncodingTexto,
+                Indent = true,
+                CloseOutput = false
+            };
         }
 
         /// <summary>
@@ -42,14 +74,43 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        public async Task<TL> LerAsync(params object[] parametros)
+        public async Task<T> LerAsync(params object[] parametros)
         {
-            if (!File.Exists(_caminhoArquivo))
+            if (!File.Exists(NomeECaminhoArquivo))
             {
-                return null;
+                return default;
             }
+            return default;
+        }
 
-            return await Task.Run(() => XDocument.Load(_caminhoArquivo, LoadOptions.None)).ConfigureAwait(false);
+        /// <summary>
+        /// Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="XDocument"/>.
+        /// </summary>
+        /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
+        /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
+        public async Task<T> LerAsync(ITaskParametros parametros)
+        {
+            if (!File.Exists(NomeECaminhoArquivo))
+            {
+                return default;
+            }
+            return default;
+        }
+
+        protected async Task<string> LerAsync(T objeto)
+        {
+            var serializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
+            using (var sr = new StreamReader(
+                FS,
+                EncodingTexto,
+                detectEncodingFromByteOrderMarks: false
+                )
+            )   // ANSI não usa BOM; força 1252 ))
+            using (var xr = XmlReader.Create(sr, new XmlReaderSettings { Async = true }))
+            {
+                this.CancelToken.ThrowIfCancellationRequested();
+                return await sr.ReadToEndAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -58,12 +119,26 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="dados">O <see cref="XDocument"/> a ser salvo.</param>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-        public async Task EscreverAsync(XDocument dados, params object[] parametros)
+        public async Task EscreverAsync(params object[] parametros)
         {
-            if (dados == null)
-                throw new ArgumentNullException(nameof(dados));
+            //if (dados == null)
+            //    throw new ArgumentNullException(nameof(dados));
 
-            await Task.Run(() => dados.Save(_caminhoArquivo, SaveOptions.None)).ConfigureAwait(false);
+            //await Task.Run(() => dados.Save(_caminhoArquivo, SaveOptions.None)).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Escreve o <see cref="XDocument"/> fornecido para o arquivo de forma assíncrona.
+        /// Se o arquivo já existir, ele será sobrescrito.
+        /// </summary>
+        /// <param name="dados">O <see cref="XDocument"/> a ser salvo.</param>
+        /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
+        public async Task EscreverAsync(ITaskParametros parametros)
+        {
+            //if (dados == null)
+            //    throw new ArgumentNullException(nameof(dados));
+
+            //await Task.Run(() => dados.Save(_caminhoArquivo, SaveOptions.None)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -72,7 +147,8 @@ namespace Etiquetas.Bibliotecas.Xml
         /// <returns>Verdadeiro se o arquivo existir, caso contrário, falso.</returns>
         public override bool EstaAberto()
         {
-            return File.Exists(_caminhoArquivo);
+            return File.Exists(NomeECaminhoArquivo);
+
         }
 
         /// <summary>
@@ -83,9 +159,9 @@ namespace Etiquetas.Bibliotecas.Xml
         {
             try
             {
-                if (File.Exists(_caminhoArquivo))
+                if (File.Exists(NomeECaminhoArquivo))
                 {
-                    return new FileInfo(_caminhoArquivo).Length > 0;
+                    return new FileInfo(NomeECaminhoArquivo).Length > 0;
                 }
                 return false;
             }
@@ -105,14 +181,5 @@ namespace Etiquetas.Bibliotecas.Xml
             base.Dispose(disposing);
         }
 
-        Task<string> IStreamLeitura<string>.LerAsync(params object[] parametros)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> LerAsync(ITaskParametros parametros)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

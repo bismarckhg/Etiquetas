@@ -26,6 +26,13 @@
             <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
             <returns>Uma tarefa que representa a operação de conexão.</returns>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamBase.ConectarAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+            <summary>
+            Implementação virtual do método ConectarAsync. As classes derivadas podem sobrescrevê-lo.
+            </summary>
+            <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
+            <returns>Uma tarefa que representa a operação de conexão.</returns>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamBase.FecharAsync">
             <summary>
             Implementação virtual do método FecharAsync. As classes derivadas podem sobrescrevê-lo.
@@ -47,66 +54,19 @@
             Finalizador (Destrutor) para garantir a liberação de recursos não gerenciados.
             </summary>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.Streams.Core.StreamXml">
-            <summary>
-            Fornece uma implementação de stream para leitura e escrita de arquivos XML.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.#ctor(System.String)">
-            <summary>
-            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Streams.Core.StreamXml"/>.
-            </summary>
-            <param name="caminhoArquivo">O caminho completo para o arquivo XML.</param>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.ConectarAsync(System.Object[])">
-            <summary>
-            As conexões são tratadas por operação, então este método não realiza nenhuma ação.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.FecharAsync">
-            <summary>
-            O fechamento é tratado por operação, então este método não realiza nenhuma ação.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.LerAsync(System.Object[])">
-            <summary>
-            Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
-            </summary>
-            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-            <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.EscreverAsync(System.Xml.Linq.XDocument,System.Object[])">
-            <summary>
-            Escreve o <see cref="T:System.Xml.Linq.XDocument"/> fornecido para o arquivo de forma assíncrona.
-            Se o arquivo já existir, ele será sobrescrito.
-            </summary>
-            <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
-            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.EstaAberto">
-            <summary>
-            Verifica se o arquivo XML existe no caminho especificado.
-            </summary>
-            <returns>Verdadeiro se o arquivo existir, caso contrário, falso.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.PossuiDados">
-            <summary>
-            Verifica se o arquivo XML existe e não está vazio.
-            </summary>
-            <returns>Verdadeiro se o arquivo existir e tiver um tamanho maior que zero, caso contrário, falso.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamXml.Dispose(System.Boolean)">
-            <summary>
-            Libera os recursos utilizados pela classe.
-            </summary>
-            <param name="disposing">Indica se a liberação está sendo feita de forma explícita.</param>
-        </member>
         <member name="T:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamConexao">
             <summary>
             Define o contrato para streams que requerem uma conexão explícita.
             </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamConexao.ConectarAsync(System.Object[])">
+            <summary>
+            Abre a conexão de forma assíncrona.
+            </summary>
+            <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
+            <returns>Uma tarefa que representa a operação de conexão.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamConexao.ConectarAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>
             Abre a conexão de forma assíncrona.
             </summary>
@@ -142,11 +102,17 @@
             </summary>
             <typeparam name="T">O tipo de dado a ser escrito.</typeparam>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita`1.EscreverAsync(`0,System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita`1.EscreverAsync(System.Object[])">
             <summary>
             Escreve dados no stream de forma assíncrona.
             </summary>
-            <param name="dados">O objeto de dados a ser escrito.</param>
+            <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
+            <returns>Uma tarefa que representa a operação de escrita.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita`1.EscreverAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+            <summary>
+            Escreve dados no stream de forma assíncrona.
+            </summary>
             <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
             <returns>Uma tarefa que representa a operação de escrita.</returns>
         </member>
@@ -157,6 +123,13 @@
             <typeparam name="T">O tipo de dado a ser lido.</typeparam>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura`1.LerAsync(System.Object[])">
+            <summary>
+            Lê dados do stream de forma assíncrona.
+            </summary>
+            <param name="parametros">Parâmetros adicionais para a operação de leitura.</param>
+            <returns>Uma tarefa que representa a operação de leitura, retornando o objeto lido.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura`1.LerAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>
             Lê dados do stream de forma assíncrona.
             </summary>
