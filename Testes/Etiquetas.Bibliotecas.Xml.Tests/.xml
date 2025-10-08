@@ -4,5 +4,16 @@
         <name>Etiquetas.Bibliotecas.Xml.Tests</name>
     </assembly>
     <members>
+        <member name="T:XmlSerializationSolution.Tests.GenericXmlServiceTests">
+            <summary>
+            Testes abrangentes para o GenericXmlService.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Xml.Tests.SlowStream">
+            <summary>
+            Um Decorator de Stream que introduz um atraso artificial em cada operação de leitura,
+            simulando um stream lento (rede, disco) para permitir o teste de cancelamento.
+            </summary>
+        </member>
     </members>
 </doc>

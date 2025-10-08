@@ -486,5 +486,20 @@
             retorna null se string ou vazia nula. Caso contrário converte para Array do tipo Char.
             </returns>
         </member>
+        <member name="F:Etiquetas.Bibliotecas.Comum.Geral.ConversaoEncoding.UTF8BOM">
+            <summary>
+            Encoding UTF-8 com BOM (Byte Order Mark).
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Bibliotecas.Comum.Geral.ConversaoEncoding.Windows1252">
+            <summary>
+            Encoding ANSI pt-BR (Windows-1252) com exceção em bytes inválidos
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Bibliotecas.Comum.Geral.ConversaoEncoding.UTF8SemBom">
+            <summary>
+            UTF-8 sem BOM (recomendado p/ JSON, ZPL etc.)
+            </summary>
+        </member>
     </members>
 </doc>

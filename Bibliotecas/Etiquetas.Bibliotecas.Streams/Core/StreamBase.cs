@@ -35,7 +35,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
         /// <returns>Uma tarefa que representa a operação de conexão.</returns>
         public abstract Task ConectarAsync(ITaskParametros parametros);
-
+        
         /// <summary>
         /// Implementação virtual do método FecharAsync. As classes derivadas podem sobrescrevê-lo.
         /// </summary>

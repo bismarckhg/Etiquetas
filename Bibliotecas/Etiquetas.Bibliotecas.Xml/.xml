@@ -4,6 +4,156 @@
         <name>Etiquetas.Bibliotecas.Xml</name>
     </assembly>
     <members>
+        <member name="T:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService">
+            <summary>
+            Serviço genérico para serialização e desserialização XML com suporte assíncrono e cache de serializers.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.GetSerializer(System.Type)">
+            <summary>
+            Obtém ou cria um XmlSerializer para o tipo especificado, utilizando cache.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.Rewind(System.IO.Stream)">
+            <summary>
+            Rebobina o stream para o início, se possível.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.WrapWithCancellation(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Cria um CancelableStream se o token não for padrão, caso contrário retorna o stream original.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootAsync``1(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Desserializa o XML completo para o tipo raiz especificado.
+            </summary>
+            <typeparam name="T">Tipo raiz a ser desserializado</typeparam>
+            <param name="stream">Stream contendo o XML</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Objeto desserializado do tipo T</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootFromFileAsync``1(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Desserializa o XML completo de um arquivo para o tipo raiz especificado.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootAsync``1(System.IO.Stream,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Desserializa uma sub-root específica do XML pelo nome do elemento.
+            </summary>
+            <typeparam name="T">Tipo da sub-root a ser desserializada</typeparam>
+            <param name="stream">Stream contendo o XML</param>
+            <param name="elementName">Nome do elemento da sub-root</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Objeto desserializado do tipo T</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootFromFileAsync``1(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Desserializa uma sub-root específica de um arquivo pelo nome do elemento.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeCollectionAsync``1(System.IO.Stream,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Desserializa uma coleção de elementos de forma incremental (streaming).
+            Permite processar elementos conforme são lidos, com suporte a cancelamento.
+            </summary>
+            <typeparam name="T">Tipo dos elementos da coleção</typeparam>
+            <param name="stream">Stream contendo o XML</param>
+            <param name="arrayElementName">Nome do elemento array (ex: "Clientes")</param>
+            <param name="itemElementName">Nome do elemento item (ex: "Cliente")</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>IEnumerable assíncrono de elementos do tipo T</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeCollectionWithCallbackAsync``1(System.IO.Stream,System.String,System.String,System.Action{``0},System.Threading.CancellationToken)">
+            <summary>
+            Desserializa uma coleção de elementos de forma incremental com callback para processar cada item.
+            Permite processar elementos conforme são lidos (streaming parcial), com suporte a cancelamento.
+            </summary>
+            <typeparam name="T">Tipo dos elementos da coleção</typeparam>
+            <param name="stream">Stream contendo o XML</param>
+            <param name="arrayElementName">Nome do elemento array (ex: "Clientes")</param>
+            <param name="itemElementName">Nome do elemento item (ex: "Cliente")</param>
+            <param name="onItemRead">Callback executado para cada item lido</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Task representando a operação assíncrona</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateAsync``1(System.IO.Stream,System.String,System.String,System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
+            <summary>
+            Desserializa um elemento específico de uma coleção baseado em um predicado.
+            </summary>
+            <typeparam name="T">Tipo do elemento a ser desserializado</typeparam>
+            <param name="stream">Stream contendo o XML</param>
+            <param name="arrayElementName">Nome do elemento array</param>
+            <param name="itemElementName">Nome do elemento item</param>
+            <param name="predicate">Função de filtro para encontrar o elemento desejado</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+            <returns>Primeiro elemento que satisfaz o predicado, ou null se não encontrado</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateFromFileAsync``1(System.String,System.String,System.String,System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
+            <summary>
+            Desserializa um elemento específico de uma coleção baseado em um predicado de um arquivo.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.SerializeAsync``1(``0,System.IO.Stream,System.Text.Encoding,System.Threading.CancellationToken)">
+            <summary>
+            Serializa um objeto para XML em um stream.
+            </summary>
+            <typeparam name="T">Tipo do objeto a ser serializado</typeparam>
+            <param name="obj">Objeto a ser serializado</param>
+            <param name="stream">Stream de destino</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.SerializeToFileAsync``1(``0,System.String,System.Text.Encoding,System.Threading.CancellationToken)">
+            <summary>
+            Serializa um objeto para XML em um arquivo.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.SerializeToStringAsync``1(``0,System.Text.Encoding,System.Threading.CancellationToken)">
+            <summary>
+            Serializa um objeto para string XML.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator">
+            <summary>
+            Gerador de dados de teste para XML.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarFornecedores(System.Int32)">
+            <summary>
+            Gera uma lista de fornecedores de teste.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarProdutos(System.Int32)">
+            <summary>
+            Gera uma lista de produtos de teste.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarClientes(System.Int32)">
+            <summary>
+            Gera uma lista de clientes de teste.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarListaProdutos(System.Int32)">
+            <summary>
+            Gera uma lista de produtos completa com preço total.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarLoja(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gera uma loja completa com fornecedores, produtos e clientes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarLojaGrande">
+            <summary>
+            Gera uma loja grande para testes de performance.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarLojaPequena">
+            <summary>
+            Gera uma loja pequena para testes rápidos.
+            </summary>
+        </member>
         <member name="T:Etiquetas.Bibliotecas.Xml.StreamXml`1">
             <summary>
             Fornece uma implementação de FS para leitura e escrita de arquivos XML.

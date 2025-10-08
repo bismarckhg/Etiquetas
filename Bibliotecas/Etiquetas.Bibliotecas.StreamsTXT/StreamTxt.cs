@@ -49,7 +49,7 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
 
         protected async Task<string> LerAsync()
         {
-
+            using (FS) // Garante o fechamento do FileStream após a leitura
             using (var sr = new StreamReader(
                 FS,
                 EncodingTexto,
@@ -142,6 +142,7 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
 
         protected async Task EscreverAsync(string dados)
         {
+            using (FS) // Garante o fechamento do FileStream após a escrita
             using (var sw = new StreamWriter(
                 FS,
                 EncodingTexto,

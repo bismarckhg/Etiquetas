@@ -1,3 +1,4 @@
+using Etiquetas.Bibliotecas.Comum.Geral;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
@@ -25,37 +26,53 @@ namespace Etiquetas.Bibliotecas.Xml
 
         private CancellationToken CancelToken { get; set; }
 
-        private Encoding EncodingTexto { get; set; }
+        private Encoding EncodingTexto { get; set; } = ConversaoEncoding.UTF8BOM;
 
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="StreamXml"/>.
         /// </summary>
-        public StreamXml(XmlReaderSettings settings = null) : base()
+        public StreamXml() : this(null, null)
         {
-            this.CancelToken = CancellationToken.None;
-            this.EncodingTexto = Encoding.UTF8;
-
-            SettingsReader = settings ?? new XmlReaderSettings
-            {
-                IgnoreWhitespace = true,
-                IgnoreComments = true,
-                CloseInput = false
-            };
         }
 
         /// <summary>
         /// Inicializa uma nova instância da classe <see cref="StreamXml"/>.
         /// </summary>
-        public StreamXml(XmlWriterSettings settings = null) : base()
+        public StreamXml(XmlReaderSettings settings) : this(settings, null)
+        {
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="StreamXml"/>.
+        /// </summary>
+        public StreamXml(XmlWriterSettings settings) : this(null, settings)
+        {
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="StreamXml"/>.
+        /// </summary>
+        public StreamXml(XmlReaderSettings settingsReader = null, XmlWriterSettings settingsWriter = null) : base()
         {
             this.CancelToken = CancellationToken.None;
             this.EncodingTexto = Encoding.UTF8;
 
-            SettingsWriter = settings ?? new XmlWriterSettings
+            SettingsReader = settingsReader ?? new XmlReaderSettings
+            {
+                IgnoreWhitespace = true,
+                IgnoreComments = true,
+                CloseInput = false,
+                Async = true
+            };
+
+            SettingsWriter = settingsWriter ?? new XmlWriterSettings
             {
                 Encoding = this.EncodingTexto,
+                OmitXmlDeclaration = false,
                 Indent = true,
-                CloseOutput = false
+                IndentChars = "  ",
+                CloseOutput = false,
+                Async = true
             };
         }
 

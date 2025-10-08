@@ -45,6 +45,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.Conta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.Bibliotecas.Xml.Tests", "Testes\Etiquetas.Bibliotecas.Xml.Tests\Etiquetas.Bibliotecas.Xml.Tests.csproj", "{267A50F5-4CE8-1D5F-027D-366638CA7ADA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{7171827E-E652-4CD9-954A-F3E6F67641B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.GUI.Texto", "GUI\Etiquetas.GUI.Texto\Etiquetas.GUI.Texto.csproj", "{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +123,10 @@ Global
 		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{267A50F5-4CE8-1D5F-027D-366638CA7ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +149,7 @@ Global
 		{E3467729-2905-D999-96A4-8A0CF8E3B5E3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{6DF7EE74-EC7E-9DF2-1BA3-578C7B0CC59B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{267A50F5-4CE8-1D5F-027D-366638CA7ADA} = {1A3670AE-63FB-4C51-86ED-00BDF3E68118}
+		{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4} = {7171827E-E652-4CD9-954A-F3E6F67641B7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D89711-8D06-47BC-80B4-ECCCC2E60B31}

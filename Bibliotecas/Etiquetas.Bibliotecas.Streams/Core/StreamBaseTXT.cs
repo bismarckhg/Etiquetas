@@ -23,12 +23,15 @@ namespace Etiquetas.Bibliotecas.Streams.Core
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            await Task.Run(() => ArrayObjectosParametrosConectarAsync(parametros));
+            var pendente = await Task.Run(() => ArrayObjectosParametrosConectarAsync(parametros));
 
-            await ConectarAsync().ConfigureAwait(false);
+            if (pendente == 0)
+            {
+                await ConectarAsync().ConfigureAwait(false);
+            }
         }
 
-        protected void ArrayObjectosParametrosConectarAsync(params object[] parametros)
+        protected int ArrayObjectosParametrosConectarAsync(params object[] parametros)
         {
             if (parametros == null || parametros.Length == 0)
                 throw new ArgumentNullException("Parâmetros inválidos!");
@@ -83,12 +86,24 @@ namespace Etiquetas.Bibliotecas.Streams.Core
 
             if (pendente.Count != 0)
             {
+                var tipo = string.Empty;
                 foreach (var item in pendente)
                 {
                     var nomeTipo = item.Key.Name;
-                    throw new ArgumentException($"Parâmetro obrigatório não fornecido: {nomeTipo}");
+                    //throw new ArgumentException($"Parâmetro obrigatório não fornecido: {nomeTipo}");
+                    if (nomeTipo.ToUpper() == "STRING")
+                    {
+                        tipo = nomeTipo;
+                        break;
+                    }
+                }
+                if (tipo != "STRING")
+                {
+                    throw new ArgumentException($"Parâmetro obrigatório não fornecido: {tipo}");
                 }
             }
+
+            return pendente.Count;
         }
 
         protected async Task ConectarAsync()
@@ -98,7 +113,37 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             if (!EhStringNuloVazioComEspacosBranco.Execute(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
+            if ((ModoArquivo == FileMode.Open || ModoArquivo == FileMode.Truncate) &&
+                (AcessoArquivo == FileAccess.Read) &&
+                !File.Exists(NomeECaminhoArquivo))
+            {
+                throw new FileNotFoundException("Arquivo não encontrado.", NomeECaminhoArquivo);
+            }
+
             FS = await Task.Run(() => new FileStream(NomeECaminhoArquivo, ModoArquivo, AcessoArquivo, CompartilhamentoArquivo));
+        }
+
+        public async Task ConectarReaderOnlyUnshareAsync()
+        {
+            var dir = Path.GetDirectoryName(NomeECaminhoArquivo);
+
+            if (!EhStringNuloVazioComEspacosBranco.Execute(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            if (!File.Exists(NomeECaminhoArquivo))
+            {
+                throw new FileNotFoundException("Arquivo não encontrado.", NomeECaminhoArquivo);
+            }
+
+            FS = await Task.Run(() => File.OpenRead(NomeECaminhoArquivo));
+        }
+
+        public async Task ConectarWriterAndReaderUnshareAsync()
+        {
+            var dir = Path.GetDirectoryName(NomeECaminhoArquivo);
+            if (!EhStringNuloVazioComEspacosBranco.Execute(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            FS = await Task.Run(() => File.OpenWrite(NomeECaminhoArquivo));
         }
 
         public override async Task ConectarAsync(ITaskParametros parametros)
@@ -107,21 +152,36 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             {
                 throw new ObjectDisposedException(this.GetType().Name);
             }
+
             if (parametros == null)
             {
                 throw new ArgumentNullException("Parâmetros inválidos!");
             }
+
             this.NomeECaminhoArquivo = (string)(parametros["NomeCaminhoArquivo"] ?? throw new ArgumentNullException("Nome arquivo Vazio ou nulo!"));
-            this.ModoArquivo = (FileMode)(parametros["ModoArquivo"] ?? throw new ArgumentNullException("Parametro FileMode Duplicado!!"));
-            this.AcessoArquivo = (FileAccess)(parametros["AcessoArquivo"] ?? throw new ArgumentNullException("Parametro FileAccess Duplicado!!"));
-            this.CompartilhamentoArquivo = (FileShare)(parametros["CompartilhamentoArquivo"] ?? throw new ArgumentNullException("Parametro FileShare Duplicado!!"));
+
+            if (parametros["ModoArquivo"] != null)
+            {
+                this.ModoArquivo = (FileMode)(parametros["ModoArquivo"]);
+            }
+
+            if (parametros["AcessoArquivo"] != null)
+            {
+                this.AcessoArquivo = (FileAccess)(parametros["AcessoArquivo"]);
+            }
+
+            if (parametros["CompartilhamentoArquivo"] != null)
+            {
+                this.CompartilhamentoArquivo = (FileShare)(parametros["CompartilhamentoArquivo"]);
+            }
 
             await ConectarAsync().ConfigureAwait(false);
         }
 
         public override async Task FecharAsync()
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 FS?.Close();
                 FS?.Dispose();
                 FS = null;
