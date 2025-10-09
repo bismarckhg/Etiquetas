@@ -18,14 +18,14 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
     /// </summary>
     public class GenericXmlService
     {
-        private readonly XmlReaderSettings _settingsReader;
-        private readonly XmlWriterSettings _settingsWriter;
-        private readonly ConcurrentDictionary<Type, XmlSerializer> _cacheSerializer =
+        private readonly XmlReaderSettings SettingsReader;
+        private readonly XmlWriterSettings SettingsWriter;
+        private readonly ConcurrentDictionary<Type, XmlSerializer> CacheSerializer =
             new ConcurrentDictionary<Type, XmlSerializer>();
 
         public GenericXmlService(XmlReaderSettings readerSettings = null, XmlWriterSettings writerSettings = null)
         {
-            _settingsReader = readerSettings ?? new XmlReaderSettings
+            SettingsReader = readerSettings ?? new XmlReaderSettings
             {
                 IgnoreWhitespace = true,
                 IgnoreComments = true,
@@ -33,7 +33,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
                 Async = true
             };
 
-            _settingsWriter = writerSettings ?? new XmlWriterSettings
+            SettingsWriter = writerSettings ?? new XmlWriterSettings
             {
                 OmitXmlDeclaration = false,
                 Indent = true,
@@ -47,7 +47,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// Obtém ou cria um XmlSerializer para o tipo especificado, utilizando cache.
         /// </summary>
         private XmlSerializer GetSerializer(Type type) =>
-            _cacheSerializer.GetOrAdd(type, t => new XmlSerializer(t));
+            CacheSerializer.GetOrAdd(type, t => new XmlSerializer(t));
 
         /// <summary>
         /// Rebobina o stream para o início, se possível.
@@ -83,7 +83,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// <param name="cancellationToken">Token de cancelamento</param>
         /// <returns>Objeto desserializado do tipo T</returns>
         public async Task<T> DeserializeRootAsync<T>(Stream stream, CancellationToken cancellationToken = default)
-            where T : class
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -92,7 +91,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var reader = XmlReader.Create(cancelableStream, _settingsReader))
+            using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -116,7 +115,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// Desserializa o XML completo de um arquivo para o tipo raiz especificado.
         /// </summary>
         public async Task<T> DeserializeRootFromFileAsync<T>(FileStream fileStream, CancellationToken cancellationToken = default)
-            where T : class
         {
             //using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
             using (fileStream)
@@ -141,7 +139,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             Stream stream,
             string elementName,
             CancellationToken cancellationToken = default)
-            where T : class
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -153,7 +150,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var reader = XmlReader.Create(cancelableStream, _settingsReader))
+            using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
             {
                 while (await reader.ReadAsync().ConfigureAwait(false))
                 {
@@ -177,7 +174,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             Stream stream,
             string elementName,
             CancellationToken cancellationToken = default)
-            where T : class
         {
 
             //using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
@@ -206,7 +202,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             string arrayElementName,
             string itemElementName,
             CancellationToken cancellationToken = default)
-            where T : class
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -222,7 +217,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
             var results = new List<T>();
 
-            using (var reader = XmlReader.Create(cancelableStream, _settingsReader))
+            using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
             {
                 var serializer = GetSerializer(typeof(T));
                 var insideArray = false;
@@ -276,7 +271,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             string itemElementName,
             Action<T> onItemRead,
             CancellationToken cancellationToken = default)
-            where T : class
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -294,7 +288,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var reader = XmlReader.Create(cancelableStream, _settingsReader))
+            using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
             {
                 var serializer = GetSerializer(typeof(T));
                 var insideArray = false;
@@ -349,7 +343,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             string itemElementName,
             Func<T, bool> predicate,
             CancellationToken cancellationToken = default)
-            where T : class
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -367,7 +360,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var reader = XmlReader.Create(cancelableStream, _settingsReader))
+            using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
             {
                 var serializer = GetSerializer(typeof(T));
                 var insideArray = false;
@@ -404,7 +397,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
                 }
             }
 
-            return null;
+            return default;
         }
 
         /// <summary>
@@ -416,7 +409,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             string itemElementName,
             Func<T, bool> predicate,
             CancellationToken cancellationToken = default)
-            where T : class
         {
 
             using (stream)
@@ -442,7 +434,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// <param name="stream">Stream de destino</param>
         /// <param name="cancellationToken">Token de cancelamento</param>
         public async Task SerializeAsync<T>(T obj, Stream stream, Encoding encoding = null, CancellationToken cancellationToken = default)
-            where T : class
         {
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
@@ -455,11 +446,11 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
                 encoding = ConversaoEncoding.UTF8BOM;
             }
 
-            _settingsWriter.Encoding = encoding;
+            SettingsWriter.Encoding = encoding;
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var writer = XmlWriter.Create(stream, _settingsWriter))
+            using (var writer = XmlWriter.Create(stream, SettingsWriter))
             {
                 await Task.Run(() =>
                 {
@@ -476,7 +467,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// Serializa um objeto para XML em um arquivo.
         /// </summary>
         public async Task SerializeToFileAsync<T>(T obj, string filePath, Encoding encoding = null, CancellationToken cancellationToken = default)
-            where T : class
         {
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentException("Caminho do arquivo não pode ser nulo ou vazio.", nameof(filePath));
@@ -497,7 +487,6 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// Serializa um objeto para string XML.
         /// </summary>
         public async Task<string> SerializeToStringAsync<T>(T obj, Encoding encoding = null, CancellationToken cancellationToken = default)
-            where T : class
         {
             using (var memoryStream = new MemoryStream())
             {

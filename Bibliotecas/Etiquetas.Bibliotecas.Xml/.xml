@@ -4,6 +4,91 @@
         <name>Etiquetas.Bibliotecas.Xml</name>
     </assembly>
     <members>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo1_SerializarEDesserializarRoot">
+            <summary>
+            Exemplo 1: Serializar e desserializar uma loja completa (Root).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo2_DesserializarSubRoot">
+            <summary>
+            Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo3_DesserializarColecao">
+            <summary>
+            Exemplo 3: Desserializar uma coleção completa de clientes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo4_BuscarComPredicado">
+            <summary>
+            Exemplo 4: Buscar um cliente específico por email usando predicado.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo5_ProcessarComCallback">
+            <summary>
+            Exemplo 5: Processar coleção com callback (streaming parcial).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo6_UsarCancellationToken">
+            <summary>
+            Exemplo 6: Usar CancellationToken para cancelar operação.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo7_SerializarParaString">
+            <summary>
+            Exemplo 7: Serializar para string XML.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo8_ReutilizarStream">
+            <summary>
+            Exemplo 8: Reutilizar stream (rewind automático).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.ExecutarTodosExemplos">
+            <summary>
+            Executa todos os exemplos.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator">
+            <summary>
+            Gerador de dados de teste para XML.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarFornecedores(System.Int32)">
+            <summary>
+            Gera uma lista de fornecedores de teste.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarProdutos(System.Int32)">
+            <summary>
+            Gera uma lista de produtos de teste.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarClientes(System.Int32)">
+            <summary>
+            Gera uma lista de clientes de teste.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarListaProdutos(System.Int32)">
+            <summary>
+            Gera uma lista de produtos completa com preço total.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarLoja(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gera uma loja completa com fornecedores, produtos e clientes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarLojaGrande">
+            <summary>
+            Gera uma loja grande para testes de performance.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator.GerarLojaPequena">
+            <summary>
+            Gera uma loja pequena para testes rápidos.
+            </summary>
+        </member>
         <member name="T:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService">
             <summary>
             Serviço genérico para serialização e desserialização XML com suporte assíncrono e cache de serializers.
@@ -33,7 +118,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Objeto desserializado do tipo T</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootFromFileAsync``1(System.String,System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootFromFileAsync``1(System.IO.FileStream,System.Threading.CancellationToken)">
             <summary>
             Desserializa o XML completo de um arquivo para o tipo raiz especificado.
             </summary>
@@ -48,7 +133,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Objeto desserializado do tipo T</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootFromFileAsync``1(System.String,System.String,System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootFromFileAsync``1(System.IO.Stream,System.String,System.Threading.CancellationToken)">
             <summary>
             Desserializa uma sub-root específica de um arquivo pelo nome do elemento.
             </summary>
@@ -90,7 +175,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Primeiro elemento que satisfaz o predicado, ou null se não encontrado</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateFromFileAsync``1(System.String,System.String,System.String,System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateFromFileAsync``1(System.IO.Stream,System.String,System.String,System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
             <summary>
             Desserializa um elemento específico de uma coleção baseado em um predicado de um arquivo.
             </summary>
@@ -114,86 +199,46 @@
             Serializa um objeto para string XML.
             </summary>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator">
-            <summary>
-            Gerador de dados de teste para XML.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarFornecedores(System.Int32)">
-            <summary>
-            Gera uma lista de fornecedores de teste.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarProdutos(System.Int32)">
-            <summary>
-            Gera uma lista de produtos de teste.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarClientes(System.Int32)">
-            <summary>
-            Gera uma lista de clientes de teste.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarListaProdutos(System.Int32)">
-            <summary>
-            Gera uma lista de produtos completa com preço total.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarLoja(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Gera uma loja completa com fornecedores, produtos e clientes.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarLojaGrande">
-            <summary>
-            Gera uma loja grande para testes de performance.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.XmlDataGenerator.GerarLojaPequena">
-            <summary>
-            Gera uma loja pequena para testes rápidos.
-            </summary>
-        </member>
-        <member name="T:Etiquetas.Bibliotecas.Xml.StreamXml`1">
+        <member name="T:Etiquetas.Bibliotecas.Xml.StreamXml">
             <summary>
             Fornece uma implementação de FS para leitura e escrita de arquivos XML.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.#ctor(System.Xml.XmlReaderSettings)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.#ctor">
             <summary>
-            Inicializa uma nova instância da classe <see cref="!:StreamXml"/>.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Xml.StreamXml"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.#ctor(System.Xml.XmlWriterSettings)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.#ctor(System.Xml.XmlReaderSettings)">
             <summary>
-            Inicializa uma nova instância da classe <see cref="!:StreamXml"/>.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Xml.StreamXml"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.ConectarAsync(System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.#ctor(System.Xml.XmlWriterSettings)">
             <summary>
-            As conexões são tratadas por operação, então este método não realiza nenhuma ação.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Xml.StreamXml"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.FecharAsync">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.#ctor(System.Xml.XmlReaderSettings,System.Xml.XmlWriterSettings)">
             <summary>
-            O fechamento é tratado por operação, então este método não realiza nenhuma ação.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Xml.StreamXml"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.LerAsync(System.Object[])">
-            <summary>
-            Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
-            </summary>
-            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-            <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.LerAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.LerAsync``1(System.Object[])">
             <summary>
             Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
             </summary>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
             <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.EscreverAsync(System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.LerAsync``1(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+            <summary>
+            Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
+            </summary>
+            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
+            <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EscreverAsync``1(System.Object[])">
             <summary>
             Escreve o <see cref="T:System.Xml.Linq.XDocument"/> fornecido para o arquivo de forma assíncrona.
             Se o arquivo já existir, ele será sobrescrito.
@@ -201,7 +246,7 @@
             <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.EscreverAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EscreverAsync``1(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>
             Escreve o <see cref="T:System.Xml.Linq.XDocument"/> fornecido para o arquivo de forma assíncrona.
             Se o arquivo já existir, ele será sobrescrito.
@@ -209,19 +254,19 @@
             <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.EstaAberto">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EstaAberto">
             <summary>
             Verifica se o arquivo XML existe no caminho especificado.
             </summary>
             <returns>Verdadeiro se o arquivo existir, caso contrário, falso.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.PossuiDados">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.PossuiDados">
             <summary>
             Verifica se o arquivo XML existe e não está vazio.
             </summary>
             <returns>Verdadeiro se o arquivo existir e tiver um tamanho maior que zero, caso contrário, falso.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml`1.Dispose(System.Boolean)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.Dispose(System.Boolean)">
             <summary>
             Libera os recursos utilizados pela classe.
             </summary>

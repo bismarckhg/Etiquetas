@@ -2,6 +2,7 @@ using Etiquetas.Bibliotecas.Comum.Geral;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
+using Etiquetas.Bibliotecas.Xml.Servicos;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -19,8 +20,9 @@ namespace Etiquetas.Bibliotecas.Xml
     /// <summary>
     /// Fornece uma implementação de FS para leitura e escrita de arquivos XML.
     /// </summary>
-    public class StreamXml<T> : StreamBaseTXT, IStreamLeitura<T>, IStreamEscrita<T>
+    public class StreamXml : StreamBaseTXT, IStreamLeitura, IStreamEscrita
     {
+        private GenericXmlService XmlService;
         private readonly XmlWriterSettings SettingsWriter;
         private readonly XmlReaderSettings SettingsReader;
 
@@ -55,7 +57,8 @@ namespace Etiquetas.Bibliotecas.Xml
         public StreamXml(XmlReaderSettings settingsReader = null, XmlWriterSettings settingsWriter = null) : base()
         {
             this.CancelToken = CancellationToken.None;
-            this.EncodingTexto = Encoding.UTF8;
+            this.EncodingTexto = ConversaoEncoding.UTF8BOM;
+            this.XmlService = new GenericXmlService();
 
             SettingsReader = settingsReader ?? new XmlReaderSettings
             {
@@ -77,27 +80,53 @@ namespace Etiquetas.Bibliotecas.Xml
         }
 
         /// <summary>
-        /// As conexões são tratadas por operação, então este método não realiza nenhuma ação.
-        /// </summary>
-        public override Task ConectarAsync(params object[] parametros) => Task.CompletedTask;
-
-        /// <summary>
-        /// O fechamento é tratado por operação, então este método não realiza nenhuma ação.
-        /// </summary>
-        public override Task FecharAsync() => Task.CompletedTask;
-
-        /// <summary>
         /// Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="XDocument"/>.
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        public async Task<T> LerAsync(params object[] parametros)
+        public async Task<T> LerAsync<T>(params object[] parametros)
         {
             if (!File.Exists(NomeECaminhoArquivo))
             {
                 return default;
             }
-            return default;
+
+            await Task.Run(() => ArrayObjectosParametrosLerAsync(parametros)).ConfigureAwait(false);
+
+            return await LerAsync<T>().ConfigureAwait(false);
+        }
+
+
+        protected async Task ArrayObjectosParametrosLerAsync(params object[] parametros)
+        {
+            var pendente = new ConcurrentDictionary<Type, int>
+            {
+                [typeof(CancellationToken)] = 1,
+                [typeof(Encoding)] = 2
+            };
+            var lista = new ConcurrentDictionary<Type, int>();
+            foreach (var item in parametros)
+            {
+                var ok = false;
+                var posicao = 0;
+                switch (item)
+                {
+                    case CancellationToken cancellationToken:
+                        CancelToken = cancellationToken;
+                        ok = pendente.TryRemove(cancellationToken.GetType(), out posicao)
+                            ? lista.TryAdd(cancellationToken.GetType(), posicao)
+                            : throw new ArgumentException("Parametro FileMode Duplicado!!");
+                        break;
+                    case Encoding encoding:
+                        EncodingTexto = encoding;
+                        ok = pendente.TryRemove(encoding.GetType(), out posicao)
+                            ? lista.TryAdd(encoding.GetType(), posicao)
+                            : throw new ArgumentException("Parametro FileAccess Duplicado!!");
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -105,29 +134,37 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        public async Task<T> LerAsync(ITaskParametros parametros)
+        public async Task<T> LerAsync<T>(ITaskParametros parametros)
         {
-            if (!File.Exists(NomeECaminhoArquivo))
+            if (EstaAberto() == false)
             {
-                return default;
+                await ConectarReaderOnlyUnshareAsync().ConfigureAwait(false);
             }
-            return default;
+            this.CancelToken = parametros.RetornoCancellationToken;
+            this.EncodingTexto = parametros.RetornoEncoding;
+
+            return await LerAsync<T>().ConfigureAwait(false);
         }
 
-        protected async Task<string> LerAsync(T objeto)
+        protected async Task<T> LerAsync<T>()
         {
-            var serializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
-            using (var sr = new StreamReader(
-                FS,
-                EncodingTexto,
-                detectEncodingFromByteOrderMarks: false
-                )
-            )   // ANSI não usa BOM; força 1252 ))
-            using (var xr = XmlReader.Create(sr, new XmlReaderSettings { Async = true }))
-            {
-                this.CancelToken.ThrowIfCancellationRequested();
-                return await sr.ReadToEndAsync().ConfigureAwait(false);
-            }
+            var stream = File.OpenRead(NomeECaminhoArquivo);
+            var subRootName = string.Empty;
+            var itemNameSubRoot = string.Empty;
+            Func<T, bool> predicate = null;
+
+            // Exemplo 1: Serializar e desserializar uma loja completa (Root).
+            var desserializacao = await XmlService.DeserializeRootFromFileAsync<T>(stream);
+
+            // Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
+            var subRoot = await XmlService.DeserializeSubRootFromFileAsync<T>(stream, subRootName);
+
+            // Exemplo 4: Buscar um cliente específico por email usando predicado.
+            // var clienteProcurado = await _xmlService.DeserializeItemByPredicateFromFileAsync<Cliente>(stream, "Clientes", "Cliente", c => c.Id == 10);
+            var itemProcurado = await XmlService.DeserializeItemByPredicateFromFileAsync<T>(stream, subRootName, itemNameSubRoot, predicate);
+
+            // Retorne o resultado ou faça o processamento necessário
+            return desserializacao;
         }
 
         /// <summary>
@@ -136,7 +173,7 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="dados">O <see cref="XDocument"/> a ser salvo.</param>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-        public async Task EscreverAsync(params object[] parametros)
+        public async Task EscreverAsync<T>(params object[] parametros)
         {
             //if (dados == null)
             //    throw new ArgumentNullException(nameof(dados));
@@ -150,7 +187,7 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="dados">O <see cref="XDocument"/> a ser salvo.</param>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-        public async Task EscreverAsync(ITaskParametros parametros)
+        public async Task EscreverAsync<T>(ITaskParametros parametros)
         {
             //if (dados == null)
             //    throw new ArgumentNullException(nameof(dados));

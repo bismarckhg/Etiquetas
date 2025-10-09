@@ -197,7 +197,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
                 FS = null;
             }).ConfigureAwait(false);
         }
-        
+
         public override bool EstaAberto()
         {
             // "Open" is transient, but we can say it's always ready if the path exists.
@@ -210,7 +210,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         {
             try
             {
-                if (File.Exists(NomeECaminhoArquivo))
+                if (FS != null && FS.CanRead && File.Exists(NomeECaminhoArquivo))
                 {
                     return new FileInfo(NomeECaminhoArquivo).Length > 0;
                 }

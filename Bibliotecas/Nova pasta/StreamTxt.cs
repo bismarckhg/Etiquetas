@@ -1,4 +1,3 @@
-using Etiquetas.Bibliotecas.Comum.Arrays;
 using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
@@ -45,7 +44,6 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
             // return await LerAsync().ConfigureAwait(false);
 
             // Por esta linha, especificando explicitamente o tipo T:
-          
             return await LerAsync<T>().ConfigureAwait(false);
         }
 
@@ -56,7 +54,7 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
             return await LerAsync<T>().ConfigureAwait(false);
         }
 
-        protected async Task<T> LerAsync<T>()
+        protected async Task<string> LerAsync<T>(T objeto)
         {
             if (EstaAberto() == false)
             {
@@ -65,26 +63,7 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
             }
 
             this.CancelToken.ThrowIfCancellationRequested();
-            var result = await this.Reader.ReadToEndAsync().ConfigureAwait(false);
-
-            // Corrige CS0030: converte explicitamente para o tipo T, se possível
-            if (typeof(T) == typeof(string))
-            {
-                return (T)(object)result;
-            }
-            else if (typeof(T) == typeof(string[]))
-            {
-
-                // Divide o texto em linhas
-                // var lines = result.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-                var lines = SeparaStringEmArrayStringComQuebraDeLinha.ComMarcadorFinalLinhaWindows(result, true);
-                
-                return (T)(object)lines;
-            }
-            else
-            {
-                throw new InvalidCastException($"Tipo de retorno não suportado: {typeof(T).FullName}");
-            }
+            return await this.Reader.ReadToEndAsync().ConfigureAwait(false);
         }
 
         protected async Task ArrayObjectosParametrosLerAsync(params object[] parametros)
@@ -208,27 +187,35 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
 
         protected async Task EscreverAsync(string dados)
         {
-            if (!EstaAberto())
-                await ConectarWriterAndReaderUnshareAsync().ConfigureAwait(false);
-
-            if (Writer == null)
+            if (EstaAberto() == false)
             {
-                Writer = new StreamWriter(
-                    FS,
-                    EncodingTexto ?? Encoding.UTF8,
-                    bufferSize: 4096,
-                    leaveOpen: true
-                )
-                {
-                    AutoFlush = true // <- simples e eficaz
-                };
+                await ConectarWriterAndReaderUnshareAsync().ConfigureAwait(false);
+                this.Writer = new StreamWriter(FS, EncodingTexto, bufferSize: 4096, leaveOpen: true);
             }
 
-            CancelToken.ThrowIfCancellationRequested();
-            await Writer.WriteLineAsync(dados).ConfigureAwait(false);
+            this.CancelToken.ThrowIfCancellationRequested();
+            await this.Writer.WriteAsync(dados).ConfigureAwait(false);
+        }
+        public override bool EstaAberto()
+        {
+            // "Open" is transient, but we can say it's always ready if the path exists.
+            return File.Exists(NomeECaminhoArquivo);
+        }
 
-            // Se preferir não usar AutoFlush:
-            // await Writer.FlushAsync().ConfigureAwait(false);
+        public override bool PossuiDados()
+        {
+            try
+            {
+                if (File.Exists(NomeECaminhoArquivo))
+                {
+                    return new FileInfo(NomeECaminhoArquivo).Length > 0;
+                }
+                return false;
+            }
+            catch (FileNotFoundException)
+            {
+                return false;
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -237,23 +224,5 @@ namespace Etiquetas.Bibliotecas.StreamsTXT
             base.Dispose(disposing);
         }
 
-        public override async Task FecharAsync()
-        {
-            // Drene e limpe os wrappers antes do FileStream
-            if (Writer != null)
-            {
-                await Writer.FlushAsync().ConfigureAwait(false);
-                Writer.Dispose();
-                Writer = null;
-            }
-
-            if (Reader != null)
-            {
-                Reader.Dispose();
-                Reader = null;
-            }
-
-            await base.FecharAsync().ConfigureAwait(false); // fecha/descarta o FS
-        }
     }
 }

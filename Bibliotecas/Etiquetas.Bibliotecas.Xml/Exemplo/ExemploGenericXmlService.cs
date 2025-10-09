@@ -259,12 +259,12 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await _xmlService.SerializeAsync(loja, stream);
 
             // Primeira leitura
-            var loja1 = await _xmlService.DeserializeRootAsync<Loja>(stream);
-            Console.WriteLine($"Primeira leitura: {loja1.ClientesLista.Clientes.Count} clientes");
+            var loja2 = await _xmlService.DeserializeRootAsync<ListaFornecedores>(stream);
+            Console.WriteLine($"Segunda leitura: {loja2.Fornecedores.Count} fornecedores");
 
             // Segunda leitura (rewind automático)
-            var loja2 = await _xmlService.DeserializeRootAsync<Loja>(stream);
-            Console.WriteLine($"Segunda leitura: {loja2.ClientesLista.Clientes.Count} clientes");
+            var loja1 = await _xmlService.DeserializeRootAsync<ListaClientes>(stream);
+            Console.WriteLine($"Primeira leitura: {loja1.Clientes.Count} clientes");
 
             // Terceira leitura de sub-root
             var listaProdutos = await _xmlService.DeserializeSubRootAsync<ListaProdutos>(stream, "Produtos");
@@ -281,7 +281,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             //await Exemplo3_DesserializarColecao();
             await Exemplo4_BuscarComPredicado();
             await Exemplo5_ProcessarComCallback();
-            await Exemplo6_UsarCancellationToken();
+            //await Exemplo6_UsarCancellationToken();
             await Exemplo7_SerializarParaString();
             await Exemplo8_ReutilizarStream();
 

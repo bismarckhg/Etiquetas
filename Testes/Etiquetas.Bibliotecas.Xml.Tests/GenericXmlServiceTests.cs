@@ -43,7 +43,7 @@ namespace XmlSerializationSolution.Tests
         {
             // Arrange
             var loja = _generator.GerarLojaPequena();
-            var _testFilePath = Path.Combine("C:\\Temp\\", $"test_loja2_{Guid.NewGuid()}.xml");
+            var _testFilePath = Path.Combine("C:\\Temp\\", $"Serializacao_{Guid.NewGuid()}.xml");
 
             // Act
             //using (var stream = new MemoryStream())
@@ -143,7 +143,9 @@ namespace XmlSerializationSolution.Tests
             await _service.SerializeToFileAsync(lojaOriginal, _testFilePath);
 
             // Act
-            var lojaDesserializada = await _service.DeserializeRootFromFileAsync<Loja>(_testFilePath);
+            var stream = File.OpenRead(_testFilePath);
+            var lojaDesserializada = await _service.DeserializeRootFromFileAsync<Loja>(stream);
+            stream.Close();
 
             // Assert
             Assert.NotNull(lojaDesserializada);
@@ -181,7 +183,9 @@ namespace XmlSerializationSolution.Tests
             await _service.SerializeToFileAsync(loja, _testFilePath);
 
             // Act
-            var listaProdutos = await _service.DeserializeSubRootFromFileAsync<ListaProdutos>(_testFilePath, "Produtos");
+            var stream = File.OpenRead(_testFilePath);
+            var listaProdutos = await _service.DeserializeSubRootFromFileAsync<ListaProdutos>(stream, "Produtos");
+            stream.Close();
 
             // Assert
             Assert.NotNull(listaProdutos);
@@ -193,14 +197,13 @@ namespace XmlSerializationSolution.Tests
         {
             // Arrange
             var loja = _generator.GerarLojaPequena();
+            var _testFilePath = Path.Combine("C:\\Temp\\", $"Serializacao_{Guid.NewGuid()}.xml");
             await _service.SerializeToFileAsync(loja, _testFilePath);
 
             // Act & Assert
-            using (var stream = File.OpenRead(_testFilePath))
-            {
-                await Assert.ThrowsAsync<InvalidOperationException>(
-                    async () => await _service.DeserializeSubRootAsync<ListaProdutos>(stream, "ElementoInexistente"));
-            }
+            var stream = File.OpenRead(_testFilePath);
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _service.DeserializeSubRootAsync<ListaProdutos>(stream, "ElementoInexistente"));
         }
 
         #endregion
@@ -308,8 +311,9 @@ namespace XmlSerializationSolution.Tests
             await _service.SerializeToFileAsync(loja, _testFilePath);
 
             // Act
+            var stream = File.OpenRead(_testFilePath);
             var clienteEncontrado = await _service.DeserializeItemByPredicateFromFileAsync<Cliente>(
-                _testFilePath,
+                stream,
                 "Clientes",
                 "Cliente",
                 c => c.Email == emailProcurado);
@@ -406,30 +410,43 @@ namespace XmlSerializationSolution.Tests
             var lojaOriginal = _generator.GerarLoja(5, 10, 15);
             await _service.SerializeToFileAsync(lojaOriginal, _testFilePath);
 
+            var stream = File.OpenRead(_testFilePath);
+
             // Act & Assert - Desserialização Root
-            var lojaCompleta = await _service.DeserializeRootFromFileAsync<Loja>(_testFilePath);
+            var lojaCompleta = await _service.DeserializeRootFromFileAsync<Loja>(stream);
             Assert.NotNull(lojaCompleta);
             Assert.Equal(lojaOriginal.FornecedoresLista.Fornecedores.Count, lojaCompleta.FornecedoresLista.Fornecedores.Count);
 
+            stream.Close();
+
+            stream = File.OpenRead(_testFilePath);
+
             // Act & Assert - Desserialização Sub-Root
-            var listaProdutos = await _service.DeserializeSubRootFromFileAsync<ListaProdutos>(_testFilePath, "Produtos");
+            var listaProdutos = await _service.DeserializeSubRootFromFileAsync<ListaProdutos>(stream, "Produtos");
             Assert.NotNull(listaProdutos);
             Assert.Equal(lojaOriginal.ProdutosLista.Produtos.Count, listaProdutos.Produtos.Count);
 
+            stream.Close();
+
             // Act & Assert - Desserialização de Coleção
-            using (var stream = File.OpenRead(_testFilePath))
+            using (var fstream = File.OpenRead(_testFilePath))
             {
-                var fornecedores = await _service.DeserializeCollectionAsync<Fornecedor>(stream, "Fornecedores", "Fornecedor");
+                var fornecedores = await _service.DeserializeCollectionAsync<Fornecedor>(fstream, "Fornecedores", "Fornecedor");
                 Assert.Equal(lojaOriginal.FornecedoresLista.Fornecedores.Count, fornecedores.Count());
             }
+
+            stream = File.OpenRead(_testFilePath);
 
             // Act & Assert - Busca com Predicado
             var clienteEsperado = lojaOriginal.ClientesLista.Clientes[7];
             var clienteEncontrado = await _service.DeserializeItemByPredicateFromFileAsync<Cliente>(
-                _testFilePath,
+                stream,
                 "Clientes",
                 "Cliente",
                 c => c.Id == clienteEsperado.Id);
+
+            stream.Close();
+
             Assert.NotNull(clienteEncontrado);
             Assert.Equal(clienteEsperado.Email, clienteEncontrado.Email);
         }

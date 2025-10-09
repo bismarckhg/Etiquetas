@@ -4,50 +4,5 @@
         <name>Etiquetas.GUI.Texto</name>
     </assembly>
     <members>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo1_SerializarEDesserializarRoot">
-            <summary>
-            Exemplo 1: Serializar e desserializar uma loja completa (Root).
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo2_DesserializarSubRoot">
-            <summary>
-            Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo3_DesserializarColecao">
-            <summary>
-            Exemplo 3: Desserializar uma coleção completa de clientes.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo4_BuscarComPredicado">
-            <summary>
-            Exemplo 4: Buscar um cliente específico por email usando predicado.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo5_ProcessarComCallback">
-            <summary>
-            Exemplo 5: Processar coleção com callback (streaming parcial).
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo6_UsarCancellationToken">
-            <summary>
-            Exemplo 6: Usar CancellationToken para cancelar operação.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo7_SerializarParaString">
-            <summary>
-            Exemplo 7: Serializar para string XML.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.Exemplo8_ReutilizarStream">
-            <summary>
-            Exemplo 8: Reutilizar stream (rewind automático).
-            </summary>
-        </member>
-        <member name="M:Etiquetas.GUI.Texto.ExemploGenericXmlService.ExecutarTodosExemplos">
-            <summary>
-            Executa todos os exemplos.
-            </summary>
-        </member>
     </members>
 </doc>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etiquetas.Bibliotecas.StreamsTXT.Exemplo;
-using Etiquetas.Bibliotecas.Xml.Exemplo;
 
 namespace Etiquetas.GUI.Texto
 {
@@ -12,10 +11,8 @@ namespace Etiquetas.GUI.Texto
     {
         static async Task Main(string[] args)
         {
-            //var examples = new ExemploStreamTxt();
-            //await examples.Executar();
-            var exemplos = new ExemploGenericXmlService();
-            await exemplos.ExecutarTodosExemplos();
+            var examples = new ExemploStreamTxt();
+            await examples.Executar();
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();

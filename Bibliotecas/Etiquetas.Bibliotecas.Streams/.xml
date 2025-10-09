@@ -73,6 +73,16 @@
             <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
             <returns>Uma tarefa que representa a operação de conexão.</returns>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamConexao.ConectarReaderOnlyUnshareAsync">
+            <summary>
+            Abre a conexão de forma assíncrona, com acesso somente leitura e sem compartilhamento.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamConexao.ConectarWriterAndReaderUnshareAsync">
+            <summary>
+            Abre a conexão de forma assíncrona, com acesso de escrita e leitura, sem compartilhamento.
+            </summary>
+        </member>
         <member name="T:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamControle">
             <summary>
             Define os contratos básicos de controle para operações de stream.
@@ -96,40 +106,40 @@
             </summary>
             <returns>Uma tarefa que representa a operação de fechamento.</returns>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita`1">
+        <member name="T:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita">
             <summary>
             Define o contrato para streams que realizam operações de escrita.
             </summary>
             <typeparam name="T">O tipo de dado a ser escrito.</typeparam>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita`1.EscreverAsync(System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita.EscreverAsync``1(System.Object[])">
             <summary>
             Escreve dados no stream de forma assíncrona.
             </summary>
             <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
             <returns>Uma tarefa que representa a operação de escrita.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita`1.EscreverAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamEscrita.EscreverAsync``1(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>
             Escreve dados no stream de forma assíncrona.
             </summary>
             <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
             <returns>Uma tarefa que representa a operação de escrita.</returns>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura`1">
+        <member name="T:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura">
             <summary>
             Define o contrato para streams que realizam operações de leitura.
             </summary>
             <typeparam name="T">O tipo de dado a ser lido.</typeparam>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura`1.LerAsync(System.Object[])">
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura.LerAsync``1(System.Object[])">
             <summary>
             Lê dados do stream de forma assíncrona.
             </summary>
             <param name="parametros">Parâmetros adicionais para a operação de leitura.</param>
             <returns>Uma tarefa que representa a operação de leitura, retornando o objeto lido.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura`1.LerAsync(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
+        <member name="M:Etiquetas.Bibliotecas.Streams.Interfaces.IStreamLeitura.LerAsync``1(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>
             Lê dados do stream de forma assíncrona.
             </summary>
