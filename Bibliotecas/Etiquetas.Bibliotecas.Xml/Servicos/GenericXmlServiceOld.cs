@@ -16,7 +16,7 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
     /// <summary>
     /// Serviço genérico para serialização e desserialização XML com suporte assíncrono e cache de serializers.
     /// </summary>
-    public class GenericXmlService
+    public class GenericXmlServiceOld
     {
         private readonly XmlReaderSettings SettingsReader;
         private readonly XmlWriterSettings SettingsWriter;
@@ -83,37 +83,31 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         /// <param name="stream">Stream contendo o XML</param>
         /// <param name="cancellationToken">Token de cancelamento</param>
         /// <returns>Objeto desserializado do tipo T</returns>
-        public async Task<T> DeserializeRootAsync<T>(Stream stream, Encoding encoding = null, CancellationToken cancellationToken = default)
+        public async Task<T> DeserializeRootAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-
-            if (encoding == null)
-            {
-                encoding = ConversaoEncoding.UTF8BOM;
-            }
 
             Rewind(stream);
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var streamReader = new StreamReader(cancelableStream, encoding, true, 1024, true))
-            using (var xmlReader = XmlReader.Create(streamReader, SettingsReader))
+            //using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
+            var reader = XmlReader.Create(cancelableStream, SettingsReader);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // Lê de forma assíncrona até o elemento raiz
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Lê de forma assíncrona até o elemento raiz
-                while (await xmlReader.ReadAsync().ConfigureAwait(false))
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (xmlReader.NodeType == XmlNodeType.Element)
-                    {
-                        var serializer = GetSerializer(typeof(T));
-                        return (T)serializer.Deserialize(xmlReader);
-                    }
+                    var serializer = GetSerializer(typeof(T));
+                    return (T)serializer.Deserialize(reader);
                 }
             }
+
             throw new InvalidOperationException("Nenhum elemento raiz encontrado no XML.");
         }
 
@@ -132,16 +126,10 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         public async Task<T> DeserializeSubRootAsync<T>(
             Stream stream,
             string elementName,
-            Encoding encoding = null,
             CancellationToken cancellationToken = default)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-
-            if (encoding == null)
-            {
-                encoding = ConversaoEncoding.UTF8BOM;
-            }
 
             if (string.IsNullOrWhiteSpace(elementName))
                 throw new ArgumentException("Nome do elemento não pode ser nulo ou vazio.", nameof(elementName));
@@ -152,20 +140,19 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             //using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
 
-            using (var streamReader = new StreamReader(cancelableStream, encoding, true, 1024, true))
-            using (var xmlReader = XmlReader.Create(streamReader, SettingsReader))
-            {
-                while (await xmlReader.ReadAsync().ConfigureAwait(false))
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
+            var reader = XmlReader.Create(cancelableStream, SettingsReader);
 
-                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == elementName)
-                    {
-                        var serializer = GetSerializer(typeof(T));
-                        return (T)serializer.Deserialize(xmlReader);
-                    }
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == elementName)
+                {
+                    var serializer = GetSerializer(typeof(T));
+                    return (T)serializer.Deserialize(reader);
                 }
             }
+
             throw new InvalidOperationException($"Elemento '{elementName}' não encontrado no XML.");
         }
 
@@ -187,16 +174,10 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             Stream stream,
             string arrayElementName,
             string itemElementName,
-            Encoding encoding = null,
             CancellationToken cancellationToken = default)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-
-            if (encoding == null)
-            {
-                encoding = ConversaoEncoding.UTF8BOM;
-            }
 
             if (string.IsNullOrWhiteSpace(arrayElementName))
                 throw new ArgumentException("Nome do elemento array não pode ser nulo ou vazio.", nameof(arrayElementName));
@@ -209,40 +190,40 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
             var results = new List<T>();
 
-            using (var streamReader = new StreamReader(cancelableStream, encoding, true, 1024, true))
-            using (var xmlReader = XmlReader.Create(streamReader, SettingsReader))
+            //using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
+            var reader = XmlReader.Create(cancelableStream, SettingsReader);
+
+            var serializer = GetSerializer(typeof(T));
+            var insideArray = false;
+
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                var serializer = GetSerializer(typeof(T));
-                var insideArray = false;
+                cancellationToken.ThrowIfCancellationRequested();
 
-                while (await xmlReader.ReadAsync().ConfigureAwait(false))
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (xmlReader.NodeType == XmlNodeType.Element)
+                    if (reader.Name == arrayElementName)
                     {
-                        if (xmlReader.Name == arrayElementName)
-                        {
-                            insideArray = true;
-                        }
-                        else if (insideArray && xmlReader.Name == itemElementName)
-                        {
-                            // Usar subtree reader para não afetar o reader principal
-                            using (var subtreeReader = xmlReader.ReadSubtree())
-                            {
-                                subtreeReader.Read(); // Move para o primeiro nó
-                                var item = (T)serializer.Deserialize(subtreeReader);
-                                results.Add(item);
-                            }
-                        }
+                        insideArray = true;
                     }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == arrayElementName)
+                    else if (insideArray && reader.Name == itemElementName)
                     {
-                        insideArray = false;
-                        break;
+                        // Usar subtree reader para não afetar o reader principal
+                        using (var subtreeReader = reader.ReadSubtree())
+                        {
+                            subtreeReader.Read(); // Move para o primeiro nó
+                            var item = (T)serializer.Deserialize(subtreeReader);
+                            results.Add(item);
+                        }
                     }
                 }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == arrayElementName)
+                {
+                    insideArray = false;
+                    break;
+                }
             }
+
             return results;
         }
 
@@ -262,16 +243,10 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             string arrayElementName,
             string itemElementName,
             Action<T> onItemRead,
-            Encoding encoding = null,
             CancellationToken cancellationToken = default)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-
-            if (encoding == null)
-            {
-                encoding = ConversaoEncoding.UTF8BOM;
-            }
 
             if (string.IsNullOrWhiteSpace(arrayElementName))
                 throw new ArgumentException("Nome do elemento array não pode ser nulo ou vazio.", nameof(arrayElementName));
@@ -286,39 +261,37 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var streamReader = new StreamReader(cancelableStream, encoding, true, 1024, true))
-            using (var xmlReader = XmlReader.Create(streamReader, SettingsReader))
+            // using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
+            var reader = XmlReader.Create(cancelableStream, SettingsReader);
+
+            var serializer = GetSerializer(typeof(T));
+            var insideArray = false;
+
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
 
-                var serializer = GetSerializer(typeof(T));
-                var insideArray = false;
-
-                while (await xmlReader.ReadAsync().ConfigureAwait(false))
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (xmlReader.NodeType == XmlNodeType.Element)
+                    if (reader.Name == arrayElementName)
                     {
-                        if (xmlReader.Name == arrayElementName)
+                        insideArray = true;
+                    }
+                    else if (insideArray && reader.Name == itemElementName)
+                    {
+                        // Usar subtree reader para não afetar o reader principal
+                        using (var subtreeReader = reader.ReadSubtree())
                         {
-                            insideArray = true;
-                        }
-                        else if (insideArray && xmlReader.Name == itemElementName)
-                        {
-                            // Usar subtree reader para não afetar o reader principal
-                            using (var subtreeReader = xmlReader.ReadSubtree())
-                            {
-                                subtreeReader.Read(); // Move para o primeiro nó
-                                var item = (T)serializer.Deserialize(subtreeReader);
-                                onItemRead(item);
-                            }
+                            subtreeReader.Read(); // Move para o primeiro nó
+                            var item = (T)serializer.Deserialize(subtreeReader);
+                            onItemRead(item);
                         }
                     }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == arrayElementName)
-                    {
-                        insideArray = false;
-                        break;
-                    }
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == arrayElementName)
+                {
+                    insideArray = false;
+                    break;
                 }
             }
         }
@@ -342,16 +315,10 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
             string arrayElementName,
             string itemElementName,
             Func<T, bool> predicate,
-            Encoding encoding = null,
             CancellationToken cancellationToken = default)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-
-            if (encoding == null)
-            {
-                encoding = ConversaoEncoding.UTF8BOM;
-            }
 
             if (string.IsNullOrWhiteSpace(arrayElementName))
                 throw new ArgumentException("Nome do elemento array não pode ser nulo ou vazio.", nameof(arrayElementName));
@@ -366,44 +333,43 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             var cancelableStream = WrapWithCancellation(stream, cancellationToken);
 
-            using (var streamReader = new StreamReader(cancelableStream, encoding, true, 1024, true))
-            using (var xmlReader = XmlReader.Create(streamReader, SettingsReader))
+            //using (var reader = XmlReader.Create(cancelableStream, SettingsReader))
+            var reader = XmlReader.Create(cancelableStream, SettingsReader);
+
+            var serializer = GetSerializer(typeof(T));
+            var insideArray = false;
+
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
 
-                var serializer = GetSerializer(typeof(T));
-                var insideArray = false;
-
-                while (await xmlReader.ReadAsync().ConfigureAwait(false))
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    if (xmlReader.NodeType == XmlNodeType.Element)
+                    if (reader.Name == arrayElementName)
                     {
-                        if (xmlReader.Name == arrayElementName)
+                        insideArray = true;
+                    }
+                    else if (insideArray && reader.Name == itemElementName)
+                    {
+                        // Usar subtree reader para não afetar o reader principal
+                        using (var subtreeReader = reader.ReadSubtree())
                         {
-                            insideArray = true;
-                        }
-                        else if (insideArray && xmlReader.Name == itemElementName)
-                        {
-                            // Usar subtree reader para não afetar o reader principal
-                            using (var subtreeReader = xmlReader.ReadSubtree())
+                            subtreeReader.Read(); // Move para o primeiro nó
+                            var item = (T)serializer.Deserialize(subtreeReader);
+                            if (predicate(item))
                             {
-                                subtreeReader.Read(); // Move para o primeiro nó
-                                var item = (T)serializer.Deserialize(subtreeReader);
-                                if (predicate(item))
-                                {
-                                    return item;
-                                }
+                                return item;
                             }
                         }
                     }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == arrayElementName)
-                    {
-                        insideArray = false;
-                        break;
-                    }
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == arrayElementName)
+                {
+                    insideArray = false;
+                    break;
                 }
             }
+
             return default;
         }
 
@@ -435,18 +401,17 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var streamWriter = new StreamWriter(stream, encoding, 1024, true))
-            using (var xmlWriter = XmlWriter.Create(streamWriter, SettingsWriter))
-            {
-                await Task.Run(() =>
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var serializer = GetSerializer(typeof(T));
-                    serializer.Serialize(xmlWriter, obj);
-                }, cancellationToken).ConfigureAwait(false);
+            //using (var writer = XmlWriter.Create(stream, SettingsWriter))
+            var writer = XmlWriter.Create(stream, SettingsWriter);
 
-                await xmlWriter.FlushAsync().ConfigureAwait(false);
-            }
+            await Task.Run(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var serializer = GetSerializer(typeof(T));
+                serializer.Serialize(writer, obj);
+            }, cancellationToken).ConfigureAwait(false);
+
+            await writer.FlushAsync().ConfigureAwait(false);
         }
 
         /// <summary>

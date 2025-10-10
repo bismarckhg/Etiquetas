@@ -31,17 +31,24 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             var filePath = "loja_completa.xml";
 
             // Serializar para arquivo
-            await _xmlService.SerializeToFileAsync(loja, filePath);
+            using (var stream = File.OpenWrite(filePath))
+            {
+                await _xmlService.SerializeAsync(loja, stream);
+            }
+            
             Console.WriteLine($"Loja serializada para: {filePath}");
 
             // Desserializar de arquivo
             using (var stream = File.OpenRead(filePath))
             {
-                var lojaDesserializada = await _xmlService.DeserializeRootFromFileAsync<Loja>(stream);
-                Console.WriteLine($"Loja desserializada com sucesso!");
-                Console.WriteLine($"- Fornecedores: {lojaDesserializada.FornecedoresLista.Fornecedores.Count}");
-                Console.WriteLine($"- Produtos: {lojaDesserializada.ProdutosLista.Produtos.Count}");
-                Console.WriteLine($"- Clientes: {lojaDesserializada.ClientesLista.Clientes.Count}\n");
+                using (var reader = new StreamReader(stream))
+                {
+                    var lojaDesserializada = await _xmlService.DeserializeRootAsync<Loja>(stream);
+                    Console.WriteLine($"Loja desserializada com sucesso!");
+                    Console.WriteLine($"- Fornecedores: {lojaDesserializada.FornecedoresLista.Fornecedores.Count}");
+                    Console.WriteLine($"- Produtos: {lojaDesserializada.ProdutosLista.Produtos.Count}");
+                    Console.WriteLine($"- Clientes: {lojaDesserializada.ClientesLista.Clientes.Count}\n");
+                }
             }
         }
 
@@ -55,12 +62,17 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             // Preparar arquivo
             var loja = _dataGenerator.GerarLoja(3, 8, 5);
             var filePath = "loja_subroot.xml";
-            await _xmlService.SerializeToFileAsync(loja, filePath);
+
+            // Serializar para arquivo
+            using (var stream = File.OpenWrite(filePath))
+            {
+                await _xmlService.SerializeAsync(loja, stream);
+            }
 
             // Desserializar apenas a ListaProdutos
             using (var stream = File.OpenRead(filePath))
             {
-                var listaProdutos = await _xmlService.DeserializeSubRootFromFileAsync<ListaProdutos>(
+                var listaProdutos = await _xmlService.DeserializeSubRootAsync<ListaProdutos>(
                 stream,
                 "Produtos");
 
@@ -80,12 +92,17 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             // Preparar arquivo
             var loja = _dataGenerator.GerarLoja(2, 5, 10);
             var filePath = "loja_colecao.xml";
-            await _xmlService.SerializeToFileAsync(loja, filePath);
+
+            // Serializar para arquivo
+            using (var stream = File.OpenWrite(filePath))
+            {
+                await _xmlService.SerializeAsync(loja, stream);
+            }
 
             // Desserializar todos os clientes
             using (var stream = File.OpenRead(filePath))
             {
-                var listaClientes = await _xmlService.DeserializeSubRootFromFileAsync<ListaClientes>(
+                var listaClientes = await _xmlService.DeserializeSubRootAsync<ListaClientes>(
                 stream,
                 "Clientes");
 
@@ -134,12 +151,17 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             // Preparar arquivo
             var loja = _dataGenerator.GerarLoja(2, 5, 20);
             var filePath = "loja_busca.xml";
-            await _xmlService.SerializeToFileAsync(loja, filePath);
+
+            // Serializar para arquivo
+            using (var stream = File.OpenWrite(filePath))
+            {
+                await _xmlService.SerializeAsync(loja, stream);
+            }
 
             // Buscar cliente com ID específico
             using (var stream = File.OpenRead(filePath))
             {
-                var clienteProcurado = await _xmlService.DeserializeItemByPredicateFromFileAsync<Cliente>(
+                var clienteProcurado = await _xmlService.DeserializeItemByPredicateAsync<Cliente>(
                 stream,
                 "Clientes",
                 "Cliente",
@@ -170,7 +192,12 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             // Preparar arquivo
             var loja = _dataGenerator.GerarLoja(2, 5, 12);
             var filePath = "loja_callback.xml";
-            await _xmlService.SerializeToFileAsync(loja, filePath);
+
+            // Serializar para arquivo
+            using (var stream = File.OpenWrite(filePath))
+            {
+                await _xmlService.SerializeAsync(loja, stream);
+            }
 
             // Processar cada fornecedor conforme é lido
             var contador = 0;
@@ -199,7 +226,12 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             // Preparar arquivo grande
             var loja = _dataGenerator.GerarLojaGrande();
             var filePath = "loja_grande.xml";
-            await _xmlService.SerializeToFileAsync(loja, filePath);
+
+            // Serializar para arquivo
+            using (var stream = File.OpenWrite(filePath))
+            {
+                await _xmlService.SerializeAsync(loja, stream);
+            }
 
             // Criar token de cancelamento com timeout
             var cts = new CancellationTokenSource();
@@ -213,6 +245,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
                         stream,
                         "Clientes",
                         "Cliente",
+                        null,
                         cts.Token);
 
                     Console.WriteLine($"Operação concluída: {clientes.Count()} clientes");
@@ -269,6 +302,9 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             // Terceira leitura de sub-root
             var listaProdutos = await _xmlService.DeserializeSubRootAsync<ListaProdutos>(stream, "Produtos");
             Console.WriteLine($"Terceira leitura: {listaProdutos.Produtos.Count} produtos\n");
+
+            stream.Flush();
+            stream.Close();
         }
 
         /// <summary>

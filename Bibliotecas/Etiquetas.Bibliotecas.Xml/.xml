@@ -109,7 +109,7 @@
             Cria um CancelableStream se o token não for padrão, caso contrário retorna o stream original.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootAsync``1(System.IO.Stream,System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootAsync``1(System.IO.Stream,System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>
             Desserializa o XML completo para o tipo raiz especificado.
             </summary>
@@ -118,12 +118,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Objeto desserializado do tipo T</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeRootFromFileAsync``1(System.IO.FileStream,System.Threading.CancellationToken)">
-            <summary>
-            Desserializa o XML completo de um arquivo para o tipo raiz especificado.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootAsync``1(System.IO.Stream,System.String,System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootAsync``1(System.IO.Stream,System.String,System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>
             Desserializa uma sub-root específica do XML pelo nome do elemento.
             </summary>
@@ -133,12 +128,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Objeto desserializado do tipo T</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeSubRootFromFileAsync``1(System.IO.Stream,System.String,System.Threading.CancellationToken)">
-            <summary>
-            Desserializa uma sub-root específica de um arquivo pelo nome do elemento.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeCollectionAsync``1(System.IO.Stream,System.String,System.String,System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeCollectionAsync``1(System.IO.Stream,System.String,System.String,System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>
             Desserializa uma coleção de elementos de forma incremental (streaming).
             Permite processar elementos conforme são lidos, com suporte a cancelamento.
@@ -150,7 +140,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>IEnumerable assíncrono de elementos do tipo T</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeCollectionWithCallbackAsync``1(System.IO.Stream,System.String,System.String,System.Action{``0},System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeCollectionWithCallbackAsync``1(System.IO.Stream,System.String,System.String,System.Action{``0},System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>
             Desserializa uma coleção de elementos de forma incremental com callback para processar cada item.
             Permite processar elementos conforme são lidos (streaming parcial), com suporte a cancelamento.
@@ -163,7 +153,7 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Task representando a operação assíncrona</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateAsync``1(System.IO.Stream,System.String,System.String,System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateAsync``1(System.IO.Stream,System.String,System.String,System.Func{``0,System.Boolean},System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>
             Desserializa um elemento específico de uma coleção baseado em um predicado.
             </summary>
@@ -175,11 +165,6 @@
             <param name="cancellationToken">Token de cancelamento</param>
             <returns>Primeiro elemento que satisfaz o predicado, ou null se não encontrado</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.DeserializeItemByPredicateFromFileAsync``1(System.IO.Stream,System.String,System.String,System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
-            <summary>
-            Desserializa um elemento específico de uma coleção baseado em um predicado de um arquivo.
-            </summary>
-        </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.SerializeAsync``1(``0,System.IO.Stream,System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>
             Serializa um objeto para XML em um stream.
@@ -188,11 +173,6 @@
             <param name="obj">Objeto a ser serializado</param>
             <param name="stream">Stream de destino</param>
             <param name="cancellationToken">Token de cancelamento</param>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.SerializeToFileAsync``1(``0,System.String,System.Text.Encoding,System.Threading.CancellationToken)">
-            <summary>
-            Serializa um objeto para XML em um arquivo.
-            </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.Servicos.GenericXmlService.SerializeToStringAsync``1(``0,System.Text.Encoding,System.Threading.CancellationToken)">
             <summary>

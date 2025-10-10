@@ -1,3 +1,4 @@
+using Etiquetas.Bibliotecas.Comum.Arrays;
 using Etiquetas.Bibliotecas.Comum.Geral;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
@@ -140,47 +141,53 @@ namespace Etiquetas.Bibliotecas.Xml
             {
                 await ConectarReaderOnlyUnshareAsync().ConfigureAwait(false);
             }
-
             this.CancelToken = parametros.RetornoCancellationToken;
             this.EncodingTexto = parametros.RetornoEncoding;
-            string subRootName = parametros.RetornaSeExistir<string>("SubRootName");
-            string intemNameSubRoot = parametros.RetornaSeExistir<string>("ItemNameSubRoot");
-            Func<T, bool> predicate = parametros.RetornaSeExistir<Func<T, bool>>("Predicate");
+            var subRootName = parametros.RetornaSeExistir<string>("SubRootName");
+            var itemNameSubRoot = parametros.RetornaSeExistir<string>("ItemNameSubRoot");
+            var predicate = parametros.RetornaSeExistir<Func<T, bool>>("Predicate");
 
-            if (!string.IsNullOrWhiteSpace(subRootName) && !string.IsNullOrWhiteSpace(intemNameSubRoot) && predicate != null)
+            var hasPredicate = predicate != null;
+            var hasItemName = !StringEhNuloVazioComEspacosBranco.Execute(itemNameSubRoot);
+            var hasSubRoot = !StringEhNuloVazioComEspacosBranco.Execute(subRootName);
+
+            if (!hasPredicate && !hasItemName)
             {
-                return await LerAsync<T>(FS, subRootName, intemNameSubRoot, predicate, CancelToken).ConfigureAwait(false);
+                if (hasSubRoot)
+                    return await LerAsync<T>(FS, subRootName, CancelToken).ConfigureAwait(false);
+
+                return await LerAsync<T>(FS, CancelToken).ConfigureAwait(false);
             }
-            else if (!string.IsNullOrWhiteSpace(subRootName))
-            {
-                return await LerAsync<T>(FS, subRootName, CancelToken).ConfigureAwait(false);
-            }
-            return await LerAsync<T>(FS, CancelToken).ConfigureAwait(false);
+
+            if (!hasSubRoot)
+                throw new ArgumentNullException(nameof(subRootName), "SubRootName é obrigatório quando Predicate ou ItemNameSubRoot são fornecidos.");
+
+            return await LerAsync<T>(FS, subRootName, itemNameSubRoot, predicate, CancelToken).ConfigureAwait(false);
         }
 
-        protected async Task<T> LerAsync<T>(FileStream filestream, CancellationToken cancellation = default)
+        protected async Task<T> LerAsync<T>(FileStream filestream, Encoding encoding, CancellationToken cancellation = default)
         {
             // Exemplo 1: Serializar e desserializar uma loja completa (Root).
-            var desserializacao = await XmlService.DeserializeRootFromFileAsync<T>(filestream, cancellation);
+            var desserializacao = await XmlService.DeserializeRootAsync<T>(filestream, encoding, cancellation);
 
             // Retorne o resultado ou faça o processamento necessário
             return desserializacao;
         }
 
-        protected async Task<T> LerAsync<T>(FileStream filestream, string subRootName, CancellationToken cancellation = default)
+        protected async Task<T> LerAsync<T>(FileStream filestream, string subRootName, Encoding encoding, CancellationToken cancellation = default)
         {
             // Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
-            var desserializacao = await XmlService.DeserializeSubRootFromFileAsync<T>(filestream, subRootName, cancellation);
+            var desserializacao = await XmlService.DeserializeSubRootAsync<T>(filestream, subRootName, encoding, cancellation);
 
             // Retorne o resultado ou faça o processamento necessário
             return desserializacao;
         }
 
-        protected async Task<T> LerAsync<T>(FileStream filestream, string subRootName, string itemNameSubRoot, Func<T, bool> predicate, CancellationToken cancellation = default)
+        protected async Task<T> LerAsync<T>(FileStream filestream, string subRootName, string itemNameSubRoot, Func<T, bool> predicate, Encoding encoding, CancellationToken cancellation = default)
         {
             // Exemplo 4: Buscar um cliente específico por email usando predicado.
             // var clienteProcurado = await _xmlService.DeserializeItemByPredicateFromFileAsync<Cliente>(stream, "Clientes", "Cliente", c => c.Id == 10);
-            var desserializacao = await XmlService.DeserializeItemByPredicateFromFileAsync<T>(filestream, subRootName, itemNameSubRoot, predicate, cancellation);
+            var desserializacao = await XmlService.DeserializeItemByPredicateAsync<T>(filestream, subRootName, itemNameSubRoot, predicate, encoding, cancellation);
 
             // Retorne o resultado ou faça o processamento necessário
             return desserializacao;
@@ -208,10 +215,16 @@ namespace Etiquetas.Bibliotecas.Xml
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         public async Task EscreverAsync<T>(ITaskParametros parametros)
         {
-            //if (dados == null)
-            //    throw new ArgumentNullException(nameof(dados));
+            if (EstaAberto() == false)
+            {
+                await ConectarWriterAndReaderUnshareAsync().ConfigureAwait(false);
+            }
 
-            //await Task.Run(() => dados.Save(_caminhoArquivo, SaveOptions.None)).ConfigureAwait(false);
+            this.CancelToken = parametros.RetornoCancellationToken;
+            this.EncodingTexto = parametros.RetornoEncoding;
+            var objeto = parametros["Objeto"] ?? throw new ArgumentNullException("Objeto nulo ou inválido!");
+
+            await XmlService.SerializeAsync<T>((T)objeto, FS).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -221,7 +234,6 @@ namespace Etiquetas.Bibliotecas.Xml
         public override bool EstaAberto()
         {
             return File.Exists(NomeECaminhoArquivo);
-
         }
 
         /// <summary>

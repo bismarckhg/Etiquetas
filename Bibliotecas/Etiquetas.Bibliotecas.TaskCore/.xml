@@ -226,6 +226,13 @@
             <param name="parametro">Índice do parâmetro (1-based).</param>
             <returns>Valor armazenado.</returns>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornaSeExistir``1(System.String)">
+            <summary>
+            Recupera o valor armazenado por nome se existir.
+            </summary>
+            <param name="nome">Nome simbólico do parâmetro.</param>
+            <returns>Valor armazenado.</returns>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.Item(System.Int32)">
             <summary>
             Indexador para recuperar valor por índice.
@@ -691,6 +698,9 @@
             <inheritdoc />
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.Item(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornaSeExistir``1(System.String)">
             <inheritdoc />
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.Item(System.String)">

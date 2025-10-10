@@ -26,12 +26,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
-    <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
+    <Compile Remove="Servicos\GenericXmlServiceOld.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Servicos\" />
+    <None Include="Servicos\GenericXmlServiceOld.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
+    <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
   </ItemGroup>
 
 </Project>

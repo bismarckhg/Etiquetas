@@ -14,7 +14,9 @@ namespace Etiquetas.GUI.Texto
         {
             //var examples = new ExemploStreamTxt();
             //await examples.Executar();
-            var exemplos = new ExemploGenericXmlService();
+            //var exemplos = new ExemploGenericXmlService();
+            //await exemplos.ExecutarTodosExemplos();
+            var exemplos = new ExemploStreamXml();
             await exemplos.ExecutarTodosExemplos();
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");

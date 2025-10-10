@@ -167,24 +167,14 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             {
                 throw new ArgumentNullException("Parâmetros inválidos!");
             }
-
             this.NomeECaminhoArquivo = (string)(parametros["NomeCaminhoArquivo"] ?? throw new ArgumentNullException("Nome arquivo Vazio ou nulo!"));
-
-            if (parametros["ModoArquivo"] != null)
+            this.ModoArquivo = parametros.RetornaSeExistir<FileMode>("ModoArquivo");
+            this.AcessoArquivo = parametros.RetornaSeExistir<FileAccess>("AcessoArquivo");
+            this.CompartilhamentoArquivo = parametros.RetornaSeExistir<FileShare>("CompartilhamentoArquivo");
+            if (this.ModoArquivo == 0 || this.AcessoArquivo == 0)
             {
-                this.ModoArquivo = (FileMode)(parametros["ModoArquivo"]);
+                return;
             }
-
-            if (parametros["AcessoArquivo"] != null)
-            {
-                this.AcessoArquivo = (FileAccess)(parametros["AcessoArquivo"]);
-            }
-
-            if (parametros["CompartilhamentoArquivo"] != null)
-            {
-                this.CompartilhamentoArquivo = (FileShare)(parametros["CompartilhamentoArquivo"]);
-            }
-
             await ConectarAsync().ConfigureAwait(false);
         }
 
@@ -197,7 +187,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
                 FS = null;
             }).ConfigureAwait(false);
         }
-        
+
         public override bool EstaAberto()
         {
             // "Open" is transient, but we can say it's always ready if the path exists.
