@@ -140,28 +140,47 @@ namespace Etiquetas.Bibliotecas.Xml
             {
                 await ConectarReaderOnlyUnshareAsync().ConfigureAwait(false);
             }
+
             this.CancelToken = parametros.RetornoCancellationToken;
             this.EncodingTexto = parametros.RetornoEncoding;
+            string subRootName = parametros.RetornaSeExistir<string>("SubRootName");
+            string intemNameSubRoot = parametros.RetornaSeExistir<string>("ItemNameSubRoot");
+            Func<T, bool> predicate = parametros.RetornaSeExistir<Func<T, bool>>("Predicate");
 
-            return await LerAsync<T>().ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(subRootName) && !string.IsNullOrWhiteSpace(intemNameSubRoot) && predicate != null)
+            {
+                return await LerAsync<T>(FS, subRootName, intemNameSubRoot, predicate, CancelToken).ConfigureAwait(false);
+            }
+            else if (!string.IsNullOrWhiteSpace(subRootName))
+            {
+                return await LerAsync<T>(FS, subRootName, CancelToken).ConfigureAwait(false);
+            }
+            return await LerAsync<T>(FS, CancelToken).ConfigureAwait(false);
         }
 
-        protected async Task<T> LerAsync<T>()
+        protected async Task<T> LerAsync<T>(FileStream filestream, CancellationToken cancellation = default)
         {
-            var stream = File.OpenRead(NomeECaminhoArquivo);
-            var subRootName = string.Empty;
-            var itemNameSubRoot = string.Empty;
-            Func<T, bool> predicate = null;
-
             // Exemplo 1: Serializar e desserializar uma loja completa (Root).
-            var desserializacao = await XmlService.DeserializeRootFromFileAsync<T>(stream);
+            var desserializacao = await XmlService.DeserializeRootFromFileAsync<T>(filestream, cancellation);
 
+            // Retorne o resultado ou faça o processamento necessário
+            return desserializacao;
+        }
+
+        protected async Task<T> LerAsync<T>(FileStream filestream, string subRootName, CancellationToken cancellation = default)
+        {
             // Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
-            var subRoot = await XmlService.DeserializeSubRootFromFileAsync<T>(stream, subRootName);
+            var desserializacao = await XmlService.DeserializeSubRootFromFileAsync<T>(filestream, subRootName, cancellation);
 
+            // Retorne o resultado ou faça o processamento necessário
+            return desserializacao;
+        }
+
+        protected async Task<T> LerAsync<T>(FileStream filestream, string subRootName, string itemNameSubRoot, Func<T, bool> predicate, CancellationToken cancellation = default)
+        {
             // Exemplo 4: Buscar um cliente específico por email usando predicado.
             // var clienteProcurado = await _xmlService.DeserializeItemByPredicateFromFileAsync<Cliente>(stream, "Clientes", "Cliente", c => c.Id == 10);
-            var itemProcurado = await XmlService.DeserializeItemByPredicateFromFileAsync<T>(stream, subRootName, itemNameSubRoot, predicate);
+            var desserializacao = await XmlService.DeserializeItemByPredicateFromFileAsync<T>(filestream, subRootName, itemNameSubRoot, predicate, cancellation);
 
             // Retorne o resultado ou faça o processamento necessário
             return desserializacao;

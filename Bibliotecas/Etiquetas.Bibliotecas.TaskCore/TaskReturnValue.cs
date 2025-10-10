@@ -400,6 +400,14 @@ namespace Etiquetas.Bibliotecas.TaskCore
         public override object this[int parametro] => Retorno(parametro);
 
         /// <inheritdoc />
+        public override T RetornaSeExistir<T>(string nome)
+        {
+            if (Nomes.TryGetValue(nome, out var idx))
+                return (T)(Retorno(idx));
+            return default;
+        }
+
+        /// <inheritdoc />
         public override object this[string nome]
         {
             get
