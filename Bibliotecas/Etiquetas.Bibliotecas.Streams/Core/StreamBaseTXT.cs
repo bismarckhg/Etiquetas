@@ -154,7 +154,8 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             if (!EhStringNuloVazioComEspacosBranco.Execute(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
             // FS = await Task.Run(() => File.OpenWrite(NomeECaminhoArquivo));
-            FS = await Task.Run(() => File.Open(NomeECaminhoArquivo, FileMode.Create, FileAccess.Write, FileShare.None));
+            // FS = await Task.Run(() => File.Open(NomeECaminhoArquivo, FileMode.Create, FileAccess.Write, FileShare.None));
+            FS = await Task.Run(() => File.Create(NomeECaminhoArquivo));
         }
 
         public override async Task ConectarAsync(ITaskParametros parametros)
