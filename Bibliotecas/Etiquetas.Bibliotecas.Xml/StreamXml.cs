@@ -222,38 +222,9 @@ namespace Etiquetas.Bibliotecas.Xml
 
             this.CancelToken = parametros.RetornoCancellationToken;
             this.EncodingTexto = parametros.RetornoEncoding;
-            var objeto = parametros["Objeto"] ?? throw new ArgumentNullException("Objeto nulo ou inválido!");
+            var objeto = parametros.Retorno<T>("Objeto");
 
             await XmlService.SerializeAsync<T>((T)objeto, FS).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Verifica se o arquivo XML existe no caminho especificado.
-        /// </summary>
-        /// <returns>Verdadeiro se o arquivo existir, caso contrário, falso.</returns>
-        public override bool EstaAberto()
-        {
-            return File.Exists(NomeECaminhoArquivo);
-        }
-
-        /// <summary>
-        /// Verifica se o arquivo XML existe e não está vazio.
-        /// </summary>
-        /// <returns>Verdadeiro se o arquivo existir e tiver um tamanho maior que zero, caso contrário, falso.</returns>
-        public override bool PossuiDados()
-        {
-            try
-            {
-                if (File.Exists(NomeECaminhoArquivo))
-                {
-                    return new FileInfo(NomeECaminhoArquivo).Length > 0;
-                }
-                return false;
-            }
-            catch (FileNotFoundException)
-            {
-                return false;
-            }
         }
 
         /// <summary>

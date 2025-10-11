@@ -400,10 +400,31 @@ namespace Etiquetas.Bibliotecas.TaskCore
         public override object this[int parametro] => Retorno(parametro);
 
         /// <inheritdoc />
+        public override T Retorno<T>(string nome)
+        {
+            if (Nomes.TryGetValue(nome, out var idx))
+            {
+                if (Valor.TryGetValue(idx, out var raw))
+                {
+                    return (T)(raw);
+                }
+            }
+
+            throw new KeyNotFoundException(
+                    $"Parâmetro com nome '{nome}' não encontrado em {NomeClasseChamou}.");
+        }
+
+        /// <inheritdoc />
         public override T RetornaSeExistir<T>(string nome)
         {
             if (Nomes.TryGetValue(nome, out var idx))
-                return (T)(Retorno(idx));
+            {
+                if (Valor.TryGetValue(idx, out var raw))
+                {
+                    return (T)(raw);
+                }
+            }
+            
             return default;
         }
 

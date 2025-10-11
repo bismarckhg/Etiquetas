@@ -234,18 +234,6 @@
             <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EstaAberto">
-            <summary>
-            Verifica se o arquivo XML existe no caminho especificado.
-            </summary>
-            <returns>Verdadeiro se o arquivo existir, caso contrário, falso.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.PossuiDados">
-            <summary>
-            Verifica se o arquivo XML existe e não está vazio.
-            </summary>
-            <returns>Verdadeiro se o arquivo existir e tiver um tamanho maior que zero, caso contrário, falso.</returns>
-        </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.Dispose(System.Boolean)">
             <summary>
             Libera os recursos utilizados pela classe.

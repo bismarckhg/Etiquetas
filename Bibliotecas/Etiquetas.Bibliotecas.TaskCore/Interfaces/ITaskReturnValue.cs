@@ -229,6 +229,13 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// </summary>
         /// <param name="nome">Nome simbólico do parâmetro.</param>
         /// <returns>Valor armazenado.</returns>
+        public abstract T Retorno<T>(string nome);
+
+        /// <summary>
+        /// Recupera o valor armazenado por nome se existir.
+        /// </summary>
+        /// <param name="nome">Nome simbólico do parâmetro.</param>
+        /// <returns>Valor armazenado.</returns>
         public abstract T RetornaSeExistir<T>(string nome);
 
         /// <summary>

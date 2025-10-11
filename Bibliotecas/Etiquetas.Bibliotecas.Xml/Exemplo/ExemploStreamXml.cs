@@ -40,10 +40,17 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
             Console.WriteLine($"Serializando dados da loja.");
-            await XmlStream.EscreverAsync<Loja>(loja).ConfigureAwait(false);
+
+            var novoParametros = new TaskParametros();
+            novoParametros.Armazena<Loja>(loja, "Objeto");
+
+            await XmlStream.EscreverAsync<Loja>(novoParametros).ConfigureAwait(false);
             await XmlStream.FecharAsync().ConfigureAwait(false);
             Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
-
+            Console.WriteLine();
+            var xml = System.IO.File.ReadAllText(filePath);
+            Console.WriteLine(xml);
+            Console.WriteLine();
             Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
             Console.WriteLine($"Deserializando dados da loja.");
