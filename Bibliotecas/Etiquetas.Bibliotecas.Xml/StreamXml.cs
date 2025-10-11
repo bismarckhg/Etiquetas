@@ -92,19 +92,23 @@ namespace Etiquetas.Bibliotecas.Xml
                 return default;
             }
 
-            await Task.Run(() => ArrayObjectosParametrosLerAsync(parametros)).ConfigureAwait(false);
+            await Task.Run(() => ArrayObjectosParametrosLerAsync<T>(parametros)).ConfigureAwait(false);
 
             return await LerAsync<T>().ConfigureAwait(false);
         }
 
 
-        protected async Task ArrayObjectosParametrosLerAsync(params object[] parametros)
+        protected async Task ArrayObjectosParametrosLerAsync<T>(params object[] parametros)
         {
             var pendente = new ConcurrentDictionary<Type, int>
             {
                 [typeof(CancellationToken)] = 1,
                 [typeof(Encoding)] = 2
             };
+            var subRootName = string.Empty;
+            var itemNameSubRoot = string.Empty;
+            Func<T, bool> predicate;
+
             var lista = new ConcurrentDictionary<Type, int>();
             foreach (var item in parametros)
             {
@@ -112,17 +116,29 @@ namespace Etiquetas.Bibliotecas.Xml
                 var posicao = 0;
                 switch (item)
                 {
+                    case string texto:
+                        switch (posicao)
+                        {
+                            case 0:
+                                subRootName = texto;
+                                posicao++;
+                                break;
+                            case 1:
+                                itemNameSubRoot = texto;
+                                posicao++;
+                                break;
+                            default:
+                                throw new ArgumentException($"Parametro string não esperado na posição {posicao}!");
+                        }
+                        break;
                     case CancellationToken cancellationToken:
                         CancelToken = cancellationToken;
                         ok = pendente.TryRemove(cancellationToken.GetType(), out posicao)
                             ? lista.TryAdd(cancellationToken.GetType(), posicao)
-                            : throw new ArgumentException("Parametro FileMode Duplicado!!");
-                        break;
-                    case Encoding encoding:
-                        EncodingTexto = encoding;
-                        ok = pendente.TryRemove(encoding.GetType(), out posicao)
+                            : throw
+                            nte.TryRemove(encoding.GetType(), out posicao)
                             ? lista.TryAdd(encoding.GetType(), posicao)
-                            : throw new ArgumentException("Parametro FileAccess Duplicado!!");
+                            : throw new ArgumentException("Parametro Encoding Duplicado!!");
                         break;
                     default:
                         break;
