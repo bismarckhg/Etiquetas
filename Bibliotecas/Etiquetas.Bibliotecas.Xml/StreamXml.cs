@@ -135,8 +135,11 @@ namespace Etiquetas.Bibliotecas.Xml
                         CancelToken = cancellationToken;
                         ok = pendente.TryRemove(cancellationToken.GetType(), out posicao)
                             ? lista.TryAdd(cancellationToken.GetType(), posicao)
-                            : throw
-                            nte.TryRemove(encoding.GetType(), out posicao)
+                            : throw new ArgumentException("Parametro CancellationToken Duplicado!!");
+                        break;
+                    case Encoding encoding:
+                        EncodingTexto = encoding;
+                        ok = pendente.TryRemove(encoding.GetType(), out posicao)
                             ? lista.TryAdd(encoding.GetType(), posicao)
                             : throw new ArgumentException("Parametro Encoding Duplicado!!");
                         break;
