@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Xml.Exemplo
@@ -53,8 +54,12 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             Console.WriteLine();
             Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
+
+            var parametrosLeitura = new TaskParametros();
+            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+
             Console.WriteLine($"Deserializando dados da loja.");
-            var lojaDesserializada = await XmlStream.LerAsync<Loja>().ConfigureAwait(false);
+            var lojaDesserializada = await XmlStream.LerAsync<Loja>(parametrosLeitura).ConfigureAwait(false);
             await XmlStream.FecharAsync().ConfigureAwait(false);
             Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
 

@@ -154,15 +154,15 @@ namespace Etiquetas.Bibliotecas.Xml
             if (!hasPredicate && !hasItemName)
             {
                 if (hasSubRoot)
-                    return await LerAsync<T>(FS, subRootName, CancelToken).ConfigureAwait(false);
+                    return await LerAsync<T>(FS, subRootName, EncodingTexto, CancelToken).ConfigureAwait(false);
 
-                return await LerAsync<T>(FS, CancelToken).ConfigureAwait(false);
+                return await LerAsync<T>(FS, EncodingTexto, CancelToken).ConfigureAwait(false);
             }
 
             if (!hasSubRoot)
                 throw new ArgumentNullException(nameof(subRootName), "SubRootName é obrigatório quando Predicate ou ItemNameSubRoot são fornecidos.");
 
-            return await LerAsync<T>(FS, subRootName, itemNameSubRoot, predicate, CancelToken).ConfigureAwait(false);
+            return await LerAsync<T>(FS, subRootName, itemNameSubRoot, predicate, EncodingTexto, CancelToken).ConfigureAwait(false);
         }
 
         protected async Task<T> LerAsync<T>(FileStream filestream, Encoding encoding, CancellationToken cancellation = default)
