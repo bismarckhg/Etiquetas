@@ -97,35 +97,36 @@ namespace Etiquetas.Bibliotecas.Xml
             return await LerAsync<T>().ConfigureAwait(false);
         }
 
-
-        protected async Task ArrayObjectosParametrosLerAsync<T>(params object[] parametros)
+        protected async Task<T> ArrayObjectosParametrosLerAsync<T>(params object[] parametros)
         {
             var pendente = new ConcurrentDictionary<Type, int>
             {
                 [typeof(CancellationToken)] = 1,
-                [typeof(Encoding)] = 2
+                [typeof(Encoding)] = 2,
+                [typeof(Func<T, bool>)] = 3
             };
             var subRootName = string.Empty;
             var itemNameSubRoot = string.Empty;
-            Func<T, bool> predicate;
+            Func<T, bool> predicate = null;
 
             var lista = new ConcurrentDictionary<Type, int>();
             foreach (var item in parametros)
             {
                 var ok = false;
+                var posicaoString = 0;
                 var posicao = 0;
                 switch (item)
                 {
                     case string texto:
-                        switch (posicao)
+                        switch (posicaoString)
                         {
                             case 0:
                                 subRootName = texto;
-                                posicao++;
+                                posicaoString++;
                                 break;
                             case 1:
                                 itemNameSubRoot = texto;
-                                posicao++;
+                                posicaoString++;
                                 break;
                             default:
                                 throw new ArgumentException($"Parametro string não esperado na posição {posicao}!");
@@ -143,10 +144,34 @@ namespace Etiquetas.Bibliotecas.Xml
                             ? lista.TryAdd(encoding.GetType(), posicao)
                             : throw new ArgumentException("Parametro Encoding Duplicado!!");
                         break;
+                    case Func<T, bool> func:
+                        predicate = func;
+                        ok = pendente.TryRemove(func.GetType(), out posicao)
+                            ? lista.TryAdd(func.GetType(), posicao)
+                            : throw new ArgumentException("Parametro Func<T, bool> Duplicado!!");
+                        break;
                     default:
                         break;
                 }
             }
+
+            var hasPredicate = predicate != null;
+            var hasItemName = !StringEhNuloVazioComEspacosBranco.Execute(itemNameSubRoot);
+            var hasSubRoot = !StringEhNuloVazioComEspacosBranco.Execute(subRootName);
+
+            if (!hasPredicate && !hasItemName)
+            {
+                if (hasSubRoot)
+                    return await LerAsync<T>(FS, subRootName, EncodingTexto, CancelToken).ConfigureAwait(false);
+
+                return await LerAsync<T>(FS, EncodingTexto, CancelToken).ConfigureAwait(false);
+            }
+
+            if (!hasSubRoot)
+                throw new ArgumentNullException(nameof(subRootName), "SubRootName é obrigatório quando Predicate ou ItemNameSubRoot são fornecidos.");
+
+            return await LerAsync<T>(FS, subRootName, itemNameSubRoot, predicate, EncodingTexto, CancelToken).ConfigureAwait(false);
+
         }
 
         /// <summary>
