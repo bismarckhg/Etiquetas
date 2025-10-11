@@ -82,38 +82,6 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             }
         }
 
-        /// <summary>
-        /// Exemplo 3: Desserializar uma coleção completa de clientes.
-        /// </summary>
-        public async Task Exemplo3_DesserializarColecao()
-        {
-            Console.WriteLine("=== Exemplo 3: Desserializar Sub-Root ===\n");
-
-            // Preparar arquivo
-            var loja = _dataGenerator.GerarLoja(2, 5, 10);
-            var filePath = "loja_colecao.xml";
-
-            // Serializar para arquivo
-            using (var stream = File.OpenWrite(filePath))
-            {
-                await _xmlService.SerializeAsync(loja, stream);
-            }
-
-            // Desserializar todos os clientes
-            using (var stream = File.OpenRead(filePath))
-            {
-                var listaClientes = await _xmlService.DeserializeSubRootAsync<ListaClientes>(
-                stream,
-                "Clientes");
-
-                Console.WriteLine($"Clientes desserializados: {listaClientes.Clientes.Count()}");
-                foreach (var cliente in listaClientes.Clientes)
-                {
-                    Console.WriteLine($"  - {cliente.Nome} ({cliente.Email})");
-                }
-                Console.WriteLine();
-            }
-        }
 
         //public async Task Exemplo3_DesserializarColecao()
         //{
