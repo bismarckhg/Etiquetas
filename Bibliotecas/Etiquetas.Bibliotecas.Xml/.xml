@@ -14,11 +14,6 @@
             Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo3_DesserializarColecao">
-            <summary>
-            Exemplo 3: Desserializar uma coleção completa de clientes.
-            </summary>
-        </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo4_BuscarComPredicado">
             <summary>
             Exemplo 4: Buscar um cliente específico por email usando predicado.
@@ -62,6 +57,11 @@
         <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploStreamXml.Exemplo3_DesserializarColecao">
             <summary>
             Exemplo 3: Desserializar uma coleção completa de clientes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploStreamXml.Exemplo4_BuscarComPredicado">
+            <summary>
+            Exemplo 4: Buscar um cliente específico por email usando predicado.
             </summary>
         </member>
         <member name="T:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator">

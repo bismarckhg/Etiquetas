@@ -26,6 +26,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await Exemplo1_SerializarEDesserializarRoot();
             await Exemplo2_DesserializarSubRoot();
             await Exemplo3_DesserializarColecao();
+            await Exemplo4_BuscarComPredicado();
         }
 
         /// <summary>
@@ -115,16 +116,16 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
 
             var parametrosLeitura = new TaskParametros();
             parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
-            parametrosLeitura.Armazena<string>("Produtos", "NomeSubRoot");
+            parametrosLeitura.Armazena<string>("Produtos", "SubRootName");
 
             Console.WriteLine($"Deserializando dados dos Produtos da loja.");
-            var lojaDesserializada = await XmlStream.LerAsync<Loja>(parametrosLeitura).ConfigureAwait(false);
+            var lojaDesserializada = await XmlStream.LerAsync<ListaProdutos>(parametrosLeitura).ConfigureAwait(false);
             await XmlStream.FecharAsync().ConfigureAwait(false);
             Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
 
             Console.WriteLine($"Produtos desserializada com sucesso!");
-            Console.WriteLine($"- Total de produtos: {lojaDesserializada.ProdutosLista.Produtos.Count}");
-            Console.WriteLine($"- Preço total: R$ {lojaDesserializada.ProdutosLista.PrecoTotal:F2}\n");
+            Console.WriteLine($"- Total de produtos: {lojaDesserializada.Produtos.Count}");
+            Console.WriteLine($"- Preço total: R$ {lojaDesserializada.PrecoTotal:F2}\n");
         }
 
         /// <summary>
@@ -179,5 +180,64 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Exemplo 4: Buscar um cliente específico por email usando predicado.
+        /// </summary>
+        public async Task Exemplo4_BuscarComPredicado()
+        {
+            Console.WriteLine("=== Exemplo 4: Buscar com Predicado ===\n");
+
+            // Preparar arquivo
+            var loja = _dataGenerator.GerarLoja(2, 5, 20);
+            var filePath = "loja_busca.xml";
+
+            // Serializar
+            var parametros = new TaskParametros();
+            parametros.Armazena<string>(filePath, "NomeCaminhoArquivo");
+
+            Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
+            await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
+            Console.WriteLine($"Serializando dados da loja.");
+
+            var novoParametros = new TaskParametros();
+            novoParametros.Armazena<Loja>(loja, "Objeto");
+
+            await XmlStream.EscreverAsync<Loja>(novoParametros).ConfigureAwait(false);
+            await XmlStream.FecharAsync().ConfigureAwait(false);
+            Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
+            Console.WriteLine();
+
+            Console.WriteLine("Conteúdo do arquivo XML: ");
+            var xml = System.IO.File.ReadAllText(filePath);
+            Console.WriteLine(xml);
+            Console.WriteLine();
+
+            Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
+            await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
+
+            var parametrosLeitura = new TaskParametros(3);
+            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+            parametrosLeitura.Armazena<string>("Clientes", "SubRootName");
+            parametrosLeitura.Armazena<string>("Cliente", "ItemNameSubRoot");
+            Func<Cliente, bool> predicate = c => c.Id == 10;
+            parametrosLeitura.Armazena<Func<Cliente, bool>>(predicate, "Predicate");
+
+            Console.WriteLine($"Deserializando dados dos Produtos da loja.");
+            var clienteProcurado = await XmlStream.LerAsync<Cliente>(parametrosLeitura).ConfigureAwait(false);
+            await XmlStream.FecharAsync().ConfigureAwait(false);
+            Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
+
+            if (clienteProcurado != null)
+            {
+                Console.WriteLine($"Cliente encontrado:");
+                Console.WriteLine($"  - ID: {clienteProcurado.Id}");
+                Console.WriteLine($"  - Nome: {clienteProcurado.Nome}");
+                Console.WriteLine($"  - Email: {clienteProcurado.Email}\n");
+            }
+            else
+            {
+                Console.WriteLine("Cliente não encontrado.\n");
+            }
+        }
     }
 }
