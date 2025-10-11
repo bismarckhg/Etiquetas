@@ -82,7 +82,6 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             }
         }
 
-
         //public async Task Exemplo3_DesserializarColecao()
         //{
         //    Console.WriteLine("=== Exemplo 3: Desserializar Coleção ===\n");
