@@ -24,8 +24,12 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
         public async Task ExecutarTodosExemplos()
         {
             await Exemplo1_SerializarEDesserializarRoot();
+            await Exemplo2_DesserializarSubRoot();
         }
 
+        /// <summary>
+        /// Exemplo 1: Serializar e desserializar uma loja completa (Root).
+        /// </summary>
         public async Task Exemplo1_SerializarEDesserializarRoot()
         {
             Console.WriteLine("=== Exemplo 1: Serializar e Desserializar Root ===\n");
@@ -49,9 +53,13 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await XmlStream.FecharAsync().ConfigureAwait(false);
             Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
             Console.WriteLine();
+
+            Console.WriteLine("Conteúdo do arquivo XML: ");
             var xml = System.IO.File.ReadAllText(filePath);
             Console.WriteLine(xml);
             Console.WriteLine();
+
+
             Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
 
@@ -68,5 +76,55 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             Console.WriteLine($"- Clientes: {lojaDesserializada.ClientesLista.Clientes.Count}\n");
 
         }
+
+        /// <summary>
+        /// Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
+        /// </summary>
+        public async Task Exemplo2_DesserializarSubRoot()
+        {
+            Console.WriteLine("=== Exemplo 2: Desserializar Sub-Root ===\n");
+
+            // Preparar arquivo
+            var loja = _dataGenerator.GerarLoja(3, 8, 5);
+            var filePath = "loja_subroot.xml";
+            // Serializar
+            var parametros = new TaskParametros();
+            parametros.Armazena<string>(filePath, "NomeCaminhoArquivo");
+
+            Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
+            await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
+            Console.WriteLine($"Serializando dados da loja.");
+
+            var novoParametros = new TaskParametros();
+            novoParametros.Armazena<Loja>(loja, "Objeto");
+
+            await XmlStream.EscreverAsync<Loja>(novoParametros).ConfigureAwait(false);
+            await XmlStream.FecharAsync().ConfigureAwait(false);
+            Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
+            Console.WriteLine();
+
+            Console.WriteLine("Conteúdo do arquivo XML: ");
+            var xml = System.IO.File.ReadAllText(filePath);
+            Console.WriteLine(xml);
+            Console.WriteLine();
+
+            Console.WriteLine($"Conectado ao arquivo XML:{filePath}");
+            await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
+
+            var parametrosLeitura = new TaskParametros();
+            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+            parametrosLeitura.Armazena<string>("Produtos", "NomeSubRoot");
+
+            Console.WriteLine($"Deserializando dados dos Produtos da loja.");
+            var lojaDesserializada = await XmlStream.LerAsync<Loja>(parametrosLeitura).ConfigureAwait(false);
+            await XmlStream.FecharAsync().ConfigureAwait(false);
+            Console.WriteLine($"Dados serializados com sucesso em {filePath}.");
+
+            Console.WriteLine($"Produtos desserializada com sucesso!");
+            Console.WriteLine($"- Total de produtos: {lojaDesserializada.ProdutosLista.Produtos.Count}");
+            Console.WriteLine($"- Preço total: R$ {lojaDesserializada.ProdutosLista.PrecoTotal:F2}\n");
+        }
+
+
     }
 }

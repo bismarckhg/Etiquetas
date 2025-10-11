@@ -49,6 +49,16 @@
             Executa todos os exemplos.
             </summary>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploStreamXml.Exemplo1_SerializarEDesserializarRoot">
+            <summary>
+            Exemplo 1: Serializar e desserializar uma loja completa (Root).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploStreamXml.Exemplo2_DesserializarSubRoot">
+            <summary>
+            Exemplo 2: Desserializar apenas uma sub-root (ListaProdutos).
+            </summary>
+        </member>
         <member name="T:Etiquetas.Bibliotecas.Xml.Exemplo.XmlDataGenerator">
             <summary>
             Gerador de dados de teste para XML.
