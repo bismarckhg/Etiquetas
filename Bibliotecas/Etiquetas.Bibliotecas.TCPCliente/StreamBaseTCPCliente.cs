@@ -1,4 +1,5 @@
-﻿using Etiquetas.Bibliotecas.Streams.Core;
+﻿using Etiquetas.Bibliotecas.Comum.Arrays;
+using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,71 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         }
         public override Task ConectarAsync(params object[] parametros)
         {
-            throw new NotImplementedException();
+            ThrowIfDisposed();
+
+            if (parametros == null)
+            {
+                throw new ArgumentNullException("Parâmetros inválidos!");
+            }
+
+            var posicao = 0;
+
+            foreach (var item in parametros)
+            {
+                switch (item)
+                {
+                    case string serverIpAdress:
+                        var ehvazio = StringEhNuloVazioComEspacosBranco.Execute(serverIpAdress);
+                    case
+                        switch (posicao)
+                        {
+                            case 0:
+                                posicao++;
+                                break;
+                            case 1:
+                                var serverPort = int.TryParse(texto, out var port) && port > 0
+                                ? port
+                                : throw new ArgumentOutOfRangeException("Porta inválida!");
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
-        public override Task ConectarAsync(ITaskParametros parametros)
+        public override async Task ConectarAsync(ITaskParametros parametros)
         {
-            throw new NotImplementedException();
+            ThrowIfDisposed();
+
+            if (parametros == null)
+            {
+                throw new ArgumentNullException("Parâmetros inválidos!");
+            }
+            var cancellationToken = parametros.RetornoCancellationToken;
+
+            var serverIpAdress = parametros.RetornaSeExistir<string>("ServerIpAdress");
+            var serverPort = parametros.RetornaSeExistir<int>("ServerPort");
+            var timeout = parametros.RetornaSeExistir<int>("Timeout");
+
+            var hasServerIpAdress = !StringEhNuloVazioComEspacosBranco.Execute(serverIpAdress);
+            var hasServerPort = serverPort > 0;
+
+            if (hasServerIpAdress && hasServerPort)
+            {
+                await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationToken).ConfigureAwait(false);
+            }
+
+            var tcpClient = parametros.RetornaSeExistir<TcpClient>("TcpClient");
+            if (tcpClient == default)
+            {
+                throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
+            }
+            await ConnectAsync(tcpClient, cancellationToken).ConfigureAwait(false);
+            return;
         }
 
         public override Task ConectarReaderOnlyUnshareAsync()
@@ -43,7 +103,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// </summary>
         /// <param name="tcpClient">Cliente TCP</param>
         /// <param name="cancellationToken">Token de cancelamento</param>
-        private async Task ConnectAsync(string serverIpAdress, int serverPort, int timeout, CancellationToken cancellationToken)
+        private async Task ConnectAsync(string serverIpAdress, int serverPort, int timeout = 0, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -79,7 +139,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// </summary>
         /// <param name="tcpClient">Cliente TCP</param>
         /// <param name="cancellationToken">Token de cancelamento</param>
-        private async Task ConnectAsync(TcpClient tcpClient, CancellationToken cancellationToken)
+        private async Task ConnectAsync(TcpClient tcpClient, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -111,19 +171,40 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
         }
 
+        /// <inheritdoc/>
         public override bool EstaAberto()
         {
             return TCPClient?.Connected ?? false;
         }
 
+        /// <inheritdoc/>
         public override Task FecharAsync()
         {
-            throw new NotImplementedException();
+            TCPClient?.Close();
+            TCPClient?.Dispose();
+            return Task.CompletedTask;
         }
 
+        /// <inheritdoc/>
         public override bool PossuiDados()
         {
-            throw new NotImplementedException();
+            var ok = TCPClient.Client.Poll(0, SelectMode.SelectRead);
+            return ok && TCPClient.Available > 0;
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (stDisposed) return;
+            if (disposing)
+            {
+                // Libera recursos gerenciados aqui
+                TCPClient?.Close();
+                TCPClient?.Dispose();
+                TCPClient = null;
+            }
+            // Libera recursos não gerenciados aqui
+            stDisposed = true;
         }
     }
 }

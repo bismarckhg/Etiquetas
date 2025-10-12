@@ -75,7 +75,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         /// <summary>
         /// Verifica se o objeto foi descartado
         /// </summary>
-        private void ThrowIfDisposed()
+        protected void ThrowIfDisposed()
         {
             if (stDisposed)
                 throw new ObjectDisposedException("StreamBase");

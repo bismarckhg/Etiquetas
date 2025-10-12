@@ -18,10 +18,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
 
         public override async Task ConectarAsync(params object[] parametros)
         {
-            if (stDisposed)
-            {
-                throw new ObjectDisposedException(this.GetType().Name);
-            }
+            ThrowIfDisposed();
 
             var pendente = await Task.Run(() => ArrayObjectosParametrosConectarAsync(parametros));
 
@@ -108,6 +105,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
 
         protected async Task ConectarAsync()
         {
+
             var dir = Path.GetDirectoryName(NomeECaminhoArquivo);
 
             if (!EhStringNuloVazioComEspacosBranco.Execute(dir) && !Directory.Exists(dir))
@@ -160,10 +158,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
 
         public override async Task ConectarAsync(ITaskParametros parametros)
         {
-            if (stDisposed)
-            {
-                throw new ObjectDisposedException(this.GetType().Name);
-            }
+            ThrowIfDisposed();
 
             if (parametros == null)
             {
