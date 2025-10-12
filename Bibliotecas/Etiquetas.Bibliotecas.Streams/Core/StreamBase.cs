@@ -73,6 +73,15 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         public abstract Task ConectarWriterAndReaderUnshareAsync();
 
         /// <summary>
+        /// Verifica se o objeto foi descartado
+        /// </summary>
+        private void ThrowIfDisposed()
+        {
+            if (stDisposed)
+                throw new ObjectDisposedException("StreamBase");
+        }
+
+        /// <summary>
         /// Finalizador (Destrutor) para garantir a liberação de recursos não gerenciados.
         /// </summary>
         ~StreamBase()
