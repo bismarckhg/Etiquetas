@@ -93,14 +93,21 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
                 if (conectado)
                 {
-                    throw new TimeoutException($"Timeout ao conectar com {_config.ServerIpAddress}:{_config.ServerPort}");
+                    var tcpClientEndPoint = TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
+                    var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
+                    var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
+
+                    throw new TimeoutException($"Timeout ao conectar com {tcpClientIPAddress}:{tcpClientPort}");
                 }
 
                 await connectTask; // Aguarda a conexão completar ou propagar exceção
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Erro ao conectar com {_config.ServerIpAddress}:{_config.ServerPort}: {ex.Message}", ex);
+                var tcpClientEndPoint = TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
+                var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
+                var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
+                throw new InvalidOperationException($"Erro ao conectar com {tcpClientIPAddress}:{tcpClientPort}: {ex.Message}", ex);
             }
         }
 
