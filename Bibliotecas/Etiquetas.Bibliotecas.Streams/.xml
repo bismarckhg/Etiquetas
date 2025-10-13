@@ -49,6 +49,11 @@
             </summary>
             <param name="disposing">Indica se a chamada vem do método Dispose().</param>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamBase.ThrowIfDisposed">
+            <summary>
+            Verifica se o objeto foi descartado
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Streams.Core.StreamBase.Finalize">
             <summary>
             Finalizador (Destrutor) para garantir a liberação de recursos não gerenciados.

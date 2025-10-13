@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.TCPCliente</name>
+    </assembly>
+    <members>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.ConnectAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Conecta ao servidor TCP de forma assíncrona
+            </summary>
+            <param name="tcpClient">Cliente TCP</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.ConnectAsync(System.Net.Sockets.TcpClient,System.Threading.CancellationToken)">
+            <summary>
+            Conecta ao servidor TCP de forma assíncrona
+            </summary>
+            <param name="tcpClient">Cliente TCP</param>
+            <param name="cancellationToken">Token de cancelamento</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.EstaAberto">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.FecharAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.PossuiDados">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

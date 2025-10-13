@@ -19,7 +19,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         {
             // Constructor logic here
         }
-        public override Task ConectarAsync(params object[] parametros)
+        public override async Task ConectarAsync(params object[] parametros)
         {
             ThrowIfDisposed();
 
@@ -29,32 +29,63 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
 
             var posicao = 0;
+            string serverIpAdress = string.Empty;
+            int serverPort = 0;
+            int timeout = 0;
+            var cancellationToken = CancellationToken.None;
+            TcpClient tcpClient = null;
 
             foreach (var item in parametros)
             {
                 switch (item)
                 {
-                    case string serverIpAdress:
-                        var ehvazio = StringEhNuloVazioComEspacosBranco.Execute(serverIpAdress);
-                    case
+                    case string texto:
+                        serverIpAdress = texto;
+                        break;
+                    case int inteiro:
                         switch (posicao)
                         {
                             case 0:
+                                serverPort = inteiro > 0
+                                ? inteiro
+                                : throw new ArgumentOutOfRangeException("Porta inválida!");
                                 posicao++;
                                 break;
                             case 1:
-                                var serverPort = int.TryParse(texto, out var port) && port > 0
-                                ? port
-                                : throw new ArgumentOutOfRangeException("Porta inválida!");
+                                timeout = inteiro;
+                                posicao++;
                                 break;
                             default:
                                 break;
                         }
                         break;
+
+                    case TcpClient client:
+                        tcpClient = client;
+                        break;
+                    case CancellationToken token:
+                        cancellationToken = token;
+                        break;
+
                     default:
                         break;
                 }
             }
+
+            var hasServerIpAdress = !StringEhNuloVazioComEspacosBranco.Execute(serverIpAdress);
+            var hasServerPort = serverPort > 0;
+
+            if (hasServerIpAdress && hasServerPort)
+            {
+                await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationToken).ConfigureAwait(false);
+            }
+
+            if (tcpClient == null)
+            {
+                throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
+            }
+            await ConnectAsync(tcpClient, cancellationToken).ConfigureAwait(false);
+            return;
         }
 
         public override async Task ConectarAsync(ITaskParametros parametros)
