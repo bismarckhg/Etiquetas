@@ -1,4 +1,5 @@
 ﻿using Etiquetas.Bibliotecas.Comum.Arrays;
+using Etiquetas.Bibliotecas.Comum.Evento;
 using Etiquetas.Bibliotecas.Streams.Core;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
@@ -13,7 +14,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 {
     public class StreamBaseTCPCliente : StreamBase
     {
-        private TcpClient TCPClient;
+        protected TcpClient TCPClient;
+
+        public override event EventHandler<ErrorEventArgs> ErrorOccurred;
+
+        public override void OnErrorOccurred(Exception exception)
+        {
+            ErrorOccurred?.Invoke(this, new ErrorEventArgs(exception));
+        }
 
         public StreamBaseTCPCliente()
         {
@@ -78,9 +86,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             if (hasServerIpAdress && hasServerPort)
             {
                 await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationToken).ConfigureAwait(false);
+                return;
             }
 
-            if (tcpClient == null)
+            if (tcpClient == default)
             {
                 throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
             }
@@ -97,24 +106,26 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 throw new ArgumentNullException("Parâmetros inválidos!");
             }
             var cancellationToken = parametros.RetornoCancellationToken;
-
-            var serverIpAdress = parametros.RetornaSeExistir<string>("ServerIpAdress");
-            var serverPort = parametros.RetornaSeExistir<int>("ServerPort");
             var timeout = parametros.RetornaSeExistir<int>("Timeout");
 
-            var hasServerIpAdress = !StringEhNuloVazioComEspacosBranco.Execute(serverIpAdress);
-            var hasServerPort = serverPort > 0;
-
-            if (hasServerIpAdress && hasServerPort)
-            {
-                await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationToken).ConfigureAwait(false);
-            }
 
             var tcpClient = parametros.RetornaSeExistir<TcpClient>("TcpClient");
             if (tcpClient == default)
             {
+                var serverIpAdress = parametros.RetornaSeExistir<string>("ServerIpAdress");
+                var serverPort = parametros.RetornaSeExistir<int>("ServerPort");
+                var hasServerIpAdress = !StringEhNuloVazioComEspacosBranco.Execute(serverIpAdress);
+                var hasServerPort = serverPort > 0;
+
+                if (hasServerIpAdress && hasServerPort)
+                {
+                    await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationToken).ConfigureAwait(false);
+                    return;
+                }
+
                 throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
             }
+
             await ConnectAsync(tcpClient, cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -205,7 +216,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <inheritdoc/>
         public override bool EstaAberto()
         {
-            return TCPClient?.Connected ?? false;
+            // return TCPClient?.Connected ?? false;
+            var conectado = TCPClient?.Connected ?? false;
+            var socket = TCPClient?.Client;
+            return conectado && socket != null && socket.Connected;
         }
 
         /// <inheritdoc/>
@@ -219,8 +233,42 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <inheritdoc/>
         public override bool PossuiDados()
         {
-            var ok = TCPClient.Client.Poll(0, SelectMode.SelectRead);
-            return ok && TCPClient.Available > 0;
+            if (TCPClient == null)
+                return false;
+
+            try
+            {
+                //var conectado = TCPClient.Connected;
+                //var socket = TCPClient.Client;
+                //conectado = conectado && socket != null && socket.Connected;
+
+                var conectado = EstaAberto();
+
+                // Método mais confiável: Poll + Available
+                // Poll com SelectMode.SelectRead retorna true se:
+                // - Há dados para ler
+                // - A conexão foi fechada
+                // - A conexão foi resetada
+                var socket = TCPClient.Client;
+                bool pollResult = socket.Poll(1000, SelectMode.SelectRead);
+                // Se Poll retorna true MAS não há dados, a conexão foi fechada
+                bool hasData = socket.Available > 0;
+                conectado = conectado && pollResult && hasData;
+
+                return conectado;
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc/>

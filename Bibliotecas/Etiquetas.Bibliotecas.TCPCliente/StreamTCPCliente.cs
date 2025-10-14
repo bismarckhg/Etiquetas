@@ -1,7 +1,9 @@
-﻿using Etiquetas.Bibliotecas.Streams.Interfaces;
+﻿using Etiquetas.Bibliotecas.Comum.Geral;
+using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -15,12 +17,80 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     {
         public Task<T> LerAsync<T>(params object[] parametros)
         {
-            throw new NotImplementedException();
+            var posicao = 0;
+            var posicao1 = 0;
+            var timeout = 0;
+            var bufferSize = 4096; // Valor padrão
+            var cancellationBreak = default(CancellationToken);
+            var cancellationStop = default(CancellationToken);
+            var encoding = ConversaoEncoding.UTF8BOM;
+
+            foreach (var item in parametros)
+            {
+                switch (item)
+                {
+                    case int valor:
+                        switch (posicao)
+                        {
+                            case 0:
+                                posicao++;
+                                timeout = valor;
+                                break;
+                            case 1:
+                                posicao++;
+                                bufferSize = valor;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case Encoding encode:
+                        encoding = encode;
+                        break;
+                    case CancellationToken cancellation:
+                        switch (posicao)
+                        {
+                            case 0:
+                                posicao1++;
+                                cancellationBreak = cancellation;
+                                break;
+                            case 1:
+                                posicao1++;
+                                cancellationStop = cancellation;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return (Task<T>)(object)ReadLinesManuallyAsync(
+                TCPClient,
+                bufferSize,
+                timeout,
+                encoding,
+                cancellationBreak,
+                cancellationStop);
         }
 
         public Task<T> LerAsync<T>(ITaskParametros parametros)
         {
-            throw new NotImplementedException();
+            var timeout = parametros.RetornaSeExistir<int>("Timeout");
+            var bufferSize = parametros.RetornaSeExistir<int>("BufferSize");
+            var encoding = parametros.RetornaSeExistir<Encoding>("Encoding") ?? ConversaoEncoding.UTF8BOM;
+            var cancellationBreak = parametros.RetornaSeExistir<CancellationToken>("CancellationBreak");
+            var cancellationStop = parametros.RetornaSeExistir<CancellationToken>("CancellationStop");
+
+            return (Task<T>)(object)ReadLinesManuallyAsync(
+                TCPClient,
+                bufferSize,
+                timeout,
+                encoding,
+                cancellationBreak,
+                cancellationStop);
         }
 
         /// <summary>
@@ -29,14 +99,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <param name="tcpClient">Cliente TCP conectado</param>
         /// <param name="message">Mensagem a ser enviada</param>
         /// <param name="cancellationToken">Token de cancelamento</param>
-        private async Task SendDataAsync(TcpClient tcpClient, string message, CancellationToken cancellationToken)
+        private async Task SendDataAsync(TcpClient tcpClient, string message, Encoding encoding, CancellationToken cancellationToken)
         {
             try
             {
                 using (var networkStream = tcpClient.GetStream())
                 {
                     // Converte a mensagem para bytes
-                    var data = Encoding.UTF8.GetBytes(message);
+                    var data = encoding.GetBytes(message);
 
                     // .NET 4.5 não tem WriteAsync nativo para NetworkStream, usamos Task.Run
                     await Task.Run(() =>
@@ -56,54 +126,318 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// Lê dados de uma conexão TCP de forma assíncrona
         /// </summary>
         /// <param name="tcpClient">Cliente TCP</param>
-        /// <param name="cancellationToken">Token de cancelamento</param>
+        /// <param name="bufferSize">Tamanho do buffer para leitura de dados</param>
+        /// <param name="lineTimeoutMilliseconds">Timeout de leitura</param>
+        /// <param name="encoding">Encoding do texto lido</param>
+        /// <param name="cancellationBreak">Token de cancelamento</param>
+        /// <param name="cancellationStop">Token de cancelamento</param>
         /// <returns>Dados lidos da conexão</returns>
-        private async Task<string> ReadDataFromConnectionAsync(TcpClient tcpClient, CancellationToken cancellationToken)
+        private async Task<string> ReadLinesFromConnectionAsync(
+            TcpClient tcpClient,
+            int lineTimeoutMilliseconds,
+            Encoding encoding,
+            CancellationToken cancellationBreak = default,
+            CancellationToken cancellationStop = default)
         {
+            // var lines = new List<string>();
+            var lines = new StringBuilder();
+            encoding = encoding ?? ConversaoEncoding.UTF8BOM;
+
             try
             {
                 using (var networkStream = tcpClient.GetStream())
                 {
-                    var buffer = new byte[_config.BufferSize];
-                    var stringBuilder = new StringBuilder();
+                    // Remove o timeout do stream para controlar manualmente
+                    networkStream.ReadTimeout = Timeout.Infinite;
 
-                    // Lê dados até não haver mais ou timeout
-                    while (networkStream.DataAvailable || stringBuilder.Length == 0)
+                    using (var reader = new StreamReader(networkStream, encoding, detectEncodingFromByteOrderMarks: false, bufferSize: 8192, leaveOpen: false))
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        // .NET 4.5 não tem ReadAsync nativo para NetworkStream, usamos Task.Run
-                        var bytesRead = await Task.Run(() =>
+                        while (!cancellationStop.IsCancellationRequested)
                         {
                             try
                             {
-                                return networkStream.Read(buffer, 0, buffer.Length);
+                                cancellationBreak.ThrowIfCancellationRequested();
+
+                                // Verifica se a conexão ainda está viva
+                                if (!PossuiDados())
+                                {
+                                    break; // Sai do loop
+                                }
+
+                                // ReadLine com timeout individual por linha
+                                string line = await ReadLineWithTimeoutAsync(reader, lineTimeoutMilliseconds, cancellationBreak)
+                                    .ConfigureAwait(false);
+
+                                if (line == null) // Fim do stream
+                                    break;
+
+                                lines.Append(line);
+
+                                // Se quiser processar linha por linha em tempo real:
+                                // OnLineReceived(line);
                             }
-                            catch (IOException)
+                            catch (TimeoutException ex)
                             {
-                                return 0; // Conexão fechada
+                                // Timeout na linha individual - loga e continua no loop
+                                //OnErrorOccurred(new Exception($"Timeout de {lineTimeoutMilliseconds}ms ao ler linha individual", ex));
+
+                                // Continua verificando cancellation e tentando ler próxima linha
+                                continue;
                             }
-                        }, cancellationToken).ConfigureAwait(false);
-
-                        if (bytesRead == 0)
-                            break; // Conexão fechada
-
-                        // Converte bytes para string
-                        var data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                        stringBuilder.Append(data);
-
-                        // Se não há mais dados disponíveis, sai do loop
-                        if (!networkStream.DataAvailable)
-                            break;
+                            catch (IOException ex)
+                            {
+                                // Conexão pode ter sido fechada
+                                throw new Exception("Erro de IO ao ler linha", ex);
+                            }
+                        }
                     }
-
-                    return stringBuilder.ToString();
                 }
+
+                return lines.ToString();
+            }
+            catch (OperationCanceledException)
+            {
+                return lines.ToString(); // Retorna o que foi lido até agora
             }
             catch (Exception ex)
             {
                 OnErrorOccurred(ex);
                 return null;
+            }
+        }
+
+        // Helper para ReadLine com timeout individual e cancellation
+        private async Task<string> ReadLineWithTimeoutAsync(
+            StreamReader reader,
+            int timeoutMilliseconds,
+            CancellationToken cancellationBreak)
+        {
+            // Se timeout = 0, Timeout.Infinite ou negativo, aguarda indefinidamente
+            if (timeoutMilliseconds <= 0)
+            {
+                var readTask = Task.Run(() =>
+                {
+                    try
+                    {
+                        return reader.ReadLine();
+                    }
+                    catch (IOException)
+                    {
+                        return null;
+                    }
+                }, cancellationBreak);
+
+                return await readTask.ConfigureAwait(false);
+            }
+
+            using (var timeoutCts = new CancellationTokenSource(timeoutMilliseconds))
+            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBreak, timeoutCts.Token))
+            {
+                try
+                {
+                    var readTask = Task.Run(() =>
+                    {
+                        try
+                        {
+                            return reader.ReadLine();
+                        }
+                        catch (IOException)
+                        {
+                            return null; // Stream fechado
+                        }
+                    }, linkedCts.Token);
+
+                    return await readTask.ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationBreak.IsCancellationRequested)
+                {
+                    // Timeout específico - não é cancelamento do usuário
+                    throw new TimeoutException($"Timeout de {timeoutMilliseconds}ms excedido ao ler linha");
+                }
+                // Se for cancellationToken, deixa a exceção subir para ser tratada no loop externo
+            }
+        }
+
+        /// <summary>
+        /// Lê dados de uma conexão TCP de forma assíncrona
+        /// </summary>
+        /// <param name="tcpClient">Cliente TCP</param>
+        /// <param name="bufferSize">Tamanho do buffer para leitura de dados</param>
+        /// <param name="lineTimeoutMilliseconds">Timeout de leitura</param>
+        /// <param name="encoding">Encoding do texto lido</param>
+        /// <param name="cancellationBreak">Token de cancelamento</param>
+        /// <param name="cancellationStop">Token de cancelamento</param>
+        /// <returns>Dados lidos da conexão</returns>
+        private async Task<string> ReadLinesManuallyAsync(
+                TcpClient tcpClient,
+                int bufferSize,
+                int lineTimeoutMilliseconds,
+                Encoding encoding,
+                CancellationToken cancellationBreak = default,
+                CancellationToken cancellationStop = default)
+        {
+            //var lines = new List<string>();
+            var lines = new StringBuilder();
+
+            try
+            {
+                using (var networkStream = tcpClient.GetStream())
+                {
+                    // Remove timeout do stream para controlar manualmente
+                    networkStream.ReadTimeout = Timeout.Infinite;
+
+                    var buffer = new byte[bufferSize];
+                    var incompleteLineBuffer = new List<byte>(); // Buffer persistente para linha incompleta
+                    var lastReadTime = DateTime.UtcNow;
+
+                    while (!cancellationStop.IsCancellationRequested)
+                    {
+                        try
+                        {
+                            cancellationBreak.ThrowIfCancellationRequested();
+
+                            // Lê dados com timeout individual
+                            var bytesRead = await ReadWithTimeoutAsync(
+                                networkStream,
+                                buffer,
+                                lineTimeoutMilliseconds,
+                                cancellationBreak
+                            ).ConfigureAwait(false);
+
+                            if (bytesRead == 0)
+                                break; // Conexão fechada
+
+                            lastReadTime = DateTime.UtcNow;
+
+                            // Processa os bytes lidos
+                            for (int i = 0; i < bytesRead; i++)
+                            {
+                                byte b = buffer[i];
+
+                                if (b == '\n') // Fim de linha (LF)
+                                {
+                                    // Remove \r se existir no final (Não remover)
+                                    // if (incompleteLineBuffer.Count > 0 && incompleteLineBuffer[incompleteLineBuffer.Count - 1] == '\r')
+                                    //    incompleteLineBuffer.RemoveAt(incompleteLineBuffer.Count - 1);
+
+                                    // Converte para string e adiciona à lista
+                                    string line = encoding.GetString(incompleteLineBuffer.ToArray());
+                                    lines.Append(line);
+
+                                    // Reseta o timer de timeout para a próxima linha
+                                    lastReadTime = DateTime.UtcNow;
+
+                                    // Limpa o buffer para a próxima linha
+                                    incompleteLineBuffer.Clear();
+                                }
+                                else
+                                {
+                                    incompleteLineBuffer.Add(b);
+                                }
+                            }
+
+                            // Verifica timeout de linha incompleta
+                            if (incompleteLineBuffer.Count > 0)
+                            {
+                                var elapsed = DateTime.UtcNow - lastReadTime;
+                                if (elapsed.TotalMilliseconds > lineTimeoutMilliseconds)
+                                {
+                                    throw new TimeoutException($"Timeout de {lineTimeoutMilliseconds}ms aguardando fim de linha");
+                                }
+                            }
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            // Timeout na leitura individual - loga e continua
+                            OnErrorOccurred(new Exception($"Timeout de {lineTimeoutMilliseconds}ms ao ler dados", ex));
+
+                            // Limpa buffer incompleto se necessário
+                            if (incompleteLineBuffer.Count > 0)
+                            {
+                                // Opcional: salva linha incompleta
+                                string incompleteLine = encoding.GetString(incompleteLineBuffer.ToArray());
+                                throw new Exception($"Linha incompleta descartada após timeout: {incompleteLine}");
+                                incompleteLineBuffer.Clear();
+                            }
+
+                            // Continua verificando cancellation
+                            continue;
+                        }
+                        catch (IOException ex)
+                        {
+                            throw new Exception("Erro de IO ao ler dados", ex);
+                            break;
+                        }
+                    }
+
+                    // Se sobrou dados no buffer (linha sem \n no final)
+                    if (incompleteLineBuffer.Count > 0)
+                    {
+                        string lastLine = encoding.GetString(incompleteLineBuffer.ToArray());
+                        lines.Append(lastLine);
+                    }
+
+                    return lines.ToString();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return lines.ToString(); // Retorna o que foi lido até agora
+            }
+        }
+
+        // Helper para Read com timeout individual
+        private async Task<int> ReadWithTimeoutAsync(
+            NetworkStream networkStream,
+            byte[] buffer,
+            int timeoutMilliseconds,
+            CancellationToken cancellationBreak)
+        {
+            // Se timeout = 0, Timeout.Infinite ou negativo, aguarda indefinidamente
+            if (timeoutMilliseconds <= 0)
+            {
+                var readTask = Task.Run(() =>
+                {
+                    try
+                    {
+                        return networkStream.Read(buffer, 0, buffer.Length);
+                    }
+                    catch (IOException)
+                    {
+                        return 0;
+                    }
+                }, cancellationBreak);
+
+                return await readTask.ConfigureAwait(false);
+            }
+
+            // Com timeout válido (> 0 e diferente de Timeout.Infinite)
+            using (var timeoutCts = new CancellationTokenSource(timeoutMilliseconds))
+            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBreak, timeoutCts.Token))
+            {
+                try
+                {
+                    var readTask = Task.Run(() =>
+                    {
+                        try
+                        {
+                            return networkStream.Read(buffer, 0, buffer.Length);
+                        }
+                        catch (IOException)
+                        {
+                            return 0; // Conexão fechada
+                        }
+                    }, linkedCts.Token);
+
+                    return await readTask.ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
+                {
+                    // Timeout específico - não é cancelamento do usuário
+                    // throw new TimeoutException($"Timeout de {timeoutMilliseconds}ms excedido ao ler dados");
+                    return 0; // Conexão fechada
+                }
+                // Se for cancellationToken, deixa a exceção subir
             }
         }
 

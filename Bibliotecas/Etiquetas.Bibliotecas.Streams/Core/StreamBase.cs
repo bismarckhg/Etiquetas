@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Etiquetas.Bibliotecas.Comum.Evento;
 using Etiquetas.Bibliotecas.Streams.Interfaces;
 using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 
@@ -12,6 +13,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
     {
         protected bool stDisposed = false;
 
+ 
         /// <summary>
         /// Implementação virtual do método EstaAberto. As classes derivadas devem sobrescrevê-lo.
         /// </summary>
