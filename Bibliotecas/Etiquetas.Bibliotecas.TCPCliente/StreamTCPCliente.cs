@@ -168,8 +168,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                                 string line = await ReadLineWithTimeoutAsync(reader, lineTimeoutMilliseconds, cancellationBreak)
                                     .ConfigureAwait(false);
 
-                                if (line == null) // Fim do stream
-                                    break;
+                                //if (line == null) // Fim do stream
+                                //    break;
 
                                 lines.Append(line);
 
@@ -449,6 +449,263 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         public Task EscreverAsync<T>(ITaskParametros parametros)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Envia uma string para o TcpClient com timeout
+        /// </summary>
+        private async Task<bool> SendDataAsync(
+            TcpClient tcpClient,
+            string data,
+            int timeoutMilliseconds = 5000,
+            Encoding encoding = null,
+            bool addLineBreak = true,
+            CancellationToken cancellationToken = default)
+        {
+            encoding = encoding ?? Encoding.UTF8;
+
+            try
+            {
+                // Verifica se a conexão está ativa
+                if (!IsConnectionAlive(tcpClient))
+                {
+                    OnErrorOccurred(new Exception("Conexão TCP não está ativa para envio"));
+                    return false;
+                }
+
+                using (var networkStream = tcpClient.GetStream())
+                {
+                    networkStream.WriteTimeout = timeoutMilliseconds > 0 ? timeoutMilliseconds : Timeout.Infinite;
+
+                    // Adiciona quebra de linha se solicitado
+                    string dataToSend = addLineBreak ? data + "\r\n" : data;
+                    byte[] buffer = encoding.GetBytes(dataToSend);
+
+                    // Envia com timeout
+                    if (timeoutMilliseconds > 0 && timeoutMilliseconds != Timeout.Infinite)
+                    {
+                        using (var timeoutCts = new CancellationTokenSource(timeoutMilliseconds))
+                        using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token))
+                        {
+                            await WriteWithTimeoutAsync(networkStream, buffer, linkedCts.Token).ConfigureAwait(false);
+                        }
+                    }
+                    else
+                    {
+                        await WriteWithTimeoutAsync(networkStream, buffer, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    // Garante que os dados foram enviados
+                    await FlushStreamAsync(networkStream, cancellationToken).ConfigureAwait(false);
+
+                    return true;
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                OnErrorOccurred(new Exception($"Timeout de {timeoutMilliseconds}ms ao enviar dados", ex));
+                return false;
+            }
+            catch (IOException ex)
+            {
+                OnErrorOccurred(new Exception("Erro de IO ao enviar dados - conexão perdida", ex));
+                return false;
+            }
+            catch (SocketException ex)
+            {
+                OnErrorOccurred(new Exception("Erro de socket ao enviar dados", ex));
+                return false;
+            }
+            catch (ObjectDisposedException ex)
+            {
+                OnErrorOccurred(new Exception("Stream foi fechado durante envio", ex));
+                return false;
+            }
+            catch (OperationCanceledException)
+            {
+                OnErrorOccurred(new Exception("Envio cancelado"));
+                return false;
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccurred(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Helper para escrever no stream com cancellation
+        /// </summary>
+        private async Task WriteWithTimeoutAsync(
+            NetworkStream networkStream,
+            byte[] buffer,
+            CancellationToken cancellationToken)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    networkStream.Write(buffer, 0, buffer.Length);
+                }
+                catch (IOException)
+                {
+                    throw;
+                }
+                catch (ObjectDisposedException)
+                {
+                    throw;
+                }
+            }, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Flush do stream de forma assíncrona
+        /// </summary>
+        private async Task FlushStreamAsync(NetworkStream networkStream, CancellationToken cancellationToken)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    networkStream.Flush();
+                }
+                catch (IOException)
+                {
+                    throw;
+                }
+                catch (ObjectDisposedException)
+                {
+                    throw;
+                }
+            }, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Envia dados e aguarda resposta (uma linha)
+        /// </summary>
+        private async Task<string> SendAndReceiveLineAsync(
+            TcpClient tcpClient,
+            string data,
+            int sendTimeoutMilliseconds = 5000,
+            int receiveTimeoutMilliseconds = 5000,
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default)
+        {
+            encoding = encoding ?? Encoding.UTF8;
+
+            try
+            {
+                // Envia dados
+                bool sent = await SendDataAsync(
+                    tcpClient,
+                    data,
+                    sendTimeoutMilliseconds,
+                    encoding,
+                    addLineBreak: true,
+                    cancellationToken
+                ).ConfigureAwait(false);
+
+                if (!sent)
+                {
+                    OnErrorOccurred(new Exception("Falha ao enviar dados"));
+                    return null;
+                }
+
+                // Aguarda resposta
+                using (var networkStream = tcpClient.GetStream())
+                {
+                    networkStream.ReadTimeout = Timeout.Infinite;
+
+                    using (var reader = new StreamReader(networkStream, encoding, detectEncodingFromByteOrderMarks: false, bufferSize: 8192, leaveOpen: true))
+                    {
+                        string response = await ReadLineWithTimeoutAsync(
+                            reader,
+                            receiveTimeoutMilliseconds,
+                            cancellationToken
+                        ).ConfigureAwait(false);
+
+                        return response;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccurred(new Exception("Erro ao enviar e receber dados", ex));
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Envia dados e lê resposta em bytes (para dados binários ou não-texto)
+        /// </summary>
+        private async Task<byte[]> SendAndReceiveBytesAsync(
+            TcpClient tcpClient,
+            string data,
+            int bufferSize = 4096,
+            int sendTimeoutMilliseconds = 5000,
+            int receiveTimeoutMilliseconds = 5000,
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default)
+        {
+            encoding = encoding ?? Encoding.UTF8;
+
+            try
+            {
+                // Envia dados
+                bool sent = await SendDataAsync(
+                    tcpClient,
+                    data,
+                    sendTimeoutMilliseconds,
+                    encoding,
+                    addLineBreak: true,
+                    cancellationToken
+                ).ConfigureAwait(false);
+
+                if (!sent)
+                {
+                    OnErrorOccurred(new Exception("Falha ao enviar dados"));
+                    return null;
+                }
+
+                // Aguarda resposta em bytes
+                using (var networkStream = tcpClient.GetStream())
+                {
+                    networkStream.ReadTimeout = Timeout.Infinite;
+
+                    var buffer = new byte[bufferSize];
+                    var receivedData = new List<byte>();
+
+                    try
+                    {
+                        int bytesRead = await ReadWithTimeoutAsync(
+                            networkStream,
+                            buffer,
+                            receiveTimeoutMilliseconds,
+                            cancellationToken
+                        ).ConfigureAwait(false);
+
+                        if (bytesRead > 0)
+                        {
+                            for (int i = 0; i < bytesRead; i++)
+                            {
+                                receivedData.Add(buffer[i]);
+                            }
+                        }
+
+                        return receivedData.ToArray();
+                    }
+                    catch (TimeoutException)
+                    {
+                        // Retorna o que foi lido até o timeout
+                        return receivedData.Count > 0 ? receivedData.ToArray() : null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccurred(new Exception("Erro ao enviar e receber bytes", ex));
+                return null;
+            }
         }
 
     }
