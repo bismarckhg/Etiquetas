@@ -16,9 +16,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     {
         protected TcpClient TCPClient;
 
-        public override event EventHandler<ErrorEventArgs> ErrorOccurred;
+        public event EventHandler<ErrorEventArgs> ErrorOccurred;
 
-        public override void OnErrorOccurred(Exception exception)
+        public void OnErrorOccurred(Exception exception)
         {
             ErrorOccurred?.Invoke(this, new ErrorEventArgs(exception));
         }

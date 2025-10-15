@@ -486,6 +486,16 @@
             retorna null se string ou vazia nula. Caso contrário converte para Array do tipo Char.
             </returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Evento.ErrorEventArgs">
+            <summary>
+            Classe de Eventos de Log de Erros
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.Comum.Evento.ErrorEventArgs.Exception">
+            <summary>
+            Implementacao do método OnErrorOccurred. As classes derivadas devem sobrescrevê-lo.
+            </summary>
+        </member>
         <member name="F:Etiquetas.Bibliotecas.Comum.Geral.ConversaoEncoding.UTF8BOM">
             <summary>
             Encoding UTF-8 com BOM (Byte Order Mark).
