@@ -20,6 +20,8 @@ namespace Etiquetas.GUI.Texto
             //var exemplos = new ExemploStreamXml();
             //await exemplos.ExecutarTodosExemplos();
 
+            var exemplos = new ExemploStreamTCPClient();
+
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();
         }
