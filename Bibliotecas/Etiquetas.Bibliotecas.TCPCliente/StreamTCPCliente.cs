@@ -48,19 +48,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         encoding = encode;
                         break;
                     case CancellationToken cancellation:
-                        switch (posicao)
-                        {
-                            case 0:
-                                posicao1++;
-                                cancellationBreak = cancellation;
-                                break;
-                            case 1:
-                                posicao1++;
-                                cancellationStop = cancellation;
-                                break;
-                            default:
-                                break;
-                        }
+                        cancellationBreak = cancellation;
                         break;
                     default:
                         break;
@@ -72,8 +60,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 bufferSize,
                 timeout,
                 encoding,
-                cancellationBreak,
-                cancellationStop);
+                cancellationBreak);
         }
 
         public Task<T> LerAsync<T>(ITaskParametros parametros)
@@ -82,45 +69,48 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             var bufferSize = parametros.RetornaSeExistir<int>("BufferSize");
             var encoding = parametros.RetornaSeExistir<Encoding>("Encoding") ?? ConversaoEncoding.UTF8BOM;
             var cancellationBreak = parametros.RetornaSeExistir<CancellationToken>("CancellationBreak");
-            var cancellationStop = parametros.RetornaSeExistir<CancellationToken>("CancellationStop");
 
             return (Task<T>)(object)ReadLinesManuallyAsync(
                 TCPClient,
                 bufferSize,
                 timeout,
                 encoding,
-                cancellationBreak,
-                cancellationStop);
+                cancellationBreak);
         }
 
-        /// <summary>
-        /// Envia dados para o servidor TCP de forma assíncrona
-        /// </summary>
-        /// <param name="tcpClient">Cliente TCP conectado</param>
-        /// <param name="message">Mensagem a ser enviada</param>
-        /// <param name="cancellationToken">Token de cancelamento</param>
-        private async Task SendDataAsync(TcpClient tcpClient, string message, Encoding encoding, CancellationToken cancellationToken)
-        {
-            try
-            {
-                using (var networkStream = tcpClient.GetStream())
-                {
-                    // Converte a mensagem para bytes
-                    var data = encoding.GetBytes(message);
+        ///// <summary>
+        ///// Envia dados para o servidor TCP de forma assíncrona
+        ///// </summary>
+        ///// <param name="tcpClient">Cliente TCP conectado</param>
+        ///// <param name="message">Mensagem a ser enviada</param>
+        ///// <param name="cancellationBreak">Token de cancelamento</param>
+        //private async Task SendDataAsync(TcpClient tcpClient, string message, Encoding encoding, CancellationToken cancellationBreak = default)
+        //{
+        //    try
+        //    {
+        //        cancellationBreak.ThrowIfCancellationRequested();
+        //        using (var networkStream = tcpClient.GetStream())
+        //        {
+        //            // Converte a mensagem para bytes
+        //            var data = encoding.GetBytes(message);
 
-                    // .NET 4.5 não tem WriteAsync nativo para NetworkStream, usamos Task.Run
-                    await Task.Run(() =>
-                    {
-                        networkStream.Write(data, 0, data.Length);
-                        networkStream.Flush();
-                    }, cancellationToken).ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"Erro ao enviar dados: {ex.Message}", ex);
-            }
-        }
+        //            // .NET 4.5 não tem WriteAsync nativo para NetworkStream, usamos Task.Run
+        //            await Task.Run(() =>
+        //            {
+        //                networkStream.Write(data, 0, data.Length);
+        //                networkStream.Flush();
+        //            }, cancellationBreak).ConfigureAwait(false);
+        //        }
+        //    }
+        //    catch (OperationCanceledException)
+        //    {
+        //        throw;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         /// <summary>
         /// Lê dados de uma conexão TCP de forma assíncrona
@@ -130,14 +120,12 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <param name="lineTimeoutMilliseconds">Timeout de leitura</param>
         /// <param name="encoding">Encoding do texto lido</param>
         /// <param name="cancellationBreak">Token de cancelamento</param>
-        /// <param name="cancellationStop">Token de cancelamento</param>
         /// <returns>Dados lidos da conexão</returns>
         private async Task<string> ReadLinesFromConnectionAsync(
             TcpClient tcpClient,
             int lineTimeoutMilliseconds,
             Encoding encoding,
-            CancellationToken cancellationBreak = default,
-            CancellationToken cancellationStop = default)
+            CancellationToken cancellationBreak = default)
         {
             // var lines = new List<string>();
             var lines = new StringBuilder();
@@ -145,6 +133,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
             try
             {
+                cancellationBreak.ThrowIfCancellationRequested();
+
                 using (var networkStream = tcpClient.GetStream())
                 {
                     // Remove o timeout do stream para controlar manualmente
@@ -152,17 +142,11 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
                     using (var reader = new StreamReader(networkStream, encoding, detectEncodingFromByteOrderMarks: false, bufferSize: 8192, leaveOpen: false))
                     {
-                        while (!cancellationStop.IsCancellationRequested)
+                        while (PossuiDados())
                         {
                             try
                             {
                                 cancellationBreak.ThrowIfCancellationRequested();
-
-                                // Verifica se a conexão ainda está viva
-                                if (!PossuiDados())
-                                {
-                                    break; // Sai do loop
-                                }
 
                                 // ReadLine com timeout individual por linha
                                 string line = await ReadLineWithTimeoutAsync(reader, lineTimeoutMilliseconds, cancellationBreak)
@@ -178,16 +162,11 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                             }
                             catch (TimeoutException ex)
                             {
-                                // Timeout na linha individual - loga e continua no loop
-                                //OnErrorOccurred(new Exception($"Timeout de {lineTimeoutMilliseconds}ms ao ler linha individual", ex));
-
-                                // Continua verificando cancellation e tentando ler próxima linha
-                                continue;
+                                throw;
                             }
-                            catch (IOException ex)
+                            catch (OperationCanceledException)
                             {
-                                // Conexão pode ter sido fechada
-                                throw new Exception("Erro de IO ao ler linha", ex);
+                                throw;
                             }
                         }
                     }
@@ -197,12 +176,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
             catch (OperationCanceledException)
             {
-                return lines.ToString(); // Retorna o que foi lido até agora
-            }
-            catch (Exception ex)
-            {
-                OnErrorOccurred(ex);
-                return null;
+                throw;
             }
         }
 
@@ -221,9 +195,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     {
                         return reader.ReadLine();
                     }
-                    catch (IOException)
+                    catch (Exception)
                     {
-                        return null;
+                        throw;
                     }
                 }, cancellationBreak);
 
@@ -241,9 +215,13 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         {
                             return reader.ReadLine();
                         }
-                        catch (IOException)
+                        catch (TimeoutException)
                         {
-                            return null; // Stream fechado
+                            throw;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            throw;
                         }
                     }, linkedCts.Token);
 
@@ -254,7 +232,11 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     // Timeout específico - não é cancelamento do usuário
                     throw new TimeoutException($"Timeout de {timeoutMilliseconds}ms excedido ao ler linha");
                 }
-                // Se for cancellationToken, deixa a exceção subir para ser tratada no loop externo
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                // Se for cancellationBreak, deixa a exceção subir para ser tratada no loop externo
             }
         }
 
@@ -290,7 +272,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     var incompleteLineBuffer = new List<byte>(); // Buffer persistente para linha incompleta
                     var lastReadTime = DateTime.UtcNow;
 
-                    while (!cancellationStop.IsCancellationRequested)
+                    while (PossuiDados())
                     {
                         try
                         {
@@ -348,25 +330,25 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         }
                         catch (TimeoutException ex)
                         {
-                            // Timeout na leitura individual - loga e continua
-                            OnErrorOccurred(new Exception($"Timeout de {lineTimeoutMilliseconds}ms ao ler dados", ex));
+                            throw;
+                            //// Timeout na leitura individual - loga e continua
+                            //OnErrorOccurred(new Exception($"Timeout de {lineTimeoutMilliseconds}ms ao ler dados", ex));
 
-                            // Limpa buffer incompleto se necessário
-                            if (incompleteLineBuffer.Count > 0)
-                            {
-                                // Opcional: salva linha incompleta
-                                string incompleteLine = encoding.GetString(incompleteLineBuffer.ToArray());
-                                throw new Exception($"Linha incompleta descartada após timeout: {incompleteLine}");
-                                incompleteLineBuffer.Clear();
-                            }
+                            //// Limpa buffer incompleto se necessário
+                            //if (incompleteLineBuffer.Count > 0)
+                            //{
+                            //    // Opcional: salva linha incompleta
+                            //    string incompleteLine = encoding.GetString(incompleteLineBuffer.ToArray());
+                            //    throw new Exception($"Linha incompleta descartada após timeout: {incompleteLine}");
+                            //    incompleteLineBuffer.Clear();
+                            //}
 
-                            // Continua verificando cancellation
-                            continue;
+                            //// Continua verificando cancellation
+                            //continue;
                         }
-                        catch (IOException ex)
+                        catch (OperationCanceledException)
                         {
-                            throw new Exception("Erro de IO ao ler dados", ex);
-                            break;
+                            throw;
                         }
                     }
 
@@ -382,7 +364,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
             catch (OperationCanceledException)
             {
-                return lines.ToString(); // Retorna o que foi lido até agora
+                throw;
             }
         }
 
@@ -402,9 +384,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     {
                         return networkStream.Read(buffer, 0, buffer.Length);
                     }
-                    catch (IOException)
+                    catch (Exception)
                     {
-                        return 0;
+                        throw;
                     }
                 }, cancellationBreak);
 
@@ -423,9 +405,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         {
                             return networkStream.Read(buffer, 0, buffer.Length);
                         }
-                        catch (IOException)
+                        catch (Exception)
                         {
-                            return 0; // Conexão fechada
+                            throw;
                         }
                     }, linkedCts.Token);
 
@@ -434,10 +416,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
                 {
                     // Timeout específico - não é cancelamento do usuário
-                    // throw new TimeoutException($"Timeout de {timeoutMilliseconds}ms excedido ao ler dados");
-                    return 0; // Conexão fechada
+                    throw new TimeoutException($"Timeout de {timeoutMilliseconds}ms excedido ao ler dados");
+                    //return 0; // Conexão fechada
                 }
-                // Se for cancellationToken, deixa a exceção subir
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                // Se for cancellationBreak, deixa a exceção subir
             }
         }
 
@@ -448,7 +434,21 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
         public Task EscreverAsync<T>(ITaskParametros parametros)
         {
-            throw new NotImplementedException();
+            var dados = parametros.RetornaSeExistir<string>("Dados");
+            var timeout = parametros.RetornaSeExistir<int>("Timeout");
+            var bufferSize = parametros.RetornaSeExistir<int>("BufferSize");
+            var encoding = parametros.RetornaSeExistir<Encoding>("Encoding") ?? ConversaoEncoding.UTF8BOM;
+            var cancellationBreak = parametros.RetornaSeExistir<CancellationToken>("CancellationBreak");
+            var addLineBreak = parametros.RetornaSeExistir<bool>("AddLineBreak");
+
+            return (Task<T>)(object)SendDataAsync(
+                TCPClient,
+                dados,
+                bufferSize,
+                timeout,
+                encoding,
+                addLineBreak,
+                cancellationBreak);
         }
 
         /// <summary>
@@ -457,17 +457,18 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         private async Task<bool> SendDataAsync(
             TcpClient tcpClient,
             string data,
-            int timeoutMilliseconds = 5000,
+             int bufferSize,
+            int timeoutMilliseconds = 0,
             Encoding encoding = null,
             bool addLineBreak = true,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationBreak = default)
         {
-            encoding = encoding ?? Encoding.UTF8;
+            encoding = encoding ?? ConversaoEncoding.UTF8BOM;
 
             try
             {
                 // Verifica se a conexão está ativa
-                if (!IsConnectionAlive(tcpClient))
+                if (!EstaAberto())
                 {
                     OnErrorOccurred(new Exception("Conexão TCP não está ativa para envio"));
                     return false;
@@ -485,51 +486,33 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     if (timeoutMilliseconds > 0 && timeoutMilliseconds != Timeout.Infinite)
                     {
                         using (var timeoutCts = new CancellationTokenSource(timeoutMilliseconds))
-                        using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token))
+                        using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBreak, timeoutCts.Token))
                         {
                             await WriteWithTimeoutAsync(networkStream, buffer, linkedCts.Token).ConfigureAwait(false);
                         }
                     }
                     else
                     {
-                        await WriteWithTimeoutAsync(networkStream, buffer, cancellationToken).ConfigureAwait(false);
+                        await WriteWithTimeoutAsync(networkStream, buffer, cancellationBreak).ConfigureAwait(false);
                     }
 
                     // Garante que os dados foram enviados
-                    await FlushStreamAsync(networkStream, cancellationToken).ConfigureAwait(false);
+                    await FlushStreamAsync(networkStream, cancellationBreak).ConfigureAwait(false);
 
                     return true;
                 }
             }
             catch (TimeoutException ex)
             {
-                OnErrorOccurred(new Exception($"Timeout de {timeoutMilliseconds}ms ao enviar dados", ex));
-                return false;
-            }
-            catch (IOException ex)
-            {
-                OnErrorOccurred(new Exception("Erro de IO ao enviar dados - conexão perdida", ex));
-                return false;
-            }
-            catch (SocketException ex)
-            {
-                OnErrorOccurred(new Exception("Erro de socket ao enviar dados", ex));
-                return false;
-            }
-            catch (ObjectDisposedException ex)
-            {
-                OnErrorOccurred(new Exception("Stream foi fechado durante envio", ex));
-                return false;
+                throw;
             }
             catch (OperationCanceledException)
             {
-                OnErrorOccurred(new Exception("Envio cancelado"));
-                return false;
+                throw;
             }
             catch (Exception ex)
             {
-                OnErrorOccurred(ex);
-                return false;
+                throw;
             }
         }
 
@@ -547,11 +530,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 {
                     networkStream.Write(buffer, 0, buffer.Length);
                 }
-                catch (IOException)
-                {
-                    throw;
-                }
-                catch (ObjectDisposedException)
+                catch (Exception)
                 {
                     throw;
                 }
@@ -569,11 +548,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 {
                     networkStream.Flush();
                 }
-                catch (IOException)
-                {
-                    throw;
-                }
-                catch (ObjectDisposedException)
+                catch (Exception)
                 {
                     throw;
                 }

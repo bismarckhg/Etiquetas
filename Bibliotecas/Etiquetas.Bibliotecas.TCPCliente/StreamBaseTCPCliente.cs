@@ -40,7 +40,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             string serverIpAdress = string.Empty;
             int serverPort = 0;
             int timeout = 0;
-            var cancellationToken = CancellationToken.None;
+            var cancellationBruto = CancellationToken.None;
             TcpClient tcpClient = null;
 
             foreach (var item in parametros)
@@ -72,7 +72,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         tcpClient = client;
                         break;
                     case CancellationToken token:
-                        cancellationToken = token;
+                        cancellationBruto = token;
                         break;
 
                     default:
@@ -85,7 +85,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
             if (hasServerIpAdress && hasServerPort)
             {
-                await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationToken).ConfigureAwait(false);
+                await ConnectAsync(serverIpAdress, serverPort, timeout, cancellationBruto).ConfigureAwait(false);
                 return;
             }
 
@@ -93,7 +93,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             {
                 throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
             }
-            await ConnectAsync(tcpClient, cancellationToken).ConfigureAwait(false);
+            await ConnectAsync(tcpClient, cancellationBruto).ConfigureAwait(false);
             return;
         }
 
@@ -105,7 +105,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             {
                 throw new ArgumentNullException("Parâmetros inválidos!");
             }
-            var cancellationToken = parametros.RetornoCancellationToken;
+            var cancellationToken = parametros.RetornaSeExistir<CancellationToken>("CancellationBruto");
             var timeout = parametros.RetornaSeExistir<int>("Timeout");
 
 
@@ -143,32 +143,52 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <summary>
         /// Conecta ao servidor TCP de forma assíncrona
         /// </summary>
-        /// <param name="tcpClient">Cliente TCP</param>
-        /// <param name="cancellationToken">Token de cancelamento</param>
-        private async Task ConnectAsync(string serverIpAdress, int serverPort, int timeout = 0, CancellationToken cancellationToken = default)
+        /// <param name="serverIpAdress">IP Servidor de conexão</param>
+        /// <param name="serverPort">Porta Servidor de conexão</param>
+        /// <param name="timeout">Time Out de conexao com o Servidor</param>
+        /// <param name="cancellationBruto">Token de cancelamento</param>
+        private async Task ConnectAsync(string serverIpAdress, int serverPort, int timeout = Timeout.Infinite, CancellationToken cancellationBruto = default)
         {
             try
             {
-                // .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run com timeout
+                cancellationBruto.ThrowIfCancellationRequested();
+
+                // .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run
                 var connectTask = Task.Run(() =>
                 {
                     var ipAddress = System.Net.IPAddress.Parse(serverIpAdress);
                     TCPClient = new TcpClient();
                     TCPClient.Connect(ipAddress, serverPort);
-                }, cancellationToken);
+                }, cancellationBruto);
 
-                // Aplica timeout de conexão
-                var timeoutTask = Task.Delay(timeout, cancellationToken);
-                var completedTask = await Task.WhenAny(connectTask, timeoutTask).ConfigureAwait(false);
-
-                var conectado = EstaAberto();
-
-                if (completedTask == timeoutTask && !conectado)
+                // Se timeout for 0 ou negativo, aguarda indefinidamente
+                if (timeout <= 0)
                 {
-                    throw new TimeoutException($"Timeout {timeout}ms ao tentar conectar com {serverIpAdress}:{serverPort}");
+                    await connectTask.ConfigureAwait(false);
                 }
+                else
+                {
+                    // Aplica timeout de conexão
+                    var timeoutTask = Task.Delay(timeout, cancellationBruto);
+                    var completedTask = await Task.WhenAny(connectTask, timeoutTask).ConfigureAwait(false);
 
-                await connectTask; // Aguarda a conexão completar ou propagar exceção
+                    if (completedTask == timeoutTask)
+                    {
+                        // Tenta fechar a conexão parcial se existir
+                        TCPClient?.Close();
+                        throw new TimeoutException($"Timeout de {timeout}ms ao tentar conectar com {serverIpAdress}:{serverPort}");
+                    }
+
+                    await connectTask; // Aguarda a conexão completar ou propagar exceção
+                }
+            }
+            catch (TimeoutException)
+            {
+                throw; // Re-lança TimeoutException sem encapsular
+            }
+            catch (OperationCanceledException)
+            {
+                throw; // Re-lança OperationCanceledException sem encapsular
             }
             catch (Exception ex)
             {
@@ -180,8 +200,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// Conecta ao servidor TCP de forma assíncrona
         /// </summary>
         /// <param name="tcpClient">Cliente TCP</param>
-        /// <param name="cancellationToken">Token de cancelamento</param>
-        private async Task ConnectAsync(TcpClient tcpClient, CancellationToken cancellationToken = default)
+        /// <param name="cancellationBruto">Token de cancelamento</param>
+        private async Task ConnectAsync(TcpClient tcpClient, CancellationToken cancellationBruto = default)
         {
             try
             {
@@ -189,7 +209,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 var connectTask = Task.Run(() =>
                 {
                     TCPClient = tcpClient ?? throw new ArgumentNullException(nameof(tcpClient));
-                }, cancellationToken);
+                }, cancellationBruto);
 
                 var conectado = EstaAberto();
 
@@ -198,11 +218,13 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     var tcpClientEndPoint = TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
                     var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
                     var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
-
-                    throw new TimeoutException($"Timeout ao conectar com {tcpClientIPAddress}:{tcpClientPort}");
                 }
 
                 await connectTask; // Aguarda a conexão completar ou propagar exceção
+            }
+            catch (OperationCanceledException)
+            {
+                throw; // Re-lança OperationCanceledException sem encapsular
             }
             catch (Exception ex)
             {
