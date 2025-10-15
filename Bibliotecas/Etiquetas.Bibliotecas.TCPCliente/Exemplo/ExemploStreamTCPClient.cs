@@ -24,8 +24,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente.Exemplo
 
         public async Task Exemplo1()
         {
-            var parametros = new TaskParametros();
-            parametros.Adicionar<string>("ServerIpAdress")
+            var parametros = new TaskParametros(4);
+            parametros.Armazena<string>("127.0.0.1", "ServerIpAdress");
+            parametros.Armazena<int>(9100, "ServerPort");
         }
     }
 }
