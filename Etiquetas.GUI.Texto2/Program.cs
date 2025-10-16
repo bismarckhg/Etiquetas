@@ -10,7 +10,7 @@ namespace Etiquetas.GUI.Texto2
     {
         static async Task Main(string[] args)
         {
-
+            await Task.Delay(2000);
             await TCPListernerSimulador.Execute();
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");

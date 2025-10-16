@@ -8,15 +8,16 @@
             <summary>
             Conecta ao servidor TCP de forma assíncrona
             </summary>
-            <param name="tcpClient">Cliente TCP</param>
-            <param name="cancellationToken">Token de cancelamento</param>
+            <param name="serverIpAdress">IP Servidor de conexão</param>
+            <param name="serverPort">Porta Servidor de conexão</param>
+            <param name="timeout">Time Out de conexao com o Servidor</param>
+            <param name="cancellationBruto">Token de cancelamento</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.ConnectAsync(System.Net.Sockets.TcpClient,System.Threading.CancellationToken)">
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.ConnectAsync(System.Threading.CancellationToken)">
             <summary>
             Conecta ao servidor TCP de forma assíncrona
             </summary>
-            <param name="tcpClient">Cliente TCP</param>
-            <param name="cancellationToken">Token de cancelamento</param>
+            <param name="cancellationBruto">Token de cancelamento</param>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.EstaAberto">
             <inheritdoc/>
@@ -29,6 +30,47 @@
         </member>
         <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamBaseTCPCliente.Dispose(System.Boolean)">
             <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamTCPCliente.ReadLinesFromConnectionAsync``1(System.Int32,System.Text.Encoding,System.Threading.CancellationToken)">
+            <summary>
+            Lê dados de uma conexão TCP de forma assíncrona
+            </summary>
+            <param name="bufferSize">Tamanho do buffer para leitura de dados</param>
+            <param name="lineTimeoutMilliseconds">Timeout de leitura</param>
+            <param name="encoding">Encoding do texto lido</param>
+            <param name="cancellationBreak">Token de cancelamento</param>
+            <returns>Dados lidos da conexão</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamTCPCliente.ReadLinesManuallyAsync(System.Int32,System.Int32,System.Text.Encoding,System.Threading.CancellationToken)">
+            <summary>
+            Lê dados de uma conexão TCP de forma assíncrona
+            </summary>
+            <param name="bufferSize">Tamanho do buffer para leitura de dados</param>
+            <param name="lineTimeoutMilliseconds">Timeout de leitura</param>
+            <param name="encoding">Encoding do texto lido</param>
+            <param name="cancellationBreak">Token de cancelamento</param>
+            <param name="cancellationStop">Token de cancelamento</param>
+            <returns>Dados lidos da conexão</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamTCPCliente.SendDataAsync(System.String,System.Int32,System.Int32,System.Text.Encoding,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Envia uma string para o TcpClient com timeout
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamTCPCliente.WriteWithTimeoutAsync(System.Byte[],System.Threading.CancellationToken)">
+            <summary>
+            Helper para escrever no stream com cancellation
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamTCPCliente.FlushStreamAsync(System.Threading.CancellationToken)">
+            <summary>
+            Flush do stream de forma assíncrona
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TCPCliente.StreamTCPCliente.SendAndReceiveLineAsync(System.String,System.Int32,System.Int32,System.Text.Encoding,System.Threading.CancellationToken)">
+            <summary>
+            Envia dados e aguarda resposta (uma linha)
+            </summary>
         </member>
     </members>
 </doc>

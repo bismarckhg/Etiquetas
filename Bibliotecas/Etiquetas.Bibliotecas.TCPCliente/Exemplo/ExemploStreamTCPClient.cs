@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Comum.Geral;
 using Etiquetas.Bibliotecas.TaskCore;
 using Etiquetas.Bibliotecas.TCPCliente;
@@ -23,7 +24,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente.Exemplo
 
         public async Task ExecutarTodosExemplos()
         {
-
+            Exemplo1();
         }
 
         public async Task Exemplo1()
@@ -49,16 +50,32 @@ namespace Etiquetas.Bibliotecas.TCPCliente.Exemplo
             Console.WriteLine("Conectado com sucesso ao servidor TCP.");
 
             var parametrosEnvio = new TaskParametros(5);
-            parametrosEnvio.Armazena<string>("Olá, servidor TCPListerner!", "Dados");
+            var dados = "TESTE ENVIO DE DADOS";
+            parametrosEnvio.Armazena<string>(dados, "Dados");
             parametrosEnvio.Armazena<int>(5000, "Timeout");
             parametrosEnvio.Armazena<int>(4096, "BufferSize");
             parametrosEnvio.Armazena<Encoding>(ConversaoEncoding.UTF8BOM, "Encoding");
             parametrosEnvio.Armazena<CancellationToken>(this.CancellationBruto, "CancellationBruto");
             await this.TcpCliente.EscreverAsync<string>(parametrosEnvio).ConfigureAwait(false);
-
-            Console.WriteLine("Mensagem enviada ao servidor.");
+            Console.WriteLine($"Mensagem {dados} enviada ao servidor.");
             // Aguarda um pouco para garantir que o servidor tenha tempo de responder
+
+            Console.WriteLine("Aguardar 5 segundos.");
             await Task.Delay(1000).ConfigureAwait(false);
+
+            Console.WriteLine("Aguardar 4 segundos.");
+            await Task.Delay(1000).ConfigureAwait(false);
+
+            Console.WriteLine("Aguardar 3 segundos.");
+            await Task.Delay(1000).ConfigureAwait(false);
+
+            Console.WriteLine("Aguardar 2 segundos.");
+            await Task.Delay(1000).ConfigureAwait(false);
+
+            Console.WriteLine("Aguardar 1 segundos.");
+            await Task.Delay(1000).ConfigureAwait(false);
+
+            Console.WriteLine("Possui dados?");
             if (this.TcpCliente.PossuiDados())
             {
                 var parametrosRecepcao = new TaskParametros(4);
@@ -67,9 +84,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente.Exemplo
                 parametrosRecepcao.Armazena<Encoding>(ConversaoEncoding.UTF8BOM, "Encoding");
                 parametrosRecepcao.Armazena<CancellationToken>(this.CancellationBruto, "CancellationBruto");
 
-
-                int bytesLidos = await this.TcpCliente.ReceberAsync(bufferRecepcao, 0, bufferRecepcao.Length, this.CancellationBruto).ConfigureAwait(false);
-                string resposta = Encoding.UTF8.GetString(bufferRecepcao, 0, bytesLidos);
+                var resposta = await this.TcpCliente.LerAsync<string>(parametrosRecepcao).ConfigureAwait(false);
                 Console.WriteLine($"Resposta do servidor: {resposta}");
             }
             else

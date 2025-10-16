@@ -4,5 +4,8 @@
         <name>Etiquetas.GUI.Texto2</name>
     </assembly>
     <members>
+        <member name="M:Etiquetas.GUI.Texto2.TCPListernerSimulador.EstaAberto(System.Net.Sockets.TcpClient)">
+            <inheritdoc/>
+        </member>
     </members>
 </doc>

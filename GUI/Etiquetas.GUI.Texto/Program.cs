@@ -4,8 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Etiquetas.Bibliotecas.StreamsTXT.Exemplo;
-using Etiquetas.Bibliotecas.Xml.Exemplo;
+using Etiquetas.Bibliotecas.TCPCliente.Exemplo;
 
 namespace Etiquetas.GUI.Texto
 {
@@ -21,6 +20,7 @@ namespace Etiquetas.GUI.Texto
             //await exemplos.ExecutarTodosExemplos();
 
             var exemplos = new ExemploStreamTCPClient();
+            await exemplos.ExecutarTodosExemplos().ConfigureAwait(false);
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();
