@@ -107,7 +107,6 @@ namespace Etiquetas.GUI.Texto2
                 //var reader = new StreamReader(network, Encoding.UTF8, false);
                 while (!token.IsCancellationRequested && EstaAberto(client, netstream))
                 {
-
                     // Lê uma linha de forma assíncrona (null = cliente fechou)
                     //line = await reader.ReadLineAsync().ConfigureAwait(false);
 
