@@ -84,6 +84,9 @@ namespace Etiquetas.GUI.Texto2
             var endpoint = client.Client.RemoteEndPoint?.ToString() ?? "??";
             Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Cliente conectado: {endpoint}");
 
+            var contaZero = 0;
+            var contaLido0 = 0;
+
             try
             {
                 string line = string.Empty;
@@ -104,6 +107,7 @@ namespace Etiquetas.GUI.Texto2
                     }
                 }
 
+
                 //var reader = new StreamReader(network, Encoding.UTF8, false);
                 while (!token.IsCancellationRequested && EstaAberto(client, netstream))
                 {
@@ -117,11 +121,28 @@ namespace Etiquetas.GUI.Texto2
                         await Task.Delay(100).ConfigureAwait(false);
                         tamanho = client.Available;
                         liberado = NetStream.DataAvailable;
+                        tamanho = 1;
+                        contaZero++;
                     }
 
                     byte[] buffer = new byte[tamanho];
                     //var lido = await network.ReadAsync(buffer, 0, tamanho).ConfigureAwait(false);
                     var lido = await LerComTimeoutAsync(client, buffer, tamanho, 2000, throwOnTimeout: false, token).ConfigureAwait(false);
+                    if (lido == 0)
+                    {
+                        contaLido0++;
+                        await Task.Delay(100).ConfigureAwait(false);
+                        if (contaLido0 > 10)
+                        {
+                            // Opcional: enviar ACK (será ignorado)
+                            await NetStream.WriteAsync(new byte[] { 0x06 }, 0, 1);
+                            await NetStream.FlushAsync();
+                            client.Close();
+                            break;
+                        }
+                        continue;
+                    }
+
                     //if (lido < 0)
                     //{
                     //    await Task.Delay(100).ConfigureAwait(false);
@@ -165,10 +186,10 @@ namespace Etiquetas.GUI.Texto2
             }
             finally
             {
+                Console.WriteLine($"ContaZero = {contaZero} ContaLido0 = {contaLido0}");
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Cliente desconectado: {endpoint}\n");
             }
         }
-
 
         // Helper para ReadLine com timeout individual e cancellation
         private static async Task<int> ReadLineWithTimeoutAsync(
@@ -242,13 +263,14 @@ namespace Etiquetas.GUI.Texto2
             // Verifica cancelamento antes de começar
             cancellationToken.ThrowIfCancellationRequested();
 
-            int timeoutOriginal = NetStream.ReadTimeout > 0 ? client.Client.ReceiveTimeout : Timeout.Infinite;
+            int streamTimeoutOriginal = NetStream.ReadTimeout > 0 ? client.Client.ReceiveTimeout : Timeout.Infinite;
 
             if (timeoutMs > 0)
             {
                 // Define timeout no socket
                 NetStream.ReadTimeout = timeoutMs;
             }
+            var x = 1;
 
             try
             {
@@ -258,7 +280,18 @@ namespace Etiquetas.GUI.Texto2
                     var dadosLidos = 0;
                     try
                     {
+                        var available = client.Available;
+                        var connected = client.Connected;
+                        var dataavailable = NetStream.DataAvailable;
+
                         dadosLidos = NetStream.Read(buffer, 0, tamanho);
+                        var socket = client.Client;
+                        var netstream = NetStream;
+                        var teste4 = netstream.CanRead;
+                        var teste5 = socket.Connected;
+                        var teste6 = socket.Poll(100000, SelectMode.SelectRead);
+                        var teste7 = socket.Poll(1, SelectMode.SelectRead);
+
                         return dadosLidos;
                     }
                     catch (IOException ex) when (ex.InnerException is SocketException se &&
@@ -279,7 +312,7 @@ namespace Etiquetas.GUI.Texto2
             }
             finally
             {
-                NetStream.ReadTimeout = timeoutOriginal;
+                NetStream.ReadTimeout = streamTimeoutOriginal;
             }
         }
     }
