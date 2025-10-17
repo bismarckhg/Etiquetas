@@ -95,18 +95,11 @@ namespace Etiquetas.GUI.Texto2
                 var netstream = client.GetStream();
                 NetStream = netstream;
 
-                if (!token.IsCancellationRequested && EstaAberto(client, netstream))
-                {
-                    tamanho = client.Available;
-                    liberado = NetStream.DataAvailable;
-                    if (tamanho == 0)
-                    {
-                        await Task.Delay(100).ConfigureAwait(false);
-                        tamanho = client.Available;
-                        liberado = NetStream.DataAvailable;
-                    }
-                }
+                var bufferZero = new byte[0];
 
+                var vazio = await LerComTimeoutAsync(client, bufferZero, tamanho, 2000, throwOnTimeout: false, token).ConfigureAwait(false);
+                tamanho = client.Available;
+                liberado = NetStream.DataAvailable;
 
                 //var reader = new StreamReader(network, Encoding.UTF8, false);
                 while (!token.IsCancellationRequested && EstaAberto(client, netstream))
