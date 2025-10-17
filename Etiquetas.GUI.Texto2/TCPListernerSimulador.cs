@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,9 @@ namespace Etiquetas.GUI.Texto2
 {
     public class TCPListernerSimulador
     {
+        protected static TcpClient TCPClient { get; set; }
+        protected static NetworkStream NetStream { get; set; }
+
         public static async Task Execute()
         {
             // Cancelamento com Ctrl+C
@@ -39,11 +43,11 @@ namespace Etiquetas.GUI.Texto2
                 while (!token.IsCancellationRequested)
                 {
                     // AcceptTcpClientAsync não aceita token em .NET 4.5, então fazemos o “wrap”
-                    var client = await AcceptClientAsync(listener, token);
-                    if (client == null) break; // cancelado
+                    var TCPClient = await AcceptClientAsync(listener, token);
+                    if (TCPClient == null) break; // cancelado
 
                     // Cada cliente é tratado em sua própria tarefa (não bloqueia o loop)
-                    _ = Task.Run(() => HandleClientAsync(client, token), token);
+                    _ = Task.Run(() => HandleClientAsync(TCPClient, token), token);
                 }
             }
             finally
@@ -64,13 +68,15 @@ namespace Etiquetas.GUI.Texto2
         }
 
         /// <inheritdoc/>
-        private static bool EstaAberto(TcpClient client)
+        private static bool EstaAberto(TcpClient client, NetworkStream nestream)
         {
             // return TCPClient?.Connected ?? false;
-            var conectado = client?.Connected ?? false;
-            var socket = client?.Client;
-            return (client?.Connected ?? false)
-                && (client?.Client).Connected;
+            //var conectado = TCPClient?.Connected ?? false;
+            //var socket = TCPClient?.Client;
+            //return (TCPClient?.Connected ?? false)
+            //    && (TCPClient?.Client).Connected;
+            var retorno = client?.Connected ?? false;
+            return retorno;
         }
 
         private static async Task HandleClientAsync(TcpClient client, CancellationToken token)
@@ -81,54 +87,55 @@ namespace Etiquetas.GUI.Texto2
             try
             {
                 string line = string.Empty;
-                NetworkStream network;
                 int tamanho = 0;
                 bool liberado = false;
-                network = client.GetStream();
+                var netstream = client.GetStream();
+                NetStream = netstream;
 
-                if (!token.IsCancellationRequested && EstaAberto(client))
+                if (!token.IsCancellationRequested && EstaAberto(client, netstream))
                 {
                     tamanho = client.Available;
-                    liberado = network.DataAvailable;
+                    liberado = NetStream.DataAvailable;
                     if (tamanho == 0)
                     {
                         await Task.Delay(100).ConfigureAwait(false);
                         tamanho = client.Available;
-                        liberado = network.DataAvailable;
+                        liberado = NetStream.DataAvailable;
                     }
                 }
 
                 //var reader = new StreamReader(network, Encoding.UTF8, false);
-                while (!token.IsCancellationRequested && EstaAberto(client))
+                while (!token.IsCancellationRequested && EstaAberto(client, netstream))
                 {
 
                     // Lê uma linha de forma assíncrona (null = cliente fechou)
                     //line = await reader.ReadLineAsync().ConfigureAwait(false);
 
                     tamanho = client.Available;
-                    liberado = network.DataAvailable;
+                    liberado = NetStream.DataAvailable;
                     if (tamanho == 0)
                     {
                         await Task.Delay(100).ConfigureAwait(false);
                         tamanho = client.Available;
-                        liberado = network.DataAvailable;
+                        liberado = NetStream.DataAvailable;
                     }
 
                     byte[] buffer = new byte[tamanho];
-                    var lido = await network.ReadAsync(buffer, 0, tamanho).ConfigureAwait(false);
-                    if (lido == 0)
-                    {
-                        await Task.Delay(100).ConfigureAwait(false);
-                        tamanho = client.Available;
-                        liberado = network.DataAvailable;
-                        if (tamanho == 0)
-                        {
-                            if (!liberado)
-                            {
-                                break; // cliente fechou 
-                            }
-                        }
-                    }
+                    //var lido = await network.ReadAsync(buffer, 0, tamanho).ConfigureAwait(false);
+                    var lido = await LerComTimeoutAsync(client, buffer, tamanho, 2000, throwOnTimeout: false, token).ConfigureAwait(false);
+                    //if (lido < 0)
+                    //{
+                    //    await Task.Delay(100).ConfigureAwait(false);
+                    //    tamanho = client.Available;
+                    //    liberado = NetStream.DataAvailable;
+                    //    if (tamanho == 0)
+                    //    {
+                    //        if (!liberado)
+                    //        {
+                    //            break; // cliente fechou 
+                    //        }
+                    //    }
+                    //}
 
                     line = Encoding.UTF8.GetString(buffer);
                     if (string.IsNullOrEmpty(line)) break;
@@ -136,18 +143,18 @@ namespace Etiquetas.GUI.Texto2
                     Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Recebido de {endpoint}: {line}");
                 }
 
-                network = client.GetStream();
-                var writer = new StreamWriter(network, Encoding.UTF8, 4096, leaveOpen: false) { AutoFlush = true };
+                ////NetStream = TCPClient.GetStream();
+                ////var writer = new StreamWriter(NetStream, Encoding.UTF8, 4096, leaveOpen: false) { AutoFlush = true };
 
-                // Loop de leitura – só sai quando o cliente fecha a conexão ou o token é cancelado
-                while (!token.IsCancellationRequested && EstaAberto(client))
-                {
-                    // Responde **apenas** depois de receber algo
-                    var teste = writer.BaseStream.CanWrite;
-                    string response = $"ECHO: {line}";
-                    await writer.WriteLineAsync(response).ConfigureAwait(false);
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Enviado a {endpoint}: {response}");
-                }
+                ////// Loop de leitura – só sai quando o cliente fecha a conexão ou o token é cancelado
+                ////while (!token.IsCancellationRequested && EstaAberto(client))
+                ////{
+                ////    // Responde **apenas** depois de receber algo
+                ////    var teste = writer.BaseStream.CanWrite;
+                ////    string response = $"ECHO: {line}";
+                ////    await writer.WriteLineAsync(response).ConfigureAwait(false);
+                ////    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Enviado a {endpoint}: {response}");
+                ////}
             }
             catch (OperationCanceledException)
             {
@@ -163,66 +170,118 @@ namespace Etiquetas.GUI.Texto2
             }
         }
 
-        public async Task<int> LerComTimeoutAsync(
-            NetworkStream network,
+
+        // Helper para ReadLine com timeout individual e cancellation
+        private static async Task<int> ReadLineWithTimeoutAsync(
             byte[] buffer,
-            int offset,
             int tamanho,
-            int timeoutMs,  // 0 = sem timeout, >0 = timeout em milissegundos
-            CancellationToken cancellationToken = default)
+            int timeoutMilliseconds,  // 0 = sem timeout, >0 = timeout em milissegundos
+            CancellationToken cancellationBreak = default)
         {
-            CancellationTokenSource timeoutCts = default;
-            CancellationTokenSource linkedCts = default;
-
-            try
+            // Se timeout = 0, Timeout.Infinite ou negativo, aguarda indefinidamente
+            if (timeoutMilliseconds <= 0)
             {
-                CancellationToken tokenFinal;
-
-                if (timeoutMs > 0)
+                var readTask = Task.Run(async () =>
                 {
-                    // Cria CTS para timeout
-                    timeoutCts = new CancellationTokenSource(timeoutMs);
+                    try
+                    {
+                        return await NetStream.ReadAsync(buffer, 0, tamanho, cancellationBreak).ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }, cancellationBreak);
 
-                    // Combina timeout + cancelamento externo
-                    linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
-                        timeoutCts.Token,
-                        cancellationToken);
-
-                    tokenFinal = linkedCts.Token;
-                }
-                else
-                {
-                    // Sem timeout, usa apenas o token externo
-                    tokenFinal = cancellationToken;
-                }
-
-                // Verifica cancelamento antes de iniciar
-                tokenFinal.ThrowIfCancellationRequested();
-
-                var lido = await network.ReadAsync(buffer, offset, tamanho, tokenFinal)
-                                        .ConfigureAwait(false);
-
-                return lido;
+                return await readTask.ConfigureAwait(false);
             }
-            catch (OperationCanceledException ex)
+
+            using (var timeoutCts = new CancellationTokenSource(timeoutMilliseconds))
+            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBreak, timeoutCts.Token))
             {
-                // Verifica qual token causou o cancelamento
-                if (timeoutCts?.IsCancellationRequested == true)
+                try
                 {
-                    throw new TimeoutException($"Timeout de {timeoutMs}ms na leitura", ex);
+                    var readTask = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            return await NetStream.ReadAsync(buffer, 0, tamanho, cancellationBreak).ConfigureAwait(false);
+                        }
+                        catch (TimeoutException)
+                        {
+                            throw;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            throw;
+                        }
+                    }, linkedCts.Token);
+
+                    return await readTask.ConfigureAwait(false);
                 }
-                else
+                catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationBreak.IsCancellationRequested)
                 {
-                    // Cancelamento manual pelo usuário
-                    throw; // Re-lança OperationCanceledException
+                    // Timeout específico - não é cancelamento do usuário
+                    throw new TimeoutException($"Timeout de {timeoutMilliseconds}ms excedido ao ler linha");
                 }
-            }
-            finally
-            {
-                timeoutCts?.Dispose();
-                linkedCts?.Dispose();
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                // Se for cancellationBreak, deixa a exceção subir para ser tratada no loop externo
             }
         }
 
+        public static async Task<int> LerComTimeoutAsync(
+            TcpClient client,
+                byte[] buffer,
+                int tamanho,
+                int timeoutMs,
+                bool throwOnTimeout = false,
+                CancellationToken cancellationToken = default)
+        {
+            // Verifica cancelamento antes de começar
+            cancellationToken.ThrowIfCancellationRequested();
+
+            int timeoutOriginal = NetStream.ReadTimeout > 0 ? client.Client.ReceiveTimeout : Timeout.Infinite;
+
+            if (timeoutMs > 0)
+            {
+                // Define timeout no socket
+                NetStream.ReadTimeout = timeoutMs;
+            }
+
+            try
+            {
+                // Executa Read síncrono em thread separada
+                return await Task.Run(() =>
+                {
+                    var dadosLidos = 0;
+                    try
+                    {
+                        dadosLidos = NetStream.Read(buffer, 0, tamanho);
+                        return dadosLidos;
+                    }
+                    catch (IOException ex) when (ex.InnerException is SocketException se &&
+                                                  se.SocketErrorCode == SocketError.TimedOut)
+                    {
+                        if (!throwOnTimeout)
+                        {
+                            if (dadosLidos > 0)
+                            {
+                                return dadosLidos; // Retorna bytes lidos antes do timeout
+                            }
+                            return -1; // Saida por Timeout sem exceção
+                        }
+
+                        throw new TimeoutException($"Timeout de {timeoutMs}ms na leitura", ex);
+                    }
+                }, cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                NetStream.ReadTimeout = timeoutOriginal;
+            }
+        }
     }
 }
