@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Etiquetas.Bibliotecas.TCPCliente.Exemplo;
 
 namespace Etiquetas.GUI.Texto
 {
@@ -19,8 +18,10 @@ namespace Etiquetas.GUI.Texto
             //var exemplos = new ExemploStreamXml();
             //await exemplos.ExecutarTodosExemplos();
 
-            var exemplos = new ExemploStreamTCPClient();
-            await exemplos.ExecutarTodosExemplos().ConfigureAwait(false);
+            //var exemplos = new ExemploStreamTCPClient();
+            //await exemplos.ExecutarTodosExemplos().ConfigureAwait(false);
+
+            await TCPClientSimuladorConnect.ExecutaTodosExemplos().ConfigureAwait(false);
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();
