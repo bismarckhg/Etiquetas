@@ -12,6 +12,7 @@ namespace Etiquetas.GUI.Texto
     {
         public static async Task ExecutaTodosExemplos()
         {
+            await Task.Delay(5000).ConfigureAwait(false); // Pequena pausa antes de iniciar
             await Exemplo1ConnectWithTimeoutAsync().ConfigureAwait(false);
             await Exemplo2ConnectWithTimeoutAsync().ConfigureAwait(false);
             await Exemplo3ConnectWithTimeoutAsync().ConfigureAwait(false);
@@ -25,8 +26,9 @@ namespace Etiquetas.GUI.Texto
             try
             {
                 Console.WriteLine("=== Exemplo1ConnectWithTimeoutAsync ===");
-                await ConnectWithTimeoutAsync1(client, "192.168.1.100", 9100, 2000);
+                await ConnectWithTimeoutAsync1(client, "127.0.0.1", 9100, 2000);
                 Console.WriteLine("✅ ConnectWithTimeoutAsync1 - Conectado");
+                client.Close();
             }
             catch (TimeoutException ex)
             {
@@ -56,8 +58,9 @@ namespace Etiquetas.GUI.Texto
             try
             {
                 Console.WriteLine("=== Exemplo2ConnectWithTimeoutAsync ===");
-                await ConnectWithTimeoutAsync2(client, "192.168.1.100", 9100, 2000);
+                await ConnectWithTimeoutAsync2(client, "127.0.0.1", 9100, 2000);
                 Console.WriteLine("✅ ConnectWithTimeoutAsync2 - Conectado");
+                client.Close();
             }
             catch (TimeoutException ex)
             {
@@ -87,8 +90,9 @@ namespace Etiquetas.GUI.Texto
             var client = new TcpClient();
             try
             {
-                await ConnectWithTimeoutAsync3(client, "192.168.1.100", 9100, 2000);
+                await ConnectWithTimeoutAsync3(client, "127.0.0.1", 9100, 2000);
                 Console.WriteLine("✅ ConnectWithTimeoutAsync3 - Conectado");
+                client.Close();
             }
             catch (TimeoutException ex)
             {
@@ -117,8 +121,9 @@ namespace Etiquetas.GUI.Texto
             try
             {
                 Console.WriteLine("=== Exemplo4ConnectWithTimeoutAsync ===");
-                var client = await ConnectWithTimeoutAsync4("192.168.1.100", 9100, 2000);
+                var client = await ConnectWithTimeoutAsync4("127.0.0.1", 9100, 2000);
                 Console.WriteLine("✅ ConnectWithTimeoutAsync4 - Conectado");
+                client.Close();
             }
             catch (TimeoutException ex)
             {
@@ -170,16 +175,18 @@ namespace Etiquetas.GUI.Texto
             TcpClient client,
             string host,
             int port,
-            int timeoutMs)
+            int timeoutMs,  // 0 = sem timeout, >0 = timeout em milissegundos
+            CancellationToken cancellationBreak = default)
         {
-            using (var cts = new CancellationTokenSource(timeoutMs))
+            using (var timeoutCts = new CancellationTokenSource(timeoutMs))
+            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBreak, timeoutCts.Token))
             {
                 try
                 {
                     // Infelizmente ConnectAsync não aceita CancellationToken no .NET Framework 4.7.2
                     // Então usamos Task.WhenAny mesmo
                     var connectTask = client.ConnectAsync(host, port);
-                    var delayTask = Task.Delay(timeoutMs, cts.Token);
+                    var delayTask = Task.Delay(timeoutMs, linkedCts.Token);
 
                     var completedTask = await Task.WhenAny(connectTask, delayTask)
                                                   .ConfigureAwait(false);

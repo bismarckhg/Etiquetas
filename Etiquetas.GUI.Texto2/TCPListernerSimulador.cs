@@ -75,7 +75,7 @@ namespace Etiquetas.GUI.Texto2
             //var socket = TCPClient?.Client;
             //return (TCPClient?.Connected ?? false)
             //    && (TCPClient?.Client).Connected;
-            var retorno = client?.Connected ?? false;
+            var retorno = (client?.Connected ?? false) && (client?.Client.Connected ?? false);
             return retorno;
         }
 
@@ -95,9 +95,12 @@ namespace Etiquetas.GUI.Texto2
                 var netstream = client.GetStream();
                 NetStream = netstream;
 
-                var bufferZero = new byte[0];
+                if (!token.IsCancellationRequested && EstaAberto(client, netstream))
+                {
+                    var bufferZero = new byte[0];
+                    var vazio = await LerComTimeoutAsync(client, bufferZero, tamanho, 2000, throwOnTimeout: false, token).ConfigureAwait(false);
+                }
 
-                var vazio = await LerComTimeoutAsync(client, bufferZero, tamanho, 2000, throwOnTimeout: false, token).ConfigureAwait(false);
                 tamanho = client.Available;
                 liberado = NetStream.DataAvailable;
 
