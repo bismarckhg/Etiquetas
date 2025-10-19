@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -89,7 +90,11 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             throw new InvalidCastException($"Tipo de retorno não suportado: {typeof(T).FullName}");
         }
 
-        private async Task HandleClientAsync(Encoding encoding, CancellationToken token =  default)
+        private async Task ReadLinesManuallyAsync(
+            int bufferSize,
+            int timeout,
+            Encoding encoding,
+            CancellationToken cancellationBreak = default)
         {
             var endpoint = TCPClient.Client.RemoteEndPoint?.ToString() ?? "??";
             Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Cliente conectado: {endpoint}");
@@ -104,22 +109,25 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 var netstream = TCPClient.GetStream();
                 NetStream = netstream;
 
-                if (!token.IsCancellationRequested && EstaAberto())
+                if (!cancellationBreak.IsCancellationRequested && EstaAberto())
                 {
+                    tamanho = TCPClient.Available;
+                    liberado = PossuiDados();
+
                     var bufferZero = new byte[0];
                     var vazio = await LerComTimeoutAsync(
                         bufferZero,
                         tamanho,
-                        2000,
+                        timeout,
                         throwOnTimeout: false,
-                        token).ConfigureAwait(false);
+                        cancellationBreak).ConfigureAwait(false);
                 }
 
                 tamanho = TCPClient.Available;
                 liberado = PossuiDados();
 
                 //var reader = new StreamReader(network, Encoding.UTF8, false);
-                while (!token.IsCancellationRequested && EstaAberto())
+                while (!cancellationBreak.IsCancellationRequested && EstaAberto())
                 {
                     // Lê uma linha de forma assíncrona (null = cliente fechou)
                     //line = await reader.ReadLineAsync().ConfigureAwait(false);
@@ -139,14 +147,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     var lido = await LerComTimeoutAsync(
                         buffer,
                         tamanho,
-                        2000,
+                        timeout,
                         throwOnTimeout: false,
-                        token).ConfigureAwait(false);
+                        cancellationBreak).ConfigureAwait(false);
                     if (lido == 0)
                     {
                         contaLido0++;
                         await Task.Delay(100).ConfigureAwait(false);
-                        if (contaLido0 > 10)
+                        if (contaLido0 == 10)
                         {
                             // Opcional: enviar ACK (será ignorado)
                             await NetStream.WriteAsync(new byte[] { 0x06 }, 0, 1);
@@ -182,9 +190,104 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
         }
 
+        protected async Task<int> LerComTimeoutAsync(
+                byte[] buffer,
+                int tamanho,
+                int timeoutMs,
+                bool throwOnTimeout = false,
+                CancellationToken cancellationBreak = default)
+        {
+            // Verifica cancelamento antes de começar
+            cancellationBreak.ThrowIfCancellationRequested();
+
+            int streamTimeoutOriginal = NetStream.ReadTimeout > 0 ? TCPClient.Client.ReceiveTimeout : Timeout.Infinite;
+
+            if (timeoutMs > 0)
+            {
+                // Define timeout no socket
+                NetStream.ReadTimeout = timeoutMs;
+            }
+            var x = 1;
+
+            try
+            {
+                // Executa Read síncrono em thread separada
+                return await Task.Run(() =>
+                {
+                    var dadosLidos = 0;
+                    try
+                    {
+                        dadosLidos = NetStream.Read(buffer, 0, tamanho);
+                        return dadosLidos;
+                    }
+                    catch (IOException ex) when (ex.InnerException is SocketException se &&
+                                                  se.SocketErrorCode == SocketError.TimedOut)
+                    {
+                        if (!throwOnTimeout)
+                        {
+                            if (dadosLidos > 0)
+                            {
+                                return dadosLidos; // Retorna bytes lidos antes do timeout
+                            }
+                            return -1; // Saida por Timeout sem exceção
+                        }
+
+                        throw new TimeoutException($"Timeout de {timeoutMs}ms na leitura", ex);
+                    }
+                }, cancellationBreak).ConfigureAwait(false);
+            }
+            finally
+            {
+                NetStream.ReadTimeout = streamTimeoutOriginal;
+            }
+        }
+
         public Task EscreverAsync<T>(params object[] parametros)
         {
-            throw new NotImplementedException();
+            var posicao = 0;
+
+            var dados = string.Empty;
+            var timeout = 0;
+            var bufferSize = 4096; // Valor padrão
+            var cancellationBreak = default(CancellationToken);
+            var encoding = ConversaoEncoding.UTF8BOM;
+            var addLineBreak = true;
+
+            foreach (var item in parametros)
+            {
+                switch (item)
+                {
+                    case string envio:
+                        dados = envio;
+                        break;
+                    case int valor:
+                        switch (posicao)
+                        {
+                            case 0:
+                                posicao++;
+                                timeout = valor;
+                                break;
+                            case 1:
+                                posicao++;
+                                bufferSize = valor;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case bool quebraLinha:
+                        addLineBreak = quebraLinha;
+                        break;
+                    case Encoding encode:
+                        encoding = encode;
+                        break;
+                    case CancellationToken cancellation:
+                        cancellationBreak = cancellation;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         public Task EscreverAsync<T>(ITaskParametros parametros)
