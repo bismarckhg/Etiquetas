@@ -136,7 +136,12 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
                     byte[] buffer = new byte[tamanho];
                     //var lido = await network.ReadAsync(buffer, 0, tamanho).ConfigureAwait(false);
-                    var lido = await LerComTimeoutAsync(client, buffer, tamanho, 2000, throwOnTimeout: false, token).ConfigureAwait(false);
+                    var lido = await LerComTimeoutAsync(
+                        buffer,
+                        tamanho,
+                        2000,
+                        throwOnTimeout: false,
+                        token).ConfigureAwait(false);
                     if (lido == 0)
                     {
                         contaLido0++;
