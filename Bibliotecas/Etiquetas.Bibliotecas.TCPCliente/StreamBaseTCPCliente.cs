@@ -14,6 +14,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 {
     public class StreamBaseTCPCliente : StreamBase
     {
+        protected TcpClient TCPClient { get; set; }
 
         public StreamBaseTCPCliente()
         {
@@ -29,7 +30,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
 
             var posicao = 0;
-            TcpClient client = default;
             string serverIpAdress = string.Empty;
             int serverPort = 0;
             int timeout = 0;
@@ -60,7 +60,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         }
                         break;
                     case TcpClient tcpClient:
-                        client = tcpClient;
+                        this.TCPClient = tcpClient;
                         break;
                     case CancellationToken token:
                         cancellationBruto = token;
@@ -80,11 +80,11 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 return;
             }
 
-            if (client == default)
+            if (TCPClient == default)
             {
                 throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
             }
-            await ConnectAsync(client, cancellationBruto).ConfigureAwait(false);
+            await ConnectAsync(cancellationBruto).ConfigureAwait(false);
             return;
         }
 
@@ -98,10 +98,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
             var cancellationToken = parametros.RetornaSeExistir<CancellationToken>("CancellationBruto");
             var timeout = parametros.RetornaSeExistir<int>("Timeout");
-            TcpClient client = default;
 
-            client = parametros.RetornaSeExistir<TcpClient>("TcpClient");
-            if (client == default)
+            this.TCPClient = parametros.RetornaSeExistir<TcpClient>("TcpClient");
+            if (this.TCPClient == default)
             {
                 var serverIpAdress = parametros.RetornaSeExistir<string>("ServerIpAdress");
                 var serverPort = parametros.RetornaSeExistir<int>("ServerPort");
@@ -117,7 +116,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 throw new ArgumentNullException("Ip Adress e TcpClient não informado!");
             }
 
-            await ConnectAsync(client, cancellationToken).ConfigureAwait(false);
+            await ConnectAsync(cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -144,7 +143,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             int timeoutMs = Timeout.Infinite,
             CancellationToken cancellationBruto = default)
         {
-            var client = new TcpClient();
+            this.TCPClient = new TcpClient();
 
             using (var timeoutCts = new CancellationTokenSource(timeoutMs))
             using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBruto, timeoutCts.Token))
@@ -153,8 +152,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 {
                     // Infelizmente ConnectAsync não aceita CancellationToken no .NET Framework 4.7.2
                     // Então usamos Task.WhenAny mesmo
-                    
-                    var connectTask = client.ConnectAsync(serverIpAdress, serverPort);
+
+                    var connectTask = this.TCPClient.ConnectAsync(serverIpAdress, serverPort);
                     var delayTask = Task.Delay(timeoutMs, linkedCts.Token);
 
                     var completedTask = await Task.WhenAny(connectTask, delayTask)
@@ -162,19 +161,17 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
                     if (completedTask == delayTask)
                     {
-                        client.Close();
+                        await FecharAsync().ConfigureAwait(false);
                         throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {host}:{port}");
                     }
 
                     await connectTask;
 
                     // Cada cliente é tratado em sua própria tarefa (não bloqueia o processo)
-                    _ = Task.Run(() => HandleClientAsync(client, cancellationBruto), cancellationBruto);
-
                 }
                 catch (OperationCanceledException)
                 {
-                    client.Close();
+                    await FecharAsync().ConfigureAwait(false);
                     throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {host}:{port}");
                 }
             }
@@ -185,7 +182,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// </summary>
         /// <param name="cancellationBruto">Token de cancelamento</param>
         private async Task ConnectAsync(
-            TcpClient client,
             CancellationToken cancellationBruto = default)
         {
             try
@@ -193,14 +189,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 // .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run com timeout
                 var connectTask = Task.Run(() =>
                 {
-                    client = client ?? throw new ArgumentNullException(nameof(client));
+                    this.TCPClient = this.TCPClient ?? throw new ArgumentNullException(nameof(client));
                 }, cancellationBruto);
 
                 var conectado = EstaAberto();
 
                 if (conectado)
                 {
-                    var tcpClientEndPoint = client.Client.RemoteEndPoint as System.Net.IPEndPoint;
+                    var tcpClientEndPoint = this.TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
                     var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
                     var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
                 }
@@ -213,7 +209,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
             catch (Exception ex)
             {
-                var tcpClientEndPoint = client.Client.RemoteEndPoint as System.Net.IPEndPoint;
+                var tcpClientEndPoint = this.TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
                 var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
                 var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
                 throw new InvalidOperationException($"Erro ao conectar com {tcpClientIPAddress}:{tcpClientPort}: {ex.Message}", ex);
@@ -221,10 +217,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         }
 
         /// <inheritdoc/>
-        public override bool EstaAberto(TcpClient client)
+        public override bool EstaAberto()
         {
-            var retorno = (client?.Connected ?? false)
-                && (client?.Client?.Connected ?? false);
+            var retorno = (this.TCPClient?.Connected ?? false)
+                && (this.TCPClient?.Client?.Connected ?? false);
 
             return retorno;
         }
@@ -250,17 +246,17 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 //conectado = conectado && socket != null && socket.Connected;
 
                 var conectado = EstaAberto();
-                var tem = (TCPClient?.Available > 0);
+                var temDados = conectado && (TCPClient?.Available > 0);
                 // Método mais confiável: Poll + Available
                 // Poll com SelectMode.SelectRead retorna true se:
                 // - Há dados para ler
                 // - A conexão foi fechada
                 // - A conexão foi resetada
-                var socket = TCPClient.Client;
-                bool pollResult = socket.Poll(1000, SelectMode.SelectRead);
+                //var socket = TCPClient.Client;
+                //bool pollResult = socket.Poll(1000, SelectMode.SelectRead);
                 // Se Poll retorna true MAS não há dados, a conexão foi fechada
-                bool hasData = socket.Available > 0;
-                var temDados = conectado && pollResult && hasData;
+                //bool hasData = socket.Available > 0;
+                //var temDados = conectado && pollResult && hasData;
 
                 return temDados;
             }

@@ -29,14 +29,12 @@
     <Compile Remove="Anterior\StreamBaseTCPCliente.cs" />
     <Compile Remove="Anterior\StreamTCPCliente.cs" />
     <Compile Remove="Exemplo\ExemploStreamTCPClient.cs" />
-    <Compile Remove="StreamTCPCliente.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Anterior\StreamBaseTCPCliente.cs" />
     <None Include="Anterior\StreamTCPCliente.cs" />
     <None Include="Exemplo\ExemploStreamTCPClient.cs" />
-    <None Include="StreamTCPCliente.cs" />
   </ItemGroup>
 
   <ItemGroup>
