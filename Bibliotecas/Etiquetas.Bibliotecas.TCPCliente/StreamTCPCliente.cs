@@ -17,8 +17,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     public class StreamTCPCliente : StreamBaseTCPCliente, IStreamLeitura, IStreamEscrita
     {
         protected NetworkStream NetStream;
-        protected StreamReader Reader;
-        protected StreamWriter Writer;
 
         public Task<T> LerAsync<T>(params object[] parametros)
         {
@@ -288,6 +286,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         break;
                 }
             }
+
+            return SendDataAsync(
+                dados,
+                bufferSize,
+                timeout,
+                encoding,
+                addLineBreak,
+                cancellationBreak);
         }
 
         public Task EscreverAsync<T>(ITaskParametros parametros)
