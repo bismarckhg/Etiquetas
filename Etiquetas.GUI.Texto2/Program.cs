@@ -11,7 +11,8 @@ namespace Etiquetas.GUI.Texto2
         static async Task Main(string[] args)
         {
             await Task.Delay(2000);
-            await TCPListernerSimulador.Execute();
+            //await TCPListernerSimulador.Execute();
+            await ExemploTASK.ExecutaTodosExemplos();
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();

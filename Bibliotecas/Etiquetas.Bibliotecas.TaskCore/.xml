@@ -839,11 +839,17 @@
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.Funcoes">
             <summary>Funcões(Com metodos com parametros e retonos, para criação das Tasks.</summary>
         </member>
+        <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.ServicoMutex">
+            <summary>Controle de mutex Unico por servicos./// </summary>
+        </member>
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.ParametrosDict">
             <summary>Parâmetros de cada task.</summary>
         </member>
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.NomeParaId">
             <summary>Nome da task para os ID.</summary>
+        </member>
+        <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.IdParaNome">
+            <summary>ID para o Nome da task.</summary>
         </member>
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.ExecutandoTasks">
             <summary>Tasks em execução.</summary>

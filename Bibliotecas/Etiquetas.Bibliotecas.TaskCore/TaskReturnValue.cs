@@ -37,7 +37,8 @@ namespace Etiquetas.Bibliotecas.TaskCore
         public override TaskState StatusTask { get; set; }
 
         /// <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
-        public override object CancellationController { get; set; }
+        protected override CancellationToken CancellationTokenStop { get; set; }
+        protected override CancellationTokenSource CancellationTokenSourceStop { get; set; }
 
         /// <summary>Definição de Encoding para Textos.</summary>
         public override Encoding EncodingTexto { get; set; } = Encoding.UTF8;
@@ -47,16 +48,21 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// </summary>
         public override TasksGrupos GrupoTasks { get; set; }
 
-        /// <summary>Token de cancelamento efetivo, extraído do controlador.</summary>
+        /// <inheritdoc />
+        public override CancellationTokenSource RetornoCancellationTokenSource
+        {
+            get
+            {
+                return this.CancellationTokenSourceStop;
+            }
+        }
+
+        /// <inheritdoc />
         public override CancellationToken RetornoCancellationToken
         {
             get
             {
-                if (CancellationController is CancellationToken ct)
-                    return ct;
-                if (CancellationController is CancellationTokenSource src)
-                    return src.Token;
-                return CancellationToken.None;
+                return CancellationTokenStop;
             }
         }
 
@@ -101,12 +107,12 @@ namespace Etiquetas.Bibliotecas.TaskCore
             ArmazenaIdTask(parametros.RetornoIdTask());
             ArmazenaNomeTask(parametros.RetornoNomeTask());
             ArmazenaStatusTask(parametros.RetornoStatusTask());
-            ArmazenaCancellationToken(parametros.RetornoCancellationTokenSource());
+            ArmazenaCancellationToken(parametros.RetornoCancellationToken);
+            ArmazenaCancellationTokenSource(parametros.RetornoCancellationTokenSource);
             ArmazenaTaskCreationOptions(parametros.RetornoTaskCreationOptions());
             ArmazenaTimeOutMilliseconds(parametros.RetornoTimeOutMilliseconds());
             ArmazenaTasksGrupo(parametros.RetornoTasksGrupo());
             ArmazenaNomeClasseChamou(parametros.RetornoNomeClasseChamou());
-
         }
 
         /// <summary>
@@ -205,14 +211,14 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// </summary>
         /// <param name="token">Token de cancelamento.</param>
         /// <returns>Instância corrente para encadeamento.</returns>
-        public override void ArmazenaCancellationToken(CancellationToken token) => CancellationController = token;
+        public override void ArmazenaCancellationToken(CancellationToken token) => CancellationTokenStop = token;
 
         /// <summary>
         /// Define a fonte de token de cancelamento.
         /// </summary>
         /// <param name="cts">Fonte de token de cancelamento.</param>
         /// <returns>Instância corrente para encadeamento.</returns>
-        public override void ArmazenaCancellationToken(CancellationTokenSource cts) => this.CancellationController = cts;
+        public override void ArmazenaCancellationTokenSource(CancellationTokenSource cts) => this.CancellationTokenSourceStop = cts;
 
         /// <summary>
         /// Define a fonte de token de cancelamento.
@@ -360,10 +366,6 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <inheritdoc />
         public override int RetornoTimeOutMilliseconds() => this.TimeoutMilliseconds;
 
-
-        /// <inheritdoc />
-        public override CancellationTokenSource RetornoCancellationTokenSource() => CancellationController as CancellationTokenSource;
-
         /// <inheritdoc />
         public override string RetornoNomeClasseChamou() => NomeClasseChamou as string;
 
@@ -424,7 +426,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
                     return (T)(raw);
                 }
             }
-            
+
             return default;
         }
 

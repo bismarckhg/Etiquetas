@@ -12,6 +12,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
         EmProcessamento,
         Finalizada,
         Cancelada,
+        ParadaBrusca,
         Timeout,
         ComErro
     }

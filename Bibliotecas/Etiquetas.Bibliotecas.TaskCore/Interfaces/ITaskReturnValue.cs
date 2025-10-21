@@ -27,7 +27,8 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         public abstract TaskState StatusTask { get; set; }
 
         /// <summary>Controlador de cancelamento (Token ou Source).</summary>
-        public abstract object CancellationController { get; set; }
+        protected abstract CancellationToken CancellationTokenStop { get; set; }
+        protected abstract CancellationTokenSource CancellationTokenSourceStop { get; set; }
 
         /// <summary>Definição de Encoding para Textos.</summary>
         public abstract Encoding EncodingTexto { get; set; }
@@ -92,7 +93,7 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// Armazena uma fonte de token de cancelamento para a tarefa.
         /// </summary>
         /// <param name="cancelToken">Fonte de token de cancelamento.</param>
-        public abstract void ArmazenaCancellationToken(CancellationTokenSource cancelToken);
+        public abstract void ArmazenaCancellationTokenSource(CancellationTokenSource cancelToken);
 
         /// <summary>
         /// Define a fonte de token de cancelamento.
@@ -176,16 +177,16 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         public abstract CancellationToken RetornoCancellationToken { get; }
 
         /// <summary>
+        /// Recupera o token de cancelamento armazenado.
+        /// </summary>
+        /// <returns>Token de cancelamento.</returns>
+        public abstract CancellationTokenSource RetornoCancellationTokenSource { get; }
+
+        /// <summary>
         /// Recupera o Encoding do Texto.
         /// </summary>
         /// <returns>Encoding.</returns>
         public abstract Encoding RetornoEncoding { get; }
-
-        /// <summary>
-        /// Recupera o token de cancelamento armazenado.
-        /// </summary>
-        /// <returns>Token de cancelamento.</returns>
-        public abstract CancellationTokenSource RetornoCancellationTokenSource();
 
         /// <summary>
         /// Recupera as opções de criação de tarefa armazenadas.

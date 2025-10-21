@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos;
 using Etiquetas.Bibliotecas.Comum.Caracteres;
+using System.Reflection;
 
 namespace Etiquetas.Bibliotecas.TaskCore
 {
@@ -135,10 +136,14 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
         /// <summary>Funcões(Com metodos com parametros e retonos, para criação das Tasks.</summary>
         private readonly ConcurrentDictionary<int, Func<ITaskParametros, Task<ITaskReturnValue>>> Funcoes = new ConcurrentDictionary<int, Func<ITaskParametros, Task<ITaskReturnValue>>>();
+        /// <summary>Controle de mutex Unico por servicos./// </summary>
+        private readonly ConcurrentDictionary<int, Mutex> ServicoMutex = new ConcurrentDictionary<int, Mutex>();
         /// <summary>Parâmetros de cada task.</summary>
         private readonly ConcurrentDictionary<int, ITaskParametros> ParametrosDict = new ConcurrentDictionary<int, ITaskParametros>();
         /// <summary>Nome da task para os ID.</summary>
         private readonly ConcurrentDictionary<string, int> NomeParaId = new ConcurrentDictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        /// <summary>ID para o Nome da task.</summary>
+        private readonly ConcurrentDictionary<int, string> IdParaNome = new ConcurrentDictionary<int, string>();
         /// <summary>Tasks em execução.</summary>
         private readonly ConcurrentDictionary<int, Task<ITaskReturnValue>> ExecutandoTasks = new ConcurrentDictionary<int, Task<ITaskReturnValue>>();
         /// <summary>Resultados das tasks processadas.</summary>
@@ -146,7 +151,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <summary>Estados das tasks.</summary>
         private readonly ConcurrentDictionary<int, TaskState> Situacoes = new ConcurrentDictionary<int, TaskState>();
 
-        private readonly ConcurrentDictionary<int, CancellationTokenSource> TaskIdComCancellationTokenSource = new ConcurrentDictionary<int, CancellationTokenSource>();
+        private readonly ConcurrentDictionary<int, CancellationToken> TaskIdComCancellationToken = new ConcurrentDictionary<int, CancellationToken>();
 
         private readonly ConcurrentDictionary<int, bool> _erroDisparado = new ConcurrentDictionary<int, bool>();
 
@@ -206,7 +211,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <param name="nomeGrupo">Nome descritivo do grupo (opcional).</param>
         /// <param name="tokenExterno">Token externo para cancelamento (opcional).</param>
         public TasksGrupos(string nomeGrupo = null,
-                   CancellationTokenSource tokenExterno = null,
+                   CancellationToken tokenExterno = default,
                    bool useSingleThread = false,
                    int maxDegreeOfParallelism = 0)
         {
@@ -218,7 +223,14 @@ namespace Etiquetas.Bibliotecas.TaskCore
             this.NomeGrupo = !EhStringNuloVazioComEspacosBranco.Execute(nomeGrupo)
                 ? nomeGrupo
                 : $"GrupoTasks_{DateTime.UtcNow:yyyyMMddHHmmssfff}";
-            this.CtsGrupo = tokenExterno ?? new CancellationTokenSource();
+
+
+            this.CtsGrupo = new CancellationTokenSource();
+            if (tokenExterno != default)
+            {
+                // Linka o token externo ao token do grupo
+                this.CtsGrupo = CancellationTokenSource.CreateLinkedTokenSource(tokenExterno);
+            }
 
             this.UseSingleThread = useSingleThread;
             this.SchedulerTask = UseSingleThread
@@ -299,16 +311,18 @@ namespace Etiquetas.Bibliotecas.TaskCore
                 throw new ArgumentException($"Já existe uma task com o nome '{tarefaNome}'.", nameof(nomeTask));
             }
 
-            Etiquetas.Bibliotecas.TaskCore.TaskState statusTask = Situacoes.TryGetValue(id, out TaskState status) ? status : TaskState.AguardandoInicio;
+            if (!IdParaNome.TryAdd(id, tarefaNome))
+            {
+                throw new ArgumentException($"Já existe uma task com o ID '{id}'.");
+            }
 
-            var cancelToken = new CancellationTokenSource();
+            Etiquetas.Bibliotecas.TaskCore.TaskState statusTask = Situacoes.TryGetValue(id, out TaskState status) ? status : TaskState.AguardandoInicio;
 
             parametros.ArmazenaIdTask(id);
             parametros.ArmazenaTasksGrupo(this);
             parametros.ArmazenaNomeTask(tarefaNome);
             parametros.ArmazenaStatusTask(statusTask);
-
-            parametros.ArmazenaCancellationToken(cancelToken);
+            var cancelToken = parametros.RetornoCancellationToken;
 
             if (!await AdicionaCancellationTokenSourceComTaskId(id, cancelToken).ConfigureAwait(false))
             {
@@ -778,7 +792,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
             this.ExecutandoTasks.Clear();
             this.TaskResults.Clear();
             this.Situacoes.Clear();
-            this.TaskIdComCancellationTokenSource.Clear();
+            this.TaskIdComCancellationToken.Clear();
 
             // Libera o token de cancelamento
             this.CtsGrupo.Dispose();
@@ -827,8 +841,8 @@ namespace Etiquetas.Bibliotecas.TaskCore
             if (!ParametrosDict.TryGetValue(id, out var parametros))
                 throw new KeyNotFoundException($"Task ID {id} não encontrada.");
 
-            if (parametros.RetornoCancellationTokenSource() is CancellationTokenSource src)
-                src.Cancel();
+            if (parametros.RetornoCancellationToken is CancellationToken src)
+                src.C;
             else
                 throw new InvalidOperationException($"Token não encontrado para Task ID {id}.");
         }
@@ -993,6 +1007,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
                     {
                         try
                         {
+                            LockMutexPorServico(id);
                             var retorno = await CriarProcessEntryAsync(id).ConfigureAwait(false);
                             var ok = ExecutandoTasks.TryGetValue(id, out var task);
                             Interlocked.Increment(ref TasksRegistradas);
@@ -1149,6 +1164,35 @@ namespace Etiquetas.Bibliotecas.TaskCore
                 );
         }
 
+        protected void LockMutexPorServico(int id)
+        {
+
+            bool createdNew;
+            var mutexName = $"Global\\Mutex_{this.NomeGrupo}_Id_{id}";
+            var servicoMutex = new Mutex(true, mutexName, out createdNew);
+
+            var tarefaNome = string.Empty;
+            if (IdParaNome.TryGetValue(id, out var nome))
+            {
+                tarefaNome = nome;
+            }
+
+            if (!createdNew)
+            {
+                servicoMutex?.Dispose();
+                servicoMutex = null;
+                throw new InvalidOperationException(
+                    $"Já existe uma instância do serviço '{tarefaNome}' em execução!\n" +
+                    $"Mutex: {mutexName}");
+            }
+
+            if (!ServicoMutex.TryAdd(id, servicoMutex))
+            {
+                throw new ArgumentException($"Já existe uma task com o ID '{id}' registrada para Mutex de Serviço.", nameof(id));
+            }
+
+        }
+
         /// <summary>  
         /// Método async que monta toda a lógica e cria a entrada de processo para o ID informado, incluindo token de cancelamento e Task associada.  
         ///  
@@ -1280,7 +1324,6 @@ namespace Etiquetas.Bibliotecas.TaskCore
             }
         }
 
-
         //protected override void HandleException(int id, string nomeTask, Exception ex)
         //{
         //    // se já trataram esse id, sai sem disparar novamente
@@ -1363,13 +1406,16 @@ namespace Etiquetas.Bibliotecas.TaskCore
             return tcs.Task.Result;
         }
 
-        protected override async Task<bool> RelacionaTaskComCancellationTokenSourceAsync(int id, CancellationTokenSource cancelToken)
+        protected override async Task<bool> RelacionaTaskComCancellationTokenAsync(int id, CancellationToken cancelToken)
         {
             bool adicionado = false;
 
             for (var tentativas = 0; tentativas < MaxTokenRegistrationAttempts; tentativas++)
             {
-                adicionado = this.TaskIdComCancellationTokenSource.TryAdd(id, cancelToken);
+                var token = CancellationTokenSource.CreateLinkedTokenSource(
+                    this.CtsGrupo.Token,
+                    cancelToken).Token;
+                adicionado = this.TaskIdComCancellationToken.TryAdd(id, token);
                 if (adicionado)
                 {
                     break;
