@@ -71,13 +71,25 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// Cancela todas as tasks do grupo.
         /// Dispara <see cref="TratamentoCancelamentoGrupo"/> para cada task se implementado.
         /// </summary>
-        public abstract void CancelarGrupo();
+        public abstract void CancelamentoGrupo();
+
+        /// <summary>
+        /// Cancela todas as tasks do grupo.
+        /// Dispara <see cref="TratamentoCancelamentoGrupo"/> para cada task se implementado.
+        /// </summary>
+        public abstract void CancelamentoBruscoGrupo();
 
         /// <summary>
         /// Cancela uma task específica pelo nome, sinalizando seu token individual.
         /// Referenciado em <see cref="ITasksGrupos.CancelarTaskPorNome(string)"/>.
         /// </summary>
-        public abstract void CancelarTaskPorNome(string nomeTask);
+        public abstract void CancelamentoTaskPorNome(string nomeTask);
+
+        /// <summary>
+        /// Cancela uma task específica pelo nome, sinalizando seu token individual.
+        /// Referenciado em <see cref="ITasksGrupos.CancelarTaskPorNome(string)"/>.
+        /// </summary>
+        public abstract void CancelamentoBruscoTaskPorNome(string nomeTask);
 
         /// Obtém o estado corrente de uma task (AguardandoInicio, EmProcessamento, etc.).
         /// Usa <see cref="UpdateTaskState(int, TaskState)"/> internamente.
@@ -253,12 +265,17 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
 
         #region "Adiministra Cancel Token"
 
-        protected abstract Task<bool> AdicionaCancellationTokenSourceComTaskId(int id, CancellationTokenSource individualToken);
-        protected abstract Task<bool> ArmazenaCancellationTokenSourcePeloTaskId(int id, CancellationTokenSource cancelToken);
+        protected abstract Task<bool> AdicionaCancellationTokenComTaskId(int id, CancellationToken individualToken);
+        protected abstract Task<bool> ArmazenaCancellationTokenPeloTaskId(int id, CancellationToken cancelToken);
 
-        protected abstract Task<bool> RelacionaTaskComCancellationTokenSourceAsync(int id, CancellationTokenSource cancelToken);
+        protected abstract Task<bool> RelacionaTaskComCancellationTokenAsync(int id, CancellationToken cancelToken);
 
-        protected abstract Task<bool> RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(CancellationTokenSource cancelToken);
+        protected abstract Task<bool> AdicionaCancellationTokenBreakComTaskId(int id, CancellationToken individualToken);
+        protected abstract Task<bool> ArmazenaCancellationTokenBreakPeloTaskId(int id, CancellationToken cancelToken);
+
+        protected abstract Task<bool> RelacionaTaskComCancellationTokenBreakAsync(int id, CancellationToken cancelToken);
+
+        // protected abstract Task<bool> RegistraCancellationTokenTaskNoGroupCancellationToken(CancellationToken cancelToken);
 
         #endregion
 

@@ -47,6 +47,8 @@ namespace Etiquetas.GUI.Texto2
             Console.WriteLine($"Token recebido - CanBeCanceled: {cancellationToken.CanBeCanceled}");
             Console.WriteLine($"Token recebido - HashCode: {cancellationToken.GetHashCode()}");
 
+            Console.WriteLine("Iniciando contador de 1 a 50...");
+
             for (int i = 0; i <= 50; i++)
             {
                 // ✅ DIAGNÓSTICO 5: Verificar a cada iteração

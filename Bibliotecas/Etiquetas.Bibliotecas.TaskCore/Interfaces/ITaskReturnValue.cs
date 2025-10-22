@@ -30,6 +30,10 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         protected abstract CancellationToken CancellationTokenStop { get; set; }
         protected abstract CancellationTokenSource CancellationTokenSourceStop { get; set; }
 
+        /// <summary>Controlador de cancelamento (Token ou Source).</summary>
+        protected abstract CancellationToken CancellationTokenBreak { get; set; }
+        protected abstract CancellationTokenSource CancellationTokenSourceBreak { get; set; }
+
         /// <summary>Definição de Encoding para Textos.</summary>
         public abstract Encoding EncodingTexto { get; set; }
 
@@ -90,15 +94,27 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         public abstract void ArmazenaCancellationToken(CancellationToken token);
 
         /// <summary>
+        /// Armazena um token de cancelamento para a tarefa.
+        /// </summary>
+        /// <param name="token">Token de cancelamento.</param>
+        public abstract void ArmazenaCancellationTokenBreak(CancellationToken token);
+
+        /// <summary>
         /// Armazena uma fonte de token de cancelamento para a tarefa.
         /// </summary>
         /// <param name="cancelToken">Fonte de token de cancelamento.</param>
         public abstract void ArmazenaCancellationTokenSource(CancellationTokenSource cancelToken);
 
         /// <summary>
-        /// Define a fonte de token de cancelamento.
+        /// Armazena uma fonte de token de cancelamento para a tarefa.
         /// </summary>
-        /// <param name="encoding">Fonte de token de cancelamento.</param>
+        /// <param name="cancelToken">Fonte de token de cancelamento.</param>
+        public abstract void ArmazenaCancellationTokenSourceBreak(CancellationTokenSource cancelToken);
+
+        /// <summary>
+        /// Encoding Conversao de Codigos Textos.
+        /// </summary>
+        /// <param name="encoding">Codificacao de Textos.</param>
         /// <returns>Instância corrente para encadeamento.</returns>
         public abstract void ArmazenaEncoding(Encoding encoding);
 
@@ -180,7 +196,19 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// Recupera o token de cancelamento armazenado.
         /// </summary>
         /// <returns>Token de cancelamento.</returns>
+        public abstract CancellationToken RetornoCancellationTokenBreak { get; }
+
+        /// <summary>
+        /// Recupera o token de cancelamento armazenado.
+        /// </summary>
+        /// <returns>Token de cancelamento.</returns>
         public abstract CancellationTokenSource RetornoCancellationTokenSource { get; }
+
+        /// <summary>
+        /// Recupera o token de cancelamento armazenado.
+        /// </summary>
+        /// <returns>Token de cancelamento.</returns>
+        public abstract CancellationTokenSource RetornoCancellationTokenSourceBreak { get; }
 
         /// <summary>
         /// Recupera o Encoding do Texto.

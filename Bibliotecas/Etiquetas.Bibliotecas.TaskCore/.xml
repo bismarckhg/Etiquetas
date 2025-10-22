@@ -29,7 +29,7 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.StatusTask">
             <summary>Estado atual da task.</summary>
         </member>
-        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationController">
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenStop">
             <summary>Controlador de cancelamento (Token ou Source).</summary>
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.EncodingTexto">
@@ -90,7 +90,7 @@
             </summary>
             <param name="token">Token de cancelamento.</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationToken(System.Threading.CancellationTokenSource)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)">
             <summary>
             Armazena uma fonte de token de cancelamento para a tarefa.
             </summary>
@@ -177,17 +177,17 @@
             </summary>
             <returns>Token de cancelamento.</returns>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoCancellationTokenSource">
+            <summary>
+            Recupera o token de cancelamento armazenado.
+            </summary>
+            <returns>Token de cancelamento.</returns>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoEncoding">
             <summary>
             Recupera o Encoding do Texto.
             </summary>
             <returns>Encoding.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoCancellationTokenSource">
-            <summary>
-            Recupera o token de cancelamento armazenado.
-            </summary>
-            <returns>Token de cancelamento.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoTaskCreationOptions">
             <summary>
@@ -502,7 +502,7 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.StatusTask">
             <summary>Estado atual da task.</summary>
         </member>
-        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationController">
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenStop">
             <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.EncodingTexto">
@@ -513,8 +513,11 @@
             Grupo de tarefas associado à instância atual.
             </summary>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationTokenSource">
+            <inheritdoc />
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationToken">
-            <summary>Token de cancelamento efetivo, extraído do controlador.</summary>
+            <inheritdoc />
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoEncoding">
             <summary>
@@ -587,7 +590,7 @@
             <param name="token">Token de cancelamento.</param>
             <returns>Instância corrente para encadeamento.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationToken(System.Threading.CancellationTokenSource)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)">
             <summary>
             Define a fonte de token de cancelamento.
             </summary>
@@ -689,9 +692,6 @@
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoTimeOutMilliseconds">
             <inheritdoc />
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationTokenSource">
-            <inheritdoc />
-        </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoNomeClasseChamou">
             <inheritdoc />
         </member>
@@ -755,7 +755,7 @@
         </member>
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.TokenRegistrationDelayMs">
             <summary>
-            Delay em milissegundos entre tentativas de registro de token.
+            Delay em milissegundos entre tentativas de registro de cancellationNovo.
             </summary>
         </member>
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.DefaultGroupNamePattern">
@@ -891,7 +891,7 @@
             
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.#ctor(System.String,System.Threading.CancellationTokenSource,System.Boolean,System.Int32)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.#ctor(System.String,System.Threading.CancellationToken,System.Boolean,System.Int32)">
             <summary>
             Construtor que inicializa o grupo de tasks.
             </summary>
@@ -1063,7 +1063,7 @@
             <see cref="T:Etiquetas.Bibliotecas.TaskCore.TasksGrupos"/>.
             
             Este método descarta as assinaturas de fluxos de processos e resultados,
-            limpa os dicionários internos e libera o token de cancelamento associado ao grupo.
+            limpa os dicionários internos e libera o cancellationNovo de cancelamento associado ao grupo.
             Após a chamada deste método, a instância não deve mais ser utilizada.
             </summary>
         </member>
@@ -1071,11 +1071,11 @@
             <summary>  
             Cancela todas as tasks do grupo.  
              
-            Este método sinaliza o token de cancelamento associado ao grupo,  
+            Este método sinaliza o cancellationNovo de cancelamento associado ao grupo,  
             interrompendo a execução de todas as tasks que ainda não foram concluídas.  
              
             Exceções:  
-            <exception cref="T:System.ObjectDisposedException">Lançada se o token de cancelamento já foi descartado.</exception>  
+            <exception cref="T:System.ObjectDisposedException">Lançada se o cancellationNovo de cancelamento já foi descartado.</exception>  
             </summary>  
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelarTaskPorNome(System.String)">
@@ -1084,7 +1084,7 @@
             </summary>  
             <param name="nomeTask">O nome da task a ser cancelada.</param>  
             <exception cref="T:System.Collections.Generic.KeyNotFoundException">Lançada se a task com o nome especificado não for encontrada.</exception>  
-            <exception cref="T:System.InvalidOperationException">Lançada se o token de cancelamento da task não for encontrado.</exception>  
+            <exception cref="T:System.InvalidOperationException">Lançada se o cancellationNovo de cancelamento da task não for encontrado.</exception>  
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelarTaskPorId(System.Int32)">
             <summary>
@@ -1105,7 +1105,7 @@
             
              </summary>
              <param name="funcTask">A função assíncrona a ser executada, que recebe um <see cref="T:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros"/> e retorna um <see cref="T:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue"/>.</param>
-             <param name="parametros">Os parâmetros necessários para execução da função, incluindo token de cancelamento e configurações adicionais.</param>
+             <param name="parametros">Os parâmetros necessários para execução da função, incluindo cancellationNovo de cancelamento e configurações adicionais.</param>
              <returns>Uma <see cref="T:System.Threading.Tasks.Task`1"/> representando o resultado da função executada.</returns>
              <exception cref="T:System.InvalidOperationException">Lançada caso a função fornecida seja nula.</exception>
         </member>
@@ -1180,10 +1180,10 @@
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CriarProcessEntryAsync(System.Int32)">
              <summary>  
-             Método async que monta toda a lógica e cria a entrada de processo para o ID informado, incluindo token de cancelamento e Task associada.  
+             Método async que monta toda a lógica e cria a entrada de processo para o ID informado, incluindo cancellationNovo de cancelamento e Task associada.  
               
              Este método é responsável por inicializar a execução de uma task específica no grupo,  
-             configurando os parâmetros necessários, como timeout e token de cancelamento.  
+             configurando os parâmetros necessários, como timeout e cancellationNovo de cancelamento.  
              Ele também atualiza o estado da task para "EmProcessamento" e armazena a task em execução no dicionário interno.  
             
              Exceções:  
@@ -1194,10 +1194,10 @@
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CriarProcessEntry(System.Int32)">
              <summary>  
-             Método sincrono que monta toda a lógica e cria a entrada de processo para o ID informado, incluindo token de cancelamento e Task associada.  
+             Método sincrono que monta toda a lógica e cria a entrada de processo para o ID informado, incluindo cancellationNovo de cancelamento e Task associada.  
               
              Este método é responsável por inicializar a execução de uma task específica no grupo,  
-             configurando os parâmetros necessários, como timeout e token de cancelamento.  
+             configurando os parâmetros necessários, como timeout e cancellationNovo de cancelamento.  
              Ele também atualiza o estado da task para "EmProcessamento" e armazena a task em execução no dicionário interno.  
             
              Exceções:  
