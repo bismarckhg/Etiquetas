@@ -19,7 +19,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
     /// Alterações aplicadas:
     /// 1. Uso de CallerInfoAttributes para obter classe/método chamador sem StackTrace.
     /// 2. Dicionário de conversores pré-inicializado para primitivos e Nullable&lt;T&gt;.
-    /// 3. Metadados expostos como propriedades fortemente tipadas com Fluent API.
+    /// 3. Metadados expo tos como propriedades fortemente tipadas com Fluent API.
     /// </remarks>
     public class TaskReturnValue : ITaskParametros
     {
@@ -39,6 +39,10 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         protected override CancellationToken CancellationTokenStop { get; set; }
         protected override CancellationTokenSource CancellationTokenSourceStop { get; set; }
+
+        /// <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
+        protected override CancellationToken CancellationTokenBreak { get; set; }
+        protected override CancellationTokenSource CancellationTokenSourceBreak { get; set; }
 
         /// <summary>Definição de Encoding para Textos.</summary>
         public override Encoding EncodingTexto { get; set; } = Encoding.UTF8;
@@ -63,6 +67,24 @@ namespace Etiquetas.Bibliotecas.TaskCore
             get
             {
                 return CancellationTokenStop;
+            }
+        }
+
+        /// <inheritdoc />
+        public override CancellationTokenSource RetornoCancellationTokenSourceBreak
+        {
+            get
+            {
+                return this.CancellationTokenSourceBreak;
+            }
+        }
+
+        /// <inheritdoc />
+        public override CancellationToken RetornoCancellationTokenBreak
+        {
+            get
+            {
+                return CancellationTokenBreak;
             }
         }
 
@@ -109,6 +131,8 @@ namespace Etiquetas.Bibliotecas.TaskCore
             ArmazenaStatusTask(parametros.RetornoStatusTask());
             ArmazenaCancellationToken(parametros.RetornoCancellationToken);
             ArmazenaCancellationTokenSource(parametros.RetornoCancellationTokenSource);
+            ArmazenaCancellationTokenBreak(parametros.RetornoCancellationToken);
+            ArmazenaCancellationTokenSourceBreak(parametros.RetornoCancellationTokenSourceBreak);
             ArmazenaTaskCreationOptions(parametros.RetornoTaskCreationOptions());
             ArmazenaTimeOutMilliseconds(parametros.RetornoTimeOutMilliseconds());
             ArmazenaTasksGrupo(parametros.RetornoTasksGrupo());
@@ -152,6 +176,10 @@ namespace Etiquetas.Bibliotecas.TaskCore
             [CallerFilePath] string sourceFilePath = "",
             [CallerMemberName] string memberName = "")
         {
+            this.CancellationTokenStop = default;
+            this.CancellationTokenBreak = default;
+            this.CancellationTokenSourceBreak = null;
+            this.CancellationTokenSourceStop = null;
             SetaQuantidadeParametros(quantidadeParametros);
             SetaParametros(parametros);
             SetaNomeClasseChamou(sourceFilePath, memberName);
@@ -219,6 +247,21 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// <param name="cts">Fonte de token de cancelamento.</param>
         /// <returns>Instância corrente para encadeamento.</returns>
         public override void ArmazenaCancellationTokenSource(CancellationTokenSource cts) => this.CancellationTokenSourceStop = cts;
+
+
+        /// <summary>
+        /// Define o token de cancelamento.
+        /// </summary>
+        /// <param name="token">Token de cancelamento.</param>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    /// <returns>Instância corrente para encadeamento.</returns>
+        public override void ArmazenaCancellationTokenBreak(CancellationToken token) => CancellationTokenBreak = token;
+
+        /// <summary>
+        /// Define a fonte de token de cancelamento.
+        /// </summary>
+        /// <param name="cts">Fonte de token de cancelamento.</param>
+        /// <returns>Instância corrente para encadeamento.</returns>
+        public override void ArmazenaCancellationTokenSourceBreak(CancellationTokenSource cts) => this.CancellationTokenSourceStop = cts;
 
         /// <summary>
         /// Define a fonte de token de cancelamento.

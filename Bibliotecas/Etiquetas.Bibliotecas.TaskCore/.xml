@@ -32,6 +32,9 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenStop">
             <summary>Controlador de cancelamento (Token ou Source).</summary>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenBreak">
+            <summary>Controlador de cancelamento (Token ou Source).</summary>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.EncodingTexto">
             <summary>Definição de Encoding para Textos.</summary>
         </member>
@@ -90,7 +93,19 @@
             </summary>
             <param name="token">Token de cancelamento.</param>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenBreak(System.Threading.CancellationToken)">
+            <summary>
+            Armazena um token de cancelamento para a tarefa.
+            </summary>
+            <param name="token">Token de cancelamento.</param>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)">
+            <summary>
+            Armazena uma fonte de token de cancelamento para a tarefa.
+            </summary>
+            <param name="cancelToken">Fonte de token de cancelamento.</param>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenSourceBreak(System.Threading.CancellationTokenSource)">
             <summary>
             Armazena uma fonte de token de cancelamento para a tarefa.
             </summary>
@@ -98,9 +113,9 @@
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaEncoding(System.Text.Encoding)">
             <summary>
-            Define a fonte de token de cancelamento.
+            Encoding Conversao de Codigos Textos.
             </summary>
-            <param name="encoding">Fonte de token de cancelamento.</param>
+            <param name="encoding">Codificacao de Textos.</param>
             <returns>Instância corrente para encadeamento.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaNomeTask(System.String)">
@@ -177,7 +192,19 @@
             </summary>
             <returns>Token de cancelamento.</returns>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoCancellationTokenBreak">
+            <summary>
+            Recupera o token de cancelamento armazenado.
+            </summary>
+            <returns>Token de cancelamento.</returns>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoCancellationTokenSource">
+            <summary>
+            Recupera o token de cancelamento armazenado.
+            </summary>
+            <returns>Token de cancelamento.</returns>
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.RetornoCancellationTokenSourceBreak">
             <summary>
             Recupera o token de cancelamento armazenado.
             </summary>
@@ -310,16 +337,40 @@
             Chama internamente <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.MontarFluxoProcessos"/> e <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.MontarFluxoResultados(System.IObservable{System.Collections.Generic.KeyValuePair{System.Int32,System.Threading.Tasks.Task{Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue}}})"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelarGrupo">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoGrupo">
             <summary>
             Cancela todas as tasks do grupo.
             Dispara <see cref="E:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.TratamentoCancelamentoGrupo"/> para cada task se implementado.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelarTaskPorNome(System.String)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoBruscoGrupo">
+            <summary>
+            Cancela todas as tasks do grupo.
+            Dispara <see cref="E:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.TratamentoCancelamentoGrupo"/> para cada task se implementado.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoTaskPorNome(System.String)">
             <summary>
             Cancela uma task específica pelo nome, sinalizando seu token individual.
-            Referenciado em <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelarTaskPorNome(System.String)"/>.
+            Referenciado em <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoTaskPorNome(System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoBrutoTaskPorNome(System.String)">
+            <summary>
+            Cancela uma task específica pelo nome, sinalizando seu token individual.
+            Referenciado em <see cref="!:ITasksGrupos.CancelamentoBruscoTaskPorNome(string)"/>.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoTaskPorId(System.Int32)">
+            <summary>
+            Cancela uma task específica pelo nome, sinalizando seu token individual.
+            Referenciado em <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoTaskPorNome(System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoBrutoTaskPorId(System.Int32)">
+            <summary>
+            Cancela uma task específica pelo nome, sinalizando seu token individual.
+            Referenciado em <see cref="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.CancelamentoBrutoTaskPorNome(System.String)"/>.
             </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITasksGrupos.ObterEstadoTask(System.Int32)">
@@ -487,7 +538,7 @@
             Alterações aplicadas:
             1. Uso de CallerInfoAttributes para obter classe/método chamador sem StackTrace.
             2. Dicionário de conversores pré-inicializado para primitivos e Nullable&lt;T&gt;.
-            3. Metadados expostos como propriedades fortemente tipadas com Fluent API.
+            3. Metadados expo tos como propriedades fortemente tipadas com Fluent API.
             </remarks>
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.NomeClasseChamou">
@@ -505,6 +556,9 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenStop">
             <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenBreak">
+            <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
+        </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.EncodingTexto">
             <summary>Definição de Encoding para Textos.</summary>
         </member>
@@ -517,6 +571,12 @@
             <inheritdoc />
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationToken">
+            <inheritdoc />
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationTokenSourceBreak">
+            <inheritdoc />
+        </member>
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoCancellationTokenBreak">
             <inheritdoc />
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.RetornoEncoding">
@@ -591,6 +651,20 @@
             <returns>Instância corrente para encadeamento.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)">
+            <summary>
+            Define a fonte de token de cancelamento.
+            </summary>
+            <param name="cts">Fonte de token de cancelamento.</param>
+            <returns>Instância corrente para encadeamento.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenBreak(System.Threading.CancellationToken)">
+            <summary>
+            Define o token de cancelamento.
+            </summary>
+            <param name="token">Token de cancelamento.</param>
+            <returns>Instância corrente para encadeamento.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenSourceBreak(System.Threading.CancellationTokenSource)">
             <summary>
             Define a fonte de token de cancelamento.
             </summary>
@@ -825,6 +899,9 @@
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CtsGrupo">
             <summary>Token de cancelamento do grupo.</summary>
         </member>
+        <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CtsGrupoThrow">
+            <summary>Token de cancelamento do grupo por Throw.</summary>
+        </member>
         <member name="F:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.LockRegistroTask">
             <summary>
             
@@ -891,7 +968,7 @@
             
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.#ctor(System.String,System.Threading.CancellationToken,System.Boolean,System.Int32)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.#ctor(System.String,System.Threading.CancellationToken,System.Threading.CancellationToken,System.Boolean,System.Int32)">
             <summary>
             Construtor que inicializa o grupo de tasks.
             </summary>
@@ -1067,7 +1144,7 @@
             Após a chamada deste método, a instância não deve mais ser utilizada.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelarGrupo">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelamentoGrupo">
             <summary>  
             Cancela todas as tasks do grupo.  
              
@@ -1078,7 +1155,18 @@
             <exception cref="T:System.ObjectDisposedException">Lançada se o cancellationNovo de cancelamento já foi descartado.</exception>  
             </summary>  
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelarTaskPorNome(System.String)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelamentoBruscoGrupo">
+            <summary>  
+            Cancela todas as tasks do grupo.  
+             
+            Este método sinaliza o cancellationNovo de cancelamento associado ao grupo,  
+            interrompendo a execução de todas as tasks que ainda não foram concluídas.  
+             
+            Exceções:  
+            <exception cref="T:System.ObjectDisposedException">Lançada se o cancellationNovo de cancelamento já foi descartado.</exception>  
+            </summary>  
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelamentoTaskPorNome(System.String)">
             <summary>  
             Cancela uma task específica pelo nome dela.  
             </summary>  
@@ -1086,7 +1174,20 @@
             <exception cref="T:System.Collections.Generic.KeyNotFoundException">Lançada se a task com o nome especificado não for encontrada.</exception>  
             <exception cref="T:System.InvalidOperationException">Lançada se o cancellationNovo de cancelamento da task não for encontrado.</exception>  
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelarTaskPorId(System.Int32)">
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelamentoTaskPorId(System.Int32)">
+            <summary>
+            Cancela a task pelo seu identificador.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelamentoBrutoTaskPorNome(System.String)">
+            <summary>  
+            Cancela uma task específica pelo nome dela.  
+            </summary>  
+            <param name="nomeTask">O nome da task a ser cancelada.</param>  
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Lançada se a task com o nome especificado não for encontrada.</exception>  
+            <exception cref="T:System.InvalidOperationException">Lançada se o cancellationNovo de cancelamento da task não for encontrado.</exception>  
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.TaskCore.TasksGrupos.CancelamentoBrutoTaskPorId(System.Int32)">
             <summary>
             Cancela a task pelo seu identificador.
             </summary>

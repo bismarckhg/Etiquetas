@@ -81,15 +81,27 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
 
         /// <summary>
         /// Cancela uma task específica pelo nome, sinalizando seu token individual.
-        /// Referenciado em <see cref="ITasksGrupos.CancelarTaskPorNome(string)"/>.
+        /// Referenciado em <see cref="ITasksGrupos.CancelamentoTaskPorNome(string)"/>.
         /// </summary>
         public abstract void CancelamentoTaskPorNome(string nomeTask);
 
         /// <summary>
         /// Cancela uma task específica pelo nome, sinalizando seu token individual.
-        /// Referenciado em <see cref="ITasksGrupos.CancelarTaskPorNome(string)"/>.
+        /// Referenciado em <see cref="ITasksGrupos.CancelamentoBruscoTaskPorNome(string)"/>.
         /// </summary>
-        public abstract void CancelamentoBruscoTaskPorNome(string nomeTask);
+        public abstract void CancelamentoBrutoTaskPorNome(string nomeTask);
+
+        /// <summary>
+        /// Cancela uma task específica pelo nome, sinalizando seu token individual.
+        /// Referenciado em <see cref="ITasksGrupos.CancelamentoTaskPorNome(string)"/>.
+        /// </summary>
+        public abstract void CancelamentoTaskPorId(int id);
+
+        /// <summary>
+        /// Cancela uma task específica pelo nome, sinalizando seu token individual.
+        /// Referenciado em <see cref="ITasksGrupos.CancelamentoBrutoTaskPorNome(string)"/>.
+        /// </summary>
+        public abstract void CancelamentoBrutoTaskPorId(int id);
 
         /// Obtém o estado corrente de uma task (AguardandoInicio, EmProcessamento, etc.).
         /// Usa <see cref="UpdateTaskState(int, TaskState)"/> internamente.
