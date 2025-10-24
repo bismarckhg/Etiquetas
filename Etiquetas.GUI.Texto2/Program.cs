@@ -32,9 +32,34 @@ namespace Etiquetas.GUI.Texto2
             //{
             //    Console.WriteLine("cancel2 não é default");
             //}
-            
+
             //await TCPListernerSimulador.Execute();
-            await ExemploTASK.ExecutaTodosExemplos();
+            //await ExemploTASK.ExecutaTodosExemplos();
+
+            var cancel1 = new CancellationTokenSource();
+            var cancel2 = new CancellationTokenSource();
+            var ctsGrupo = new CancellationTokenSource();
+
+            ctsGrupo.Token.Register(() =>
+            {
+                cancel1.Cancel();
+            });
+
+            ctsGrupo.Token.Register(() =>
+            {
+                cancel2.Cancel();
+            });
+
+            Console.WriteLine($"Cancel1 {cancel1.Token.IsCancellationRequested}");
+            Console.WriteLine($"Cancel2 {cancel2.Token.IsCancellationRequested}");
+            Console.WriteLine($"ctsGrupo {ctsGrupo.Token.IsCancellationRequested}");
+
+            //ctsGrupo.Cancel();
+            cancel1.Cancel();
+
+            Console.WriteLine($"Cancel1 {cancel1.Token.IsCancellationRequested}");
+            Console.WriteLine($"Cancel2 {cancel2.Token.IsCancellationRequested}");
+            Console.WriteLine($"ctsGrupo {ctsGrupo.Token.IsCancellationRequested}");
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();

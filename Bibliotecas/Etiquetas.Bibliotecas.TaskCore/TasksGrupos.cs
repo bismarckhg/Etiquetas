@@ -1012,7 +1012,6 @@ namespace Etiquetas.Bibliotecas.TaskCore
                 // captura e retorna uma Task explicitamente falhada com essa exceção.
                 await CreateFaultedTask<ITaskReturnValue>(ex).ConfigureAwait(false);
             }
-
         }
 
         /// <summary>
@@ -1321,40 +1320,51 @@ namespace Etiquetas.Bibliotecas.TaskCore
             var cancelToken = parametros.RetornoCancellationToken;
             var cancelTokenBreak = parametros.RetornoCancellationTokenBreak;
 
-            // 4) Executa a função ou gera Task faulted
-            var funcTask = Funcoes[id](parametros);
-            var baseTask = funcTask ?? CreateFaultedTask<ITaskReturnValue>(
-                new InvalidOperationException($"Função retornou task nula. id = 'id'")
-            );
+            // 4) Obtem o nome da Task
+            var nomeTask = parametros.RetornoNomeTask();
 
-            // 5) Agenda a execução conforme a configuração do grupo (single-thread ou não)
+            // 5) Executa a função ou gera Task faulted
+            var funcTask = Funcoes[id](parametros);
+            if (funcTask == null)
+                throw new InvalidOperationException($"Função retornou Task nula (ID {id}).");
+
+            // 6) Agenda a execução conforme a configuração do grupo (single-thread ou não)
+            // ⚙️ Task principal (trabalho da função) (agendamento assíncrono inteligente)
             // Mantém o cancelToken para possível uso interno
             // da função.
-            // ⚙️ Task principal (trabalho da função)
-            Task<ITaskReturnValue> scheduledTask;
-            if (UseSingleThread)
-            {
-                // 🔹 RESPEITA scheduler dedicado (serial)
-                // 🔹 Modo single-thread: execução no scheduler dedicado
-                scheduledTask = Task.Factory.StartNew(
-                async () =>
-                {
-                    return await baseTask.ConfigureAwait(false);
-                },
-                cancelToken,
-                TaskCreationOptions.AttachedToParent, // Mantém AttachedToParent para single-thread
-                SchedulerTask
-                ).Unwrap();
-            }
-            else
-            {
-                // 🔹 NÃO respeita scheduler dedicado (paralelo)
-                // 🔹 Modo normal: execução assíncrona no pool padrão
-                scheduledTask = Task.Run(async () =>
-                 {
-                     return await baseTask.ConfigureAwait(false);
-                 }, cancelToken);
-            }
+            Task<ITaskReturnValue> scheduledTask = UseSingleThread
+                    ? Task.Factory
+                        .StartNew(async () =>
+                        {
+                            try
+                            {
+                                return await funcTask.ConfigureAwait(false);
+                            }
+                            catch (Exception ex)
+                            {
+                                //Console.WriteLine($"💢 [{nomeTask}] erro interno: {ex.Message}");
+                                throw;
+                            }
+                        },
+                        cancelToken,
+                        TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
+                        SchedulerTask)
+                        .Unwrap()
+                    : Task.Factory.StartNew(async () =>
+                    {
+                        try
+                        {
+                            return await funcTask.ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            //Console.WriteLine($"💢 [{nomeTask}] erro interno: {ex.Message}");
+                            throw;
+                        }
+                    }, cancelToken,
+                        TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
+                        TaskScheduler.Default)
+                        .Unwrap();
 
             //Task<ITaskReturnValue> scheduledTask = UseSingleThread
             //    ? Task.Factory.StartNew(() => baseTask,
@@ -1364,13 +1374,51 @@ namespace Etiquetas.Bibliotecas.TaskCore
             //      ).Unwrap()
             //    : baseTask;
 
-            // 7) Guarda no dicionário de tasks em execução
+
+            // 7) ⚡ MONITOR BREAK individual (reativo)
+            var monitorBreakTask = Task.Factory
+                .StartNew(async () =>
+                {
+                    while (!cancelTokenBreak.IsCancellationRequested)
+                        await Task.Delay(50, cancelTokenBreak).ConfigureAwait(false);
+
+                    Console.WriteLine($"💀 [BREAK - {nomeTask}] Parada total detectada (Task ID {id}).");
+                    throw new OperationCanceledException(cancelTokenBreak);
+                },
+                cancelTokenBreak,
+                TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
+                TaskScheduler.Default)
+                .Unwrap();
+
+            // 8) 🧠 COMBINA ambos: quem terminar primeiro define o destino
+            var combinedTask = Task.Factory
+                .StartNew(async () =>
+                {
+                    // Espera a conclusão do principal OU do monitor
+                    var winner = await Task.WhenAny(scheduledTask, monitorBreakTask).ConfigureAwait(false);
+
+                    // Se o monitor venceu → parada total
+                    if (winner == monitorBreakTask)
+                    {
+                        Console.WriteLine($"🛑 [{nomeTask}] interrompida via BREAK (CombinedTask).");
+                        throw new OperationCanceledException(cancelTokenBreak);
+                    }
+
+                    // Caso contrário → a execução normal terminou
+                    return await scheduledTask.ConfigureAwait(false);
+                },
+                cancelToken,
+                TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
+                TaskScheduler.Default)
+                .Unwrap();
+
+            // 9) 🔒 Registra task composta nos dicionários de execução.
             if (!ExecutandoTasks.TryAdd(id, scheduledTask))
             {
                 throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
             }
 
-            // 8) Retorna o par com ID e Task
+            // 10) Retorna o par com ID e Task
             return new KeyValuePair<int, Task<ITaskReturnValue>>(id, scheduledTask);
 
             // ⚙️ Task principal (trabalho da função)
