@@ -256,6 +256,32 @@ namespace Etiquetas.Bibliotecas.TaskCore
                        : TaskScheduler.Default;
 
             MaxDegreeOfParallelism = maxDegreeOfParallelism > 0 ? maxDegreeOfParallelism : HardwareInfo.ProcessorCount;
+
+            // ⚡ Monitor global (grupo inteiro) — detecta "parada total BREAK" no nível do grupo
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    while (!CtsGrupoThrow.IsCancellationRequested)
+                        await Task.Delay(100);
+
+                    Console.WriteLine($"💀 [GRUPO:{NomeGrupo}] PARADA TOTAL DETECTADA — cancelando todas as tasks...");
+
+                    // Cancela todas as tasks através do token de grupo normal (CtsGrupo)
+                    CtsGrupo.Cancel();
+
+                    // Também pode disparar evento global, se quiser:
+                    if (TratamentoCancelamentoGrupo != null)
+                    {
+                        await TratamentoCancelamentoGrupo(0, NomeGrupo, "ParadaTotalGrupo",
+                            new OperationCanceledException("Parada total de grupo.", CtsGrupoThrow.Token)).ConfigureAwait(false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Erro no monitor global de parada total: {ex.Message}");
+                }
+            }, CtsGrupoThrow.Token);
         }
 
         #region "eventos de Tasks"
@@ -1288,33 +1314,55 @@ namespace Etiquetas.Bibliotecas.TaskCore
             // 1) Atualiza estado para EmProcessamento
             UpdateTaskState(id, TaskState.EmProcessamento);
 
-            // 2) Prepara parâmetros e timeout
+            // 2) Prepara parâmetros
             var parametros = ParametrosDict[id];
-            var timeoutMs = (int)parametros.RetornoTimeOutMilliseconds();
 
-            // 3) Cria cancellationNovo individual com timeout
-            var ctsIndividual = timeoutMs == Timeout.Infinite
-                ? new CancellationTokenSource()
-                : new CancellationTokenSource(timeoutMs);
+            // 3) Prepara CancellationToken(entre servicos) e CancellationTokenBreak (Parada Total/Brusca)
+            var cancelToken = parametros.RetornoCancellationToken;
+            var cancelTokenBreak = parametros.RetornoCancellationTokenBreak;
 
-            //  // 4) Linka cancellationNovo do grupo de forma assíncrona
-            //  await RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(ctsIndividual).ConfigureAwait(false);
-            //  parametros.ArmazenaCancellationToken(ctsIndividual);
-
-            // 5) Executa a função ou gera Task faulted
+            // 4) Executa a função ou gera Task faulted
             var funcTask = Funcoes[id](parametros);
             var baseTask = funcTask ?? CreateFaultedTask<ITaskReturnValue>(
                 new InvalidOperationException($"Função retornou task nula. id = 'id'")
             );
 
-            // 6) Se UseSingleThread, programa a execução no scheduler dedicado
-            Task<ITaskReturnValue> scheduledTask = UseSingleThread
-                ? Task.Factory.StartNew(() => baseTask,
-                    ctsIndividual.Token,
-                    TaskCreationOptions.None,
-                    SchedulerTask
-                  ).Unwrap()
-                : baseTask;
+            // 5) Agenda a execução conforme a configuração do grupo (single-thread ou não)
+            // Mantém o cancelToken para possível uso interno
+            // da função.
+            // ⚙️ Task principal (trabalho da função)
+            Task<ITaskReturnValue> scheduledTask;
+            if (UseSingleThread)
+            {
+                // 🔹 RESPEITA scheduler dedicado (serial)
+                // 🔹 Modo single-thread: execução no scheduler dedicado
+                scheduledTask = Task.Factory.StartNew(
+                async () =>
+                {
+                    return await baseTask.ConfigureAwait(false);
+                },
+                cancelToken,
+                TaskCreationOptions.AttachedToParent, // Mantém AttachedToParent para single-thread
+                SchedulerTask
+                ).Unwrap();
+            }
+            else
+            {
+                // 🔹 NÃO respeita scheduler dedicado (paralelo)
+                // 🔹 Modo normal: execução assíncrona no pool padrão
+                scheduledTask = Task.Run(async () =>
+                 {
+                     return await baseTask.ConfigureAwait(false);
+                 }, cancelToken);
+            }
+
+            //Task<ITaskReturnValue> scheduledTask = UseSingleThread
+            //    ? Task.Factory.StartNew(() => baseTask,
+            //        cancelToken,
+            //        TaskCreationOptions.None,
+            //        SchedulerTask
+            //      ).Unwrap()
+            //    : baseTask;
 
             // 7) Guarda no dicionário de tasks em execução
             if (!ExecutandoTasks.TryAdd(id, scheduledTask))
@@ -1324,6 +1372,21 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             // 8) Retorna o par com ID e Task
             return new KeyValuePair<int, Task<ITaskReturnValue>>(id, scheduledTask);
+
+            // ⚙️ Task principal (trabalho da função)
+            // 🔹 NÃO respeita scheduler dedicado (paralelo)
+            // 🔹 Modo normal: execução assíncrona no pool padrão
+
+            // 3) Cria cancellationNovo individual com timeout
+            //var timeoutMs = (int)parametros.RetornoTimeOutMilliseconds();
+            //var ctsIndividual = timeoutMs == Timeout.Infinite
+            //    ? new CancellationTokenSource()
+            //    : new CancellationTokenSource(timeoutMs);
+
+            //  // 4) Linka cancellationNovo do grupo de forma assíncrona
+            //  await RegistraCancellationTokenSourceTaskNoGroupCancellationTokenSource(ctsIndividual).ConfigureAwait(false);
+            //  parametros.ArmazenaCancellationToken(ctsIndividual);
+
         }
 
         /// <summary>  
