@@ -277,15 +277,15 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
 
         #region "Adiministra Cancel Token"
 
-        protected abstract Task<bool> AdicionaCancellationTokenComTaskId(int id, CancellationToken individualToken);
-        protected abstract Task<bool> ArmazenaCancellationTokenPeloTaskId(int id, CancellationToken cancelToken);
+        protected abstract Task<bool> AdicionaCancellationTokenComTaskId(int id, CancellationTokenSource individualTokenSource);
+        protected abstract Task<bool> ArmazenaCancellationTokenPeloTaskId(int id, CancellationTokenSource cancelTokenSource);
 
-        protected abstract Task<bool> RelacionaTaskComCancellationTokenAsync(int id, CancellationToken cancelToken);
+        protected abstract Task<bool> RelacionaTaskComCancellationTokenAsync(int id, CancellationTokenSource cancelTokenSource);
 
-        protected abstract Task<bool> AdicionaCancellationTokenBreakComTaskId(int id, CancellationToken individualToken);
-        protected abstract Task<bool> ArmazenaCancellationTokenBreakPeloTaskId(int id, CancellationToken cancelToken);
+        protected abstract Task<bool> AdicionaCancellationTokenBreakComTaskId(int id, CancellationTokenSource individualTokenSource);
+        protected abstract Task<bool> ArmazenaCancellationTokenBreakPeloTaskId(int id, CancellationTokenSource cancelTokenSource);
 
-        protected abstract Task<bool> RelacionaTaskComCancellationTokenBreakAsync(int id, CancellationToken cancelToken);
+        protected abstract Task<bool> RelacionaTaskComCancellationTokenBreakAsync(int id, CancellationTokenSource cancelTokenSource);
 
         // protected abstract Task<bool> RegistraCancellationTokenTaskNoGroupCancellationToken(CancellationToken cancelToken);
 

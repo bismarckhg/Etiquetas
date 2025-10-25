@@ -27,11 +27,9 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         public abstract TaskState StatusTask { get; set; }
 
         /// <summary>Controlador de cancelamento (Token ou Source).</summary>
-        protected abstract CancellationToken CancellationTokenStop { get; set; }
         protected abstract CancellationTokenSource CancellationTokenSourceStop { get; set; }
 
         /// <summary>Controlador de cancelamento (Token ou Source).</summary>
-        protected abstract CancellationToken CancellationTokenBreak { get; set; }
         protected abstract CancellationTokenSource CancellationTokenSourceBreak { get; set; }
 
         /// <summary>Definição de Encoding para Textos.</summary>
@@ -87,19 +85,6 @@ namespace Etiquetas.Bibliotecas.TaskCore.Interfaces
         /// <param name="options">Opções de criação de tarefa.</param>
         public abstract void ArmazenaTaskCreationOptions(TaskCreationOptions options);
 
-        /// <summary>
-        /// Armazena um token de cancelamento para a tarefa.
-        /// </summary>
-        /// <param name="token">Token de cancelamento.</param>
-        public abstract void ArmazenaCancellationToken(CancellationToken token);
-
-        /// <summary>
-        /// Armazena um token de cancelamento para a tarefa.
-        /// </summary>
-        /// <param name="token">Token de cancelamento.</param>
-        public abstract void ArmazenaCancellationTokenBreak(CancellationToken token);
-
-        /// <summary>
         /// Armazena uma fonte de token de cancelamento para a tarefa.
         /// </summary>
         /// <param name="cancelToken">Fonte de token de cancelamento.</param>

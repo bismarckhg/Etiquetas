@@ -29,10 +29,10 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.StatusTask">
             <summary>Estado atual da task.</summary>
         </member>
-        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenStop">
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenSourceStop">
             <summary>Controlador de cancelamento (Token ou Source).</summary>
         </member>
-        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenBreak">
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.CancellationTokenSourceBreak">
             <summary>Controlador de cancelamento (Token ou Source).</summary>
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.EncodingTexto">
@@ -87,24 +87,7 @@
             </summary>
             <param name="options">Opções de criação de tarefa.</param>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationToken(System.Threading.CancellationToken)">
-            <summary>
-            Armazena um token de cancelamento para a tarefa.
-            </summary>
-            <param name="token">Token de cancelamento.</param>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenBreak(System.Threading.CancellationToken)">
-            <summary>
-            Armazena um token de cancelamento para a tarefa.
-            </summary>
-            <param name="token">Token de cancelamento.</param>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)">
-            <summary>
-            Armazena uma fonte de token de cancelamento para a tarefa.
-            </summary>
-            <param name="cancelToken">Fonte de token de cancelamento.</param>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)" -->
         <member name="M:Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskReturnValue.ArmazenaCancellationTokenSourceBreak(System.Threading.CancellationTokenSource)">
             <summary>
             Armazena uma fonte de token de cancelamento para a tarefa.
@@ -553,10 +536,10 @@
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.StatusTask">
             <summary>Estado atual da task.</summary>
         </member>
-        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenStop">
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenSourceStop">
             <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         </member>
-        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenBreak">
+        <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.CancellationTokenSourceBreak">
             <summary>Controlador de cancelamento (Token, Source ou Manager).</summary>
         </member>
         <member name="P:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.EncodingTexto">
@@ -643,25 +626,11 @@
             <param name="status">Estado da task.</param>
             <returns>Instância corrente para encadeamento.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationToken(System.Threading.CancellationToken)">
-            <summary>
-            Define o token de cancelamento.
-            </summary>
-            <param name="token">Token de cancelamento.</param>
-            <returns>Instância corrente para encadeamento.</returns>
-        </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenSource(System.Threading.CancellationTokenSource)">
             <summary>
             Define a fonte de token de cancelamento.
             </summary>
             <param name="cts">Fonte de token de cancelamento.</param>
-            <returns>Instância corrente para encadeamento.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenBreak(System.Threading.CancellationToken)">
-            <summary>
-            Define o token de cancelamento.
-            </summary>
-            <param name="token">Token de cancelamento.</param>
             <returns>Instância corrente para encadeamento.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.TaskCore.TaskReturnValue.ArmazenaCancellationTokenSourceBreak(System.Threading.CancellationTokenSource)">

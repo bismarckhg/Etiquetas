@@ -366,15 +366,18 @@ namespace Etiquetas.Bibliotecas.TaskCore
             parametros.ArmazenaTasksGrupo(this);
             parametros.ArmazenaNomeTask(tarefaNome);
             parametros.ArmazenaStatusTask(statusTask);
-            var cancelToken = parametros.RetornoCancellationToken;
-            var cancelTokenBreak = parametros.RetornoCancellationTokenBreak;
+            var cancelTokenSource = parametros.RetornoCancellationTokenSource == null ? new CancellationTokenSource() : parametros.RetornoCancellationTokenSource;
+            var cancelTokenSourceBreak = parametros.RetornoCancellationTokenSourceBreak == null ? new CancellationTokenSource() : parametros.RetornoCancellationTokenSourceBreak;
 
-            if (!await AdicionaCancellationTokenComTaskId(id, cancelToken).ConfigureAwait(false))
+            parametros.ArmazenaCancellationTokenSource(cancelTokenSource);
+            parametros.ArmazenaCancellationTokenSourceBreak(cancelTokenSourceBreak);
+
+            if (!await AdicionaCancellationTokenComTaskId(id, cancelTokenSource).ConfigureAwait(false))
             {
                 throw new InvalidOperationException($"Não foi possível adicionar CancellationTokenSource para a Task com ID {id}.");
             }
 
-            if (!await AdicionaCancellationTokenBreakComTaskId(id, cancelTokenBreak).ConfigureAwait(false))
+            if (!await AdicionaCancellationTokenBreakComTaskId(id, cancelTokenSourceBreak).ConfigureAwait(false))
             {
                 throw new InvalidOperationException($"Não foi possível adicionar CancellationTokenSource para a Task com ID {id}.");
             }
@@ -1574,27 +1577,27 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
         #region "Administra Cancel Token"
 
-        protected override async Task<bool> AdicionaCancellationTokenComTaskId(int id, CancellationToken individualToken)
+        protected override async Task<bool> AdicionaCancellationTokenComTaskId(int id, CancellationTokenSource individualTokenSource)
         {
-            var ok = await ArmazenaCancellationTokenPeloTaskId(id, individualToken).ConfigureAwait(false);
+            var ok = await ArmazenaCancellationTokenPeloTaskId(id, individualTokenSource).ConfigureAwait(false);
 
             return ok;
         }
 
-        protected override async Task<bool> AdicionaCancellationTokenBreakComTaskId(int id, CancellationToken individualTokenBreak)
+        protected override async Task<bool> AdicionaCancellationTokenBreakComTaskId(int id, CancellationTokenSource individualTokenSourceBreak)
         {
-            var ok = await ArmazenaCancellationTokenBreakPeloTaskId(id, individualTokenBreak).ConfigureAwait(false);
+            var ok = await ArmazenaCancellationTokenBreakPeloTaskId(id, individualTokenSourceBreak).ConfigureAwait(false);
 
             return ok;
         }
 
-        protected override async Task<bool> ArmazenaCancellationTokenPeloTaskId(int id, CancellationToken cancelToken)
+        protected override async Task<bool> ArmazenaCancellationTokenPeloTaskId(int id, CancellationTokenSource cancelTokenSource)
         {
             var tcs = new TaskCompletionSource<bool>();
 
             var task = Task.Run(async () =>
             {
-                bool adicionado = await RelacionaTaskComCancellationTokenAsync(id, cancelToken).ConfigureAwait(false);
+                bool adicionado = await RelacionaTaskComCancellationTokenAsync(id, cancelTokenSource).ConfigureAwait(false);
                 tcs.SetResult(adicionado);
             });
 
@@ -1602,13 +1605,13 @@ namespace Etiquetas.Bibliotecas.TaskCore
             return tcs.Task.Result;
         }
 
-        protected override async Task<bool> ArmazenaCancellationTokenBreakPeloTaskId(int id, CancellationToken cancelTokenBreak)
+        protected override async Task<bool> ArmazenaCancellationTokenBreakPeloTaskId(int id, CancellationTokenSource cancelTokenSourceBreak)
         {
             var tcs = new TaskCompletionSource<bool>();
 
             var task = Task.Run(async () =>
             {
-                bool adicionado = await RelacionaTaskComCancellationTokenBreakAsync(id, cancelTokenBreak).ConfigureAwait(false);
+                bool adicionado = await RelacionaTaskComCancellationTokenBreakAsync(id, cancelTokenSourceBreak).ConfigureAwait(false);
                 tcs.SetResult(adicionado);
             });
 
@@ -1616,26 +1619,18 @@ namespace Etiquetas.Bibliotecas.TaskCore
             return tcs.Task.Result;
         }
 
-        protected override async Task<bool> RelacionaTaskComCancellationTokenAsync(int id, CancellationToken cancelToken)
+        protected override async Task<bool> RelacionaTaskComCancellationTokenAsync(int id, CancellationTokenSource cancelTokenSource)
         {
             bool adicionado = false;
-            var cancellationNovo = default(CancellationTokenSource);
             for (var tentativas = 0; tentativas < MaxTokenRegistrationAttempts; tentativas++)
             {
-                if (cancelToken == default)
-                {
-                    cancellationNovo = CancellationTokenSource.CreateLinkedTokenSource(
-                        this.CtsGrupo.Token);
-                }
-                else
-                {
-                    cancellationNovo = CancellationTokenSource.CreateLinkedTokenSource(
-                        this.CtsGrupo.Token,
-                        cancelToken);
-                }
-                adicionado = this.TaskIdComCancellationTokenSource.TryAdd(id, cancellationNovo);
+                adicionado = this.TaskIdComCancellationTokenSource.TryAdd(id, cancelTokenSource);
                 if (adicionado)
                 {
+                    CtsGrupo.Token.Register(() =>
+                    {
+                        cancelTokenSource.Cancel();
+                    });
                     break;
                 }
                 await Task.Delay(TokenRegistrationDelayMs).ConfigureAwait(false);
@@ -1644,18 +1639,18 @@ namespace Etiquetas.Bibliotecas.TaskCore
             return adicionado;
         }
 
-        protected override async Task<bool> RelacionaTaskComCancellationTokenBreakAsync(int id, CancellationToken cancelTokenBreak)
+        protected override async Task<bool> RelacionaTaskComCancellationTokenBreakAsync(int id, CancellationTokenSource cancelTokenBreakSource)
         {
             bool adicionado = false;
-
             for (var tentativas = 0; tentativas < MaxTokenRegistrationAttempts; tentativas++)
             {
-                var cancellationNovo = CancellationTokenSource.CreateLinkedTokenSource(
-                    this.CtsGrupoThrow.Token,
-                    cancelTokenBreak);
-                adicionado = this.TaskIdComCancellationTokenSourceBreak.TryAdd(id, cancellationNovo);
+                adicionado = this.TaskIdComCancellationTokenSourceBreak.TryAdd(id, cancelTokenBreakSource);
                 if (adicionado)
                 {
+                    CtsGrupoThrow.Token.Register(() =>
+                    {
+                        cancelTokenBreakSource.Cancel();
+                    });
                     break;
                 }
                 await Task.Delay(TokenRegistrationDelayMs).ConfigureAwait(false);
