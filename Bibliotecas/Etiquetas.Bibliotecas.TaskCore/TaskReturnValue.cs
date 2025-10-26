@@ -240,7 +240,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
         /// </summary>
         /// <param name="cts">Fonte de token de cancelamento.</param>
         /// <returns>Instância corrente para encadeamento.</returns>
-        public override void ArmazenaCancellationTokenSourceBreak(CancellationTokenSource cts) => this.CancellationTokenSourceStop = cts;
+        public override void ArmazenaCancellationTokenSourceBreak(CancellationTokenSource cts) => this.CancellationTokenSourceBreak = cts;
 
         /// <summary>
         /// Define a fonte de token de cancelamento.

@@ -942,7 +942,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
             if (!ParametrosDict.TryGetValue(id, out var parametros))
                 throw new KeyNotFoundException($"Task ID {id} não encontrada.");
 
-            if (TaskIdComCancellationTokenSource.TryGetValue(id, out var cts))
+            if (TaskIdComCancellationTokenSourceBreak.TryGetValue(id, out var cts))
                 cts.Cancel();
             else
                 throw new InvalidOperationException($"CancellationTokenSource não encontrado para Task ID {id}.");
@@ -1330,7 +1330,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
             var funcTask = Funcoes[id](parametros);
             if (funcTask == null)
                 throw new InvalidOperationException($"Função retornou Task nula (ID {id}).");
-
+            Console.WriteLine($"CriarProcessEntryAsync {nomeTask}");
             // 6) Agenda a execução conforme a configuração do grupo (single-thread ou não)
             // ⚙️ Task principal (trabalho da função) (agendamento assíncrono inteligente)
             // Mantém o cancelToken para possível uso interno
@@ -1379,14 +1379,26 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
 
             // 7) ⚡ MONITOR BREAK individual (reativo)
-            var monitorBreakTask = Task.Factory
+            Task<ITaskReturnValue> monitorBreakTask = Task.Factory
                 .StartNew(async () =>
                 {
-                    while (!cancelTokenBreak.IsCancellationRequested)
-                        await Task.Delay(50, cancelTokenBreak).ConfigureAwait(false);
+                    var nome = parametros.RetornoNomeTask();
 
-                    Console.WriteLine($"💀 [BREAK - {nomeTask}] Parada total detectada (Task ID {id}).");
-                    throw new OperationCanceledException(cancelTokenBreak);
+                    while (!cancelTokenBreak.IsCancellationRequested)
+                    {
+                        await Task.Delay(50, cancelTokenBreak).ConfigureAwait(false);
+                        Console.WriteLine($"⏳ [BREAK - {nome}] Monitorando parada total {cancelTokenBreak.IsCancellationRequested}...");
+                    }
+                        
+                    if (cancelTokenBreak.IsCancellationRequested)
+                    {
+                        Console.WriteLine($"💀 [BREAK - {nome}] Parada total detectada (Task ID {id}).");
+                        throw new OperationCanceledException(cancelTokenBreak);
+                    }
+
+                    ITaskReturnValue retorno = new TaskReturnValue(0);
+
+                    return retorno;
                 },
                 cancelTokenBreak,
                 TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
@@ -1397,13 +1409,15 @@ namespace Etiquetas.Bibliotecas.TaskCore
             var combinedTask = Task.Factory
                 .StartNew(async () =>
                 {
+                    var nome = parametros.RetornoNomeTask();
+
                     // Espera a conclusão do principal OU do monitor
                     var winner = await Task.WhenAny(scheduledTask, monitorBreakTask).ConfigureAwait(false);
 
                     // Se o monitor venceu → parada total
                     if (winner == monitorBreakTask)
                     {
-                        Console.WriteLine($"🛑 [{nomeTask}] interrompida via BREAK (CombinedTask).");
+                        Console.WriteLine($"🛑 [{nome}] interrompida via BREAK (CombinedTask).");
                         throw new OperationCanceledException(cancelTokenBreak);
                     }
 
@@ -1417,6 +1431,18 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             // 9) 🔒 Registra task composta nos dicionários de execução.
             if (!ExecutandoTasks.TryAdd(id, scheduledTask))
+            {
+                throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
+            }
+            
+            var idMonitor = id * -1;
+            if (!ExecutandoTasks.TryAdd(idMonitor, monitorBreakTask))
+            {
+                throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
+            }
+
+            var idCombined = id * -101;
+            if (!ExecutandoTasks.TryAdd(idCombined, combinedTask))
             {
                 throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
             }
