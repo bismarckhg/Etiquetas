@@ -180,20 +180,21 @@ namespace Etiquetas.GUI.Texto2
             try
             {
                 var ciclo = 0;
-                cancellationTokenBreak.ThrowIfCancellationRequested();
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     ciclo++;
                     Console.WriteLine($"Exemplo02Contador Ciclo {ciclo}");
                     Console.WriteLine(" - Iniciando contador de 1 a 50...");
+                    cancellationTokenBreak.ThrowIfCancellationRequested();
 
                     for (int i = 0; i <= 50; i++)
                     {
+                        cancellationTokenBreak.ThrowIfCancellationRequested();
                         // ✅ DIAGNÓSTICO 5: Verificar a cada iteração
                         Console.Write($"Exemplo02Contador Ciclo: {ciclo} Contador: {i}");
                         Console.Write($" - IsCancellationRequested: {cancellationToken.IsCancellationRequested}");
                         Console.WriteLine($" - IsCancellationRequestedBreak: {cancellationTokenBreak.IsCancellationRequested}");
-                        await Task.Delay(100);
+                        await Task.Delay(100, cancellationTokenBreak);
                     }
                 }
                 Console.Write("Exemplo02Contador Task cancelada.");
