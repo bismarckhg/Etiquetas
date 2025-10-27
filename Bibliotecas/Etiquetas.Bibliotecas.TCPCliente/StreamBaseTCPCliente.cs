@@ -5,6 +5,7 @@ using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -20,6 +21,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         {
             // Constructor logic here
         }
+
         public override async Task ConectarAsync(params object[] parametros)
         {
             ThrowIfDisposed();
@@ -152,8 +154,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 {
                     // Infelizmente ConnectAsync não aceita CancellationToken no .NET Framework 4.7.2
                     // Então usamos Task.WhenAny mesmo
+                    var byteAdress = Etiquetas.Bibliotecas.Comum.Caracteres.StringIP.EmByteArray(serverIpAdress);
+                    var ipAddress = Etiquetas.Bibliotecas.Comum.Arrays.ByteArrayEmIPAddress.Execute(byteAdress);
 
-                    var connectTask = this.TCPClient.ConnectAsync(serverIpAdress, serverPort);
+                    this.TCPClient.Connect(ipAddress, serverPort, linkedCts.Token);
                     var delayTask = Task.Delay(timeoutMs, linkedCts.Token);
 
                     var completedTask = await Task.WhenAny(connectTask, delayTask)
@@ -162,7 +166,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     if (completedTask == delayTask)
                     {
                         await FecharAsync().ConfigureAwait(false);
-                        throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {host}:{port}");
+                        throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {serverIpAdress}:{serverPort}");
                     }
 
                     await connectTask;
@@ -172,7 +176,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 catch (OperationCanceledException)
                 {
                     await FecharAsync().ConfigureAwait(false);
-                    throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {host}:{port}");
+                    throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {serverIpAdress}:{serverPort}");
                 }
             }
         }
