@@ -26,7 +26,7 @@ namespace Etiquetas.GUI.Texto2
             //cts01.Cancel();
             grupo.CancelamentoTaskPorNome("Exemplo01Contador");
 
-            await Task.Delay(10800);
+            await Task.Delay(1200);
 
             //ctsBreak02.Cancel();
             grupo.CancelamentoBrutoTaskPorNome("Exemplo02Contador");
@@ -74,7 +74,8 @@ namespace Etiquetas.GUI.Texto2
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exemplo01Contador Exceção: {ex.Message}");
+                //Console.WriteLine($"Exemplo01Contador Exceção: {ex.Message}");
+                throw;
             }
 
             return new TaskReturnValue();

@@ -218,7 +218,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
         public TasksGrupos(string nomeGrupo = null,
                    CancellationToken tokenExterno = default,
                    CancellationToken tokenBreak = default,
-                   bool useSingleThread = false,
+                   bool useSingleThread = true,
                    int maxDegreeOfParallelism = 0)
         {
             this.ResultadosSubject = new Subject<KeyValuePair<int, ITaskReturnValue>>();
@@ -257,31 +257,31 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
             MaxDegreeOfParallelism = maxDegreeOfParallelism > 0 ? maxDegreeOfParallelism : HardwareInfo.ProcessorCount;
 
-            // ⚡ Monitor global (grupo inteiro) — detecta "parada total BREAK" no nível do grupo
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    while (!CtsGrupoThrow.IsCancellationRequested)
-                        await Task.Delay(100);
+            //// ⚡ Monitor global (grupo inteiro) — detecta "parada total BREAK" no nível do grupo
+            //_ = Task.Run(async () =>
+            //{
+            //    try
+            //    {
+            //        while (!CtsGrupoThrow.IsCancellationRequested)
+            //            await Task.Delay(100);
 
-                    Console.WriteLine($"💀 [GRUPO:{NomeGrupo}] PARADA TOTAL DETECTADA — cancelando todas as tasks...");
+            //        Console.WriteLine($"💀 [GRUPO:{NomeGrupo}] PARADA TOTAL DETECTADA — cancelando todas as tasks...");
 
-                    // Cancela todas as tasks através do token de grupo normal (CtsGrupo)
-                    CtsGrupo.Cancel();
+            //        // Cancela todas as tasks através do token de grupo normal (CtsGrupo)
+            //        CtsGrupo.Cancel();
 
-                    // Também pode disparar evento global, se quiser:
-                    if (TratamentoCancelamentoGrupo != null)
-                    {
-                        await TratamentoCancelamentoGrupo(0, NomeGrupo, "ParadaTotalGrupo",
-                            new OperationCanceledException("Parada total de grupo.", CtsGrupoThrow.Token)).ConfigureAwait(false);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"❌ Erro no monitor global de parada total: {ex.Message}");
-                }
-            }, CtsGrupoThrow.Token);
+            //        // Também pode disparar evento global, se quiser:
+            //        if (TratamentoCancelamentoGrupo != null)
+            //        {
+            //            await TratamentoCancelamentoGrupo(0, NomeGrupo, "ParadaTotalGrupo",
+            //                new OperationCanceledException("Parada total de grupo.", CtsGrupoThrow.Token)).ConfigureAwait(false);
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine($"❌ Erro no monitor global de parada total: {ex.Message}");
+            //    }
+            //}, CtsGrupoThrow.Token);
         }
 
         #region "eventos de Tasks"
@@ -1330,18 +1330,31 @@ namespace Etiquetas.Bibliotecas.TaskCore
             var funcTask = Funcoes[id](parametros);
             if (funcTask == null)
                 throw new InvalidOperationException($"Função retornou Task nula (ID {id}).");
+
+            parametros.Armazena<Task<ITaskReturnValue>>(funcTask, "FuncTask");
+
+            // Usa TaskCompletionSource para propagar resultado, erro e cancelamento
+            var tcs = new TaskCompletionSource<ITaskReturnValue>(
+                TaskCreationOptions.RunContinuationsAsynchronously);
             Console.WriteLine($"CriarProcessEntryAsync {nomeTask}");
             // 6) Agenda a execução conforme a configuração do grupo (single-thread ou não)
             // ⚙️ Task principal (trabalho da função) (agendamento assíncrono inteligente)
             // Mantém o cancelToken para possível uso interno
             // da função.
-            Task<ITaskReturnValue> scheduledTask = UseSingleThread
-                    ? Task.Factory
-                        .StartNew(async () =>
+            Task<ITaskReturnValue> scheduledTask = Task.Factory.StartNew(async () =>
                         {
                             try
                             {
-                                return await funcTask.ConfigureAwait(false);
+                                var rotinaPrincipal = Task.Run(() => RotinaPrincipal(parametros), cancelTokenBreak);
+                                var subRotina = VerificaCancellationThrow(parametros);
+                                var resultado = await Task.WhenAny(rotinaPrincipal, subRotina).ConfigureAwait(false);
+
+                                if (resultado == subRotina)
+                                {
+                                    return await subRotina.ConfigureAwait(false); // Vai lançar OperationCanceledException
+                                }
+                                
+                                return await rotinaPrincipal.ConfigureAwait(false);
                             }
                             catch (Exception ex)
                             {
@@ -1351,22 +1364,7 @@ namespace Etiquetas.Bibliotecas.TaskCore
                         },
                         cancelToken,
                         TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
-                        SchedulerTask)
-                        .Unwrap()
-                    : Task.Factory.StartNew(async () =>
-                    {
-                        try
-                        {
-                            return await funcTask.ConfigureAwait(false);
-                        }
-                        catch (Exception ex)
-                        {
-                            //Console.WriteLine($"💢 [{nomeTask}] erro interno: {ex.Message}");
-                            throw;
-                        }
-                    }, cancelToken,
-                        TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
-                        TaskScheduler.Default)
+                        UseSingleThread ? SchedulerTask : TaskScheduler.Default)
                         .Unwrap();
 
             //Task<ITaskReturnValue> scheduledTask = UseSingleThread
@@ -1378,74 +1376,74 @@ namespace Etiquetas.Bibliotecas.TaskCore
             //    : baseTask;
 
 
-            // 7) ⚡ MONITOR BREAK individual (reativo)
-            Task<ITaskReturnValue> monitorBreakTask = Task.Factory
-                .StartNew(async () =>
-                {
-                    var nome = parametros.RetornoNomeTask();
+            //// 7) ⚡ MONITOR BREAK individual (reativo)
+            //Task<ITaskReturnValue> monitorBreakTask = Task.Factory
+            //    .StartNew(async () =>
+            //    {
+            //        var nome = parametros.RetornoNomeTask();
 
-                    while (!cancelTokenBreak.IsCancellationRequested)
-                    {
-                        await Task.Delay(50, cancelTokenBreak).ConfigureAwait(false);
-                        Console.WriteLine($"⏳ [BREAK - {nome}] Monitorando parada total {cancelTokenBreak.IsCancellationRequested}...");
-                    }
-                        
-                    if (cancelTokenBreak.IsCancellationRequested)
-                    {
-                        Console.WriteLine($"💀 [BREAK - {nome}] Parada total detectada (Task ID {id}).");
-                        throw new OperationCanceledException(cancelTokenBreak);
-                    }
+            //        while (!cancelTokenBreak.IsCancellationRequested)
+            //        {
+            //            await Task.Delay(50, cancelTokenBreak).ConfigureAwait(false);
+            //            Console.WriteLine($"⏳ [BREAK - {nome}] Monitorando parada total {cancelTokenBreak.IsCancellationRequested}...");
+            //        }
 
-                    ITaskReturnValue retorno = new TaskReturnValue(0);
+            //        if (cancelTokenBreak.IsCancellationRequested)
+            //        {
+            //            Console.WriteLine($"💀 [BREAK - {nome}] Parada total detectada (Task ID {id}).");
+            //            throw new OperationCanceledException(cancelTokenBreak);
+            //        }
 
-                    return retorno;
-                },
-                cancelTokenBreak,
-                TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
-                TaskScheduler.Default)
-                .Unwrap();
+            //        ITaskReturnValue retorno = new TaskReturnValue(0);
 
-            // 8) 🧠 COMBINA ambos: quem terminar primeiro define o destino
-            var combinedTask = Task.Factory
-                .StartNew(async () =>
-                {
-                    var nome = parametros.RetornoNomeTask();
+            //        return retorno;
+            //    },
+            //    cancelTokenBreak,
+            //    TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
+            //    TaskScheduler.Default)
+            //    .Unwrap();
 
-                    // Espera a conclusão do principal OU do monitor
-                    var winner = await Task.WhenAny(scheduledTask, monitorBreakTask).ConfigureAwait(false);
+            //// 8) 🧠 COMBINA ambos: quem terminar primeiro define o destino
+            //var combinedTask = Task.Factory
+            //    .StartNew(async () =>
+            //    {
+            //        var nome = parametros.RetornoNomeTask();
 
-                    // Se o monitor venceu → parada total
-                    if (winner == monitorBreakTask)
-                    {
-                        Console.WriteLine($"🛑 [{nome}] interrompida via BREAK (CombinedTask).");
-                        throw new OperationCanceledException(cancelTokenBreak);
-                    }
+            //        // Espera a conclusão do principal OU do monitor
+            //        var winner = await Task.WhenAny(scheduledTask, monitorBreakTask).ConfigureAwait(false);
 
-                    // Caso contrário → a execução normal terminou
-                    return await scheduledTask.ConfigureAwait(false);
-                },
-                cancelToken,
-                TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
-                TaskScheduler.Default)
-                .Unwrap();
+            //        // Se o monitor venceu → parada total
+            //        if (winner == monitorBreakTask)
+            //        {
+            //            Console.WriteLine($"🛑 [{nome}] interrompida via BREAK (CombinedTask).");
+            //            throw new OperationCanceledException(cancelTokenBreak);
+            //        }
+
+            //        // Caso contrário → a execução normal terminou
+            //        return await scheduledTask.ConfigureAwait(false);
+            //    },
+            //    cancelToken,
+            //    TaskCreationOptions.DenyChildAttach | TaskCreationOptions.RunContinuationsAsynchronously,
+            //    TaskScheduler.Default)
+            //    .Unwrap();
 
             // 9) 🔒 Registra task composta nos dicionários de execução.
             if (!ExecutandoTasks.TryAdd(id, scheduledTask))
             {
                 throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
             }
-            
-            var idMonitor = id * -1;
-            if (!ExecutandoTasks.TryAdd(idMonitor, monitorBreakTask))
-            {
-                throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
-            }
 
-            var idCombined = id * -101;
-            if (!ExecutandoTasks.TryAdd(idCombined, combinedTask))
-            {
-                throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
-            }
+            //var idMonitor = id * -1;
+            //if (!ExecutandoTasks.TryAdd(idMonitor, monitorBreakTask))
+            //{
+            //    throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
+            //}
+
+            //var idCombined = id * -101;
+            //if (!ExecutandoTasks.TryAdd(idCombined, combinedTask))
+            //{
+            //    throw new InvalidOperationException($"Não foi possivel registrar a Task 'id'");
+            //}
 
             // 10) Retorna o par com ID e Task
             return new KeyValuePair<int, Task<ITaskReturnValue>>(id, scheduledTask);
@@ -1466,6 +1464,40 @@ namespace Etiquetas.Bibliotecas.TaskCore
 
         }
 
+        protected async Task<ITaskReturnValue> RotinaPrincipal(ITaskParametros parametros)
+        {
+            try
+            {
+                var funcTask = parametros.RetornaSeExistir<Task<ITaskReturnValue>>("FuncTask");
+                return await funcTask.ConfigureAwait(false);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+        protected async Task<ITaskReturnValue> VerificaCancellationThrow(ITaskParametros parametros)
+        {
+            var token = parametros.RetornoCancellationTokenBreak;
+            var nome = parametros.RetornoNomeTask();
+            try
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    await Task.Delay(100, token).ConfigureAwait(false);
+                    token.ThrowIfCancellationRequested();
+                }
+                token.ThrowIfCancellationRequested();
+                return new TaskReturnValue(0);
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine($"⏳ SubRotina Monitorando {nome} parada total {token.IsCancellationRequested}...");
+                throw;
+            }
+        }
         /// <summary>  
         /// Método sincrono que monta toda a lógica e cria a entrada de processo para o ID informado, incluindo cancellationNovo de cancelamento e Task associada.  
         ///  
