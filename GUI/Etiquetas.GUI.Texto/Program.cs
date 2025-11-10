@@ -21,7 +21,7 @@ namespace Etiquetas.GUI.Texto
             //var exemplos = new ExemploStreamTCPClient();
             //await exemplos.ExecutarTodosExemplos().ConfigureAwait(false);
 
-            await TCPClientSimuladorConnect.ExecutaTodosExemplos().ConfigureAwait(false);
+            // await TCPClientSimuladorConnect.ExecutaTodosExemplos().ConfigureAwait(false);
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();
