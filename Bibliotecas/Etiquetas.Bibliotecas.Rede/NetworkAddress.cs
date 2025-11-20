@@ -10,11 +10,12 @@ namespace Etiquetas.Bibliotecas.Rede
 {
     public class EnderecoRede
     {
-        protected string EnderecoIPOuNomeHost { get; set; }
-        protected int Porta { get; set; }
-        protected IPEndPoint EnderecoRedeIpEndPoint { get; set; }
-        protected string IPePortaRede { get; set; }
-        protected IPAddress EnderecoIP { get; set; }
+        protected string EnderecoIPOuNomeHost { get; }
+        protected int Porta { get; }
+        protected IPEndPoint EnderecoRedeIpEndPoint { get; }
+
+        protected string IPePortaRede { get; }
+        protected IPAddress EnderecoIP { get; }
 
         /// <summary>
         /// Tenta criar um IPEndPoint a partir de um endereço IP ou nome de host e uma porta.
@@ -23,7 +24,10 @@ namespace Etiquetas.Bibliotecas.Rede
         /// <param name="port">A porta numérica.</param>
         public EnderecoRede(string addressString, int port)
         {
-            IPEndPoint ipEndPoint = null;
+            this.EnderecoIPOuNomeHost = addressString;
+            this.Porta = port;
+
+            this.EnderecoRedeIpEndPoint = null;
 
             // 1. Validar a porta
             if (port < IPEndPoint.MinPort || port > IPEndPoint.MaxPort)
@@ -37,8 +41,8 @@ namespace Etiquetas.Bibliotecas.Rede
             if (IPAddress.TryParse(addressString, out ipAddress))
             {
                 // Se for um IP numérico válido, podemos criar o IPEndPoint diretamente
-                ipEndPoint = new IPEndPoint(ipAddress, port);
-                return;
+                this.EnderecoRedeIpEndPoint = new IPEndPoint(ipAddress, port);
+                this.EnderecoIP = ipAddress;
             }
             else
             {
@@ -61,8 +65,8 @@ namespace Etiquetas.Bibliotecas.Rede
 
                     if (ipAddress != null)
                     {
-                        ipEndPoint = new IPEndPoint(ipAddress, port);
-                        return;
+                        this.EnderecoRedeIpEndPoint = new IPEndPoint(ipAddress, port);
+                        this.EnderecoIP = ipAddress;
                     }
                     else
                     {
@@ -77,6 +81,8 @@ namespace Etiquetas.Bibliotecas.Rede
                 {
                     throw new Exception($"Erro inesperado ao tentar resolver '{addressString}': {ex.Message}", ex);
                 }
+                this.IPePortaRede = $"{this.EnderecoRedeIpEndPoint.Address.ToString()}:{port.ToString()}";
+
             }
         }
     }

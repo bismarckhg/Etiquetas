@@ -88,7 +88,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 try
                 {
                     
-                    var ipEndPoint = EnderecoRede.TryCreateIpEndPoint(serverIpAdress, serverPort);
+                    var ipEndPoint = new EnderecoRede(serverIpAdress, serverPort);
                     var tcpConnector = new TcpConnector(serverIpAdress, serverPort);
                     var connectTask = Task.Run(() =>
                     {

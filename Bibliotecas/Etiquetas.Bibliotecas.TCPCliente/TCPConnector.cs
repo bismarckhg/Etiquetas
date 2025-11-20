@@ -16,15 +16,17 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     public class TcpConnector
     {
         // Supondo que ipAddress e serverPort já foram validados e são acessíveis
-        private readonly IPAddress _ipAddress;
-        private readonly int _serverPort;
-        private readonly string _serverIpAdressString; // Para a mensagem de erro
+        private readonly IPAddress IpAddress;
+        private readonly int ServerPort;
+
+        protected IPAddress ipAddress { get; }
+        protected string ServerIpAdressString; // Para a mensagem de erro
 
         public TcpConnector()
         {
-            _ipAddress = ipAddress;
-            _serverPort = serverPort;
-            _serverIpAdressString = $"{_ipAddress.ToString()}:{_serverPort.ToString()}";
+            IpAddress = ipAddress;
+            ServerPort = serverPort;
+            ServerIpAdressString = $"{IpAddress.ToString()}:{ServerPort.ToString()}";
         }
 
         public async Task<TcpClient> ConnectWithTimeoutAsync(CancellationToken cancellationTokenBruto, int timeoutMs)
@@ -50,7 +52,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 // Se você estiver no .NET Framework 4.7.2, veja a alternativa abaixo.
 
                 #region Abordagem para .NET 6+ (ConnectAsync com CancellationToken)
-                // var connectTask = tcpClient.ConnectAsync(_ipAddress, _serverPort, cts.Token);
+                // var connectTask = tcpClient.ConnectAsync(IpAddress, ServerPort, cts.Token);
                 #endregion
 
                 #region Abordagem para .NET Framework 4.7.2 (e compatível com .NET 6+)
@@ -74,11 +76,11 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         // O CancellationToken pode ser verificado antes de iniciar a conexão
                         linkedCts.Token.ThrowIfCancellationRequested();
 
-                        var ipEndPoint = NetworkAddress.TryCreateIpEndPoint(_serverIpAdressString, _serverPort);
+                        var ipEndPoint = NetworkAddress.TryCreateIpEndPoint(ServerIpAdressString, ServerPort);
                         // Para .NET Framework 4.7.2, TcpClient.Connect() é síncrono.
                         // Para .NET 6+, você pode usar tcpClient.ConnectAsync().
                         // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2.
-                        await tcpClient.ConnectAsync(_serverIpAdressString, _serverPort).ConfigureAwait(false);
+                        await tcpClient.ConnectAsync(ServerIpAdressString, ServerPort).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
@@ -120,7 +122,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     // Se FecharAsync() lida com recursos externos, ele pode ser chamado aqui.
                     // await FecharAsync().ConfigureAwait(false); // Se FecharAsync() não depende do tcpClient
 
-                    throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {_serverIpAdressString}:{_serverPort}");
+                    throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {ServerIpAdressString}:{ServerPort}");
                 }
                 else // A tarefa de conexão completou primeiro (ou falhou antes do timeout)
                 {
