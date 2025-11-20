@@ -5,10 +5,10 @@
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyTitle>Etiqueta Bibliotecas JSON</AssemblyTitle>
-    <AssemblyDescription>Bibliotecas para JSON</AssemblyDescription>
+    <AssemblyTitle>Etiqueta Bibliotecas Rede</AssemblyTitle>
+    <AssemblyDescription>Bibliotecas Rede</AssemblyDescription>
     <AssemblyCompany>Etiquetas</AssemblyCompany>
-    <AssemblyProduct>JSON</AssemblyProduct>
+    <AssemblyProduct>Rede</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
@@ -25,14 +25,5 @@
     <DebugType>full</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
-    <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
-  </ItemGroup>
 
 </Project>

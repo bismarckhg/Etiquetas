@@ -5,7 +5,8 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <AssemblyTitle>Etiqueta Bibliotecas Armazem</AssemblyTitle>
-    <AssemblyCompany>Etiqueta</AssemblyCompany>
+    <AssemblyDescription>Bibliotecas Armazem</AssemblyDescription>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
     <AssemblyProduct>Armazem</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>

@@ -6,7 +6,8 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <AssemblyTitle>Etiqueta Bibliotecas TCPCliente</AssemblyTitle>
-    <AssemblyCompany>Etiqueta</AssemblyCompany>
+    <AssemblyDescription>Sistema de comunicação TCPClient</AssemblyDescription>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
     <AssemblyProduct>TcpCliente</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -38,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
     <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
   </ItemGroup>
 

@@ -6,7 +6,8 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <AssemblyTitle>Etiqueta Bibliotecas Documentos</AssemblyTitle>
-    <AssemblyCompany>Etiqueta</AssemblyCompany>
+    <AssemblyDescription>Documentação</AssemblyDescription>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
     <AssemblyProduct>Documentos</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>

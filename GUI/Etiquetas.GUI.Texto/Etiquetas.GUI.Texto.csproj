@@ -1,6 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyTitle>Etiqueta GUI Console Texto</AssemblyTitle>
+    <AssemblyDescription>Etiqueta GUI Console Texto</AssemblyDescription>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
+    <AssemblyProduct>Console Texto</AssemblyProduct>
+    <Copyright>Copyright © Etiqueta 2025</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -51,19 +62,4 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.StreamsTXT\Etiquetas.Bibliotecas.StreamsTXT.csproj">
-      <Project>{a97c6db0-3bad-f93a-d7e8-d0d6f91adc35}</Project>
-      <Name>Etiquetas.Bibliotecas.StreamsTXT</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.TCPCliente\Etiquetas.Bibliotecas.TCPCliente.csproj">
-      <Project>{c7431669-ce8a-3271-4350-233cbded4d5c}</Project>
-      <Name>Etiquetas.Bibliotecas.TCPCliente</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Xml\Etiquetas.Bibliotecas.Xml.csproj">
-      <Project>{f9a8b6c7-d8e9-4a3b-a2f1-0b9c8d7e6f5b}</Project>
-      <Name>Etiquetas.Bibliotecas.Xml</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,9 +5,10 @@
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyTitle>Etiqueta Bibliotecas Armazem</AssemblyTitle>
-    <AssemblyCompany>Etiqueta</AssemblyCompany>
-    <AssemblyProduct>TcpClient</AssemblyProduct>
+    <AssemblyTitle>Etiqueta Bibliotecas Comum</AssemblyTitle>
+    <AssemblyDescription>Bibliotecas Comum Base</AssemblyDescription>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
+    <AssemblyProduct>Comum</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>

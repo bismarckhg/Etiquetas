@@ -5,7 +5,8 @@
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyTitle>Etiquetas Bibliotecas</AssemblyTitle>
+    <AssemblyDescription>Bibliotecas TTF Renderizacao</AssemblyDescription>
+    <AssemblyTitle>Etiquetas Bibliotecas TTFRenderizacao</AssemblyTitle>
     <AssemblyCompany>Etiquetas</AssemblyCompany>
     <AssemblyProduct>TTFRenderizacao</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>

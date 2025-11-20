@@ -5,8 +5,9 @@
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyTitle>Etiqueta Bibliotecas Armazem</AssemblyTitle>
-    <AssemblyCompany>Etiqueta</AssemblyCompany>
+    <AssemblyTitle>Etiqueta Bibliotecas Streams</AssemblyTitle>
+    <AssemblyDescription>Bibliotecas para Streams Base</AssemblyDescription>
+    <AssemblyCompany>Etiquetas</AssemblyCompany>
     <AssemblyProduct>Streams</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -26,6 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
     <ProjectReference Include="..\Etiquetas.Bibliotecas.TaskCore\Etiquetas.Bibliotecas.TaskCore.csproj" />
     <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
   </ItemGroup>
