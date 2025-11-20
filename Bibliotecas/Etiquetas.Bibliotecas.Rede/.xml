@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Bibliotecas.Rede</name>
+    </assembly>
+    <members>
+        <member name="M:Etiquetas.Bibliotecas.Rede.NetworkAddress.TryCreateIpEndPoint(System.String,System.Int32)">
+            <summary>
+            Tenta criar um IPEndPoint a partir de um endereço IP ou nome de host e uma porta.
+            </summary>
+            <param name="addressString">O endereço IP (ex: "127.0.0.1") ou nome de host (ex: "localhost").</param>
+            <param name="port">A porta numérica.</param>
+            <param name="ipEndPoint">O IPEndPoint criado, se bem-sucedido.</param>
+            <returns>True se o IPEndPoint foi criado com sucesso, False caso contrário.</returns>
+        </member>
+    </members>
+</doc>

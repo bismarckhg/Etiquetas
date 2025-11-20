@@ -40,7 +40,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
+    <ProjectReference Include="..\Etiquetas.Bibliotecas.Rede\Etiquetas.Bibliotecas.Rede.csproj" />
     <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
+    <ProjectReference Include="..\Etiquetas.Bibliotecas.Xml\Etiquetas.Bibliotecas.Xml.csproj" />
   </ItemGroup>
 
 </Project>

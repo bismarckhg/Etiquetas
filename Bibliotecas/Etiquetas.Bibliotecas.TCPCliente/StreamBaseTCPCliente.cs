@@ -157,19 +157,49 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     var byteAdress = Etiquetas.Bibliotecas.Comum.Caracteres.StringIP.EmByteArray(serverIpAdress);
                     var ipAddress = Etiquetas.Bibliotecas.Comum.Arrays.ByteArrayEmIPAddress.Execute(byteAdress);
 
-                    this.TCPClient.Connect(ipAddress, serverPort, linkedCts.Token);
+                    this.TCPClient.Connect(ipAddress, serverPort);
+
+                    var tcpClient = new TcpClient();
+
+                    var connectTask = Task.Run(() => // Usamos async aqui para poder usar await dentro, se necessário
+                    {
+                        try
+                        {
+                            // O CancellationToken pode ser verificado antes de iniciar a conexão
+                            linkedCts.Token.ThrowIfCancellationRequested();
+
+                            // Para .NET Framework 4.7.2, TcpClient.Connect() é síncrono.
+                            // Para .NET 6+, você pode usar tcpClient.ConnectAsync().
+                            // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2.
+                            tcpClient.Connect(ipAddress, serverPort);
+                            return tcpClient;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // Se a Task foi cancelada antes de iniciar a conexão, ou durante a espera.
+                            // Descartar o cliente se ele foi criado mas não conectado.
+                            tcpClient.Dispose();
+                            throw; // Relançar a exceção de cancelamento
+                        }
+                        catch
+                        {
+                            // Em caso de qualquer outra exceção durante a conexão, descartar o cliente.
+                            tcpClient.Dispose();
+                            throw;
+                        }
+                    }, linkedCts.Token); // Passa o token para Task.Run para que a Task possa ser cancelada antes de iniciar
+
                     var delayTask = Task.Delay(timeoutMs, linkedCts.Token);
 
                     var completedTask = await Task.WhenAny(connectTask, delayTask)
-                                                  .ConfigureAwait(false);
+                                                    .ConfigureAwait(false);
 
                     if (completedTask == delayTask)
                     {
-                        await FecharAsync().ConfigureAwait(false);
+                        await FecharAsync().ConfigureAwait(false); // O que FecharAsync faz?
                         throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {serverIpAdress}:{serverPort}");
                     }
-
-                    await connectTask;
+                    // await connectTask; // Linha problemática
 
                     // Cada cliente é tratado em sua própria tarefa (não bloqueia o processo)
                 }

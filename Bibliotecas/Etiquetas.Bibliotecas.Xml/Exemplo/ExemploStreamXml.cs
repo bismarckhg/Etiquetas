@@ -66,7 +66,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
 
             var parametrosLeitura = new TaskParametros();
-            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+            parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
 
             Console.WriteLine($"Deserializando dados da loja.");
             var lojaDesserializada = await XmlStream.LerAsync<Loja>(parametrosLeitura).ConfigureAwait(false);
@@ -115,7 +115,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
 
             var parametrosLeitura = new TaskParametros();
-            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+            parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
             parametrosLeitura.Armazena<string>("Produtos", "SubRootName");
 
             Console.WriteLine($"Deserializando dados dos Produtos da loja.");
@@ -164,7 +164,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
 
             var parametrosLeitura = new TaskParametros();
-            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+            parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
             parametrosLeitura.Armazena<string>("Clientes", "NomeSubRoot");
 
             Console.WriteLine($"Deserializando dados dos Produtos da loja.");
@@ -216,7 +216,7 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
             await XmlStream.ConectarAsync(parametros).ConfigureAwait(false);
 
             var parametrosLeitura = new TaskParametros(3);
-            parametrosLeitura.ArmazenaCancellationToken(new CancellationTokenSource().Token);
+            parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
             parametrosLeitura.Armazena<string>("Clientes", "SubRootName");
             parametrosLeitura.Armazena<string>("Cliente", "ItemNameSubRoot");
             Func<Cliente, bool> predicate = c => c.Id == 10;

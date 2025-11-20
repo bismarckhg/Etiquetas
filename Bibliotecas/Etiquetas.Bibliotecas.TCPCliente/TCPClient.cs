@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Etiquetas.Bibliotecas.Rede;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -86,9 +87,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             {
                 try
                 {
-
-                    var ipEndPoint = new IPEndPoint(IPAddress.Parse(serverIpAdress), serverPort);
-
+                    
+                    var ipEndPoint = EnderecoRede.TryCreateIpEndPoint(serverIpAdress, serverPort);
+                    var tcpConnector = new TcpConnector(serverIpAdress, serverPort);
                     var connectTask = Task.Run(() =>
                     {
                         this.TcpCliente = new TcpClient();
@@ -98,7 +99,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 }
                 catch (Exception ex)
                 {
-
                     throw;
                 }
 

@@ -8,16 +8,20 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Rede
 {
-    public static class NetworkAddress
+    public class EnderecoRede
     {
+        protected string EnderecoIPOuNomeHost { get; set; }
+        protected int Porta { get; set; }
+        protected IPEndPoint EnderecoRedeIpEndPoint { get; set; }
+        protected string IPePortaRede { get; set; }
+        protected IPAddress EnderecoIP { get; set; }
+
         /// <summary>
         /// Tenta criar um IPEndPoint a partir de um endereço IP ou nome de host e uma porta.
         /// </summary>
         /// <param name="addressString">O endereço IP (ex: "127.0.0.1") ou nome de host (ex: "localhost").</param>
         /// <param name="port">A porta numérica.</param>
-        /// <param name="ipEndPoint">O IPEndPoint criado, se bem-sucedido.</param>
-        /// <returns>True se o IPEndPoint foi criado com sucesso, False caso contrário.</returns>
-        public static IPEndPoint TryCreateIpEndPoint(string addressString, int port)
+        public EnderecoRede(string addressString, int port)
         {
             IPEndPoint ipEndPoint = null;
 
@@ -34,7 +38,7 @@ namespace Etiquetas.Bibliotecas.Rede
             {
                 // Se for um IP numérico válido, podemos criar o IPEndPoint diretamente
                 ipEndPoint = new IPEndPoint(ipAddress, port);
-                return ipEndPoint;
+                return;
             }
             else
             {
@@ -58,7 +62,7 @@ namespace Etiquetas.Bibliotecas.Rede
                     if (ipAddress != null)
                     {
                         ipEndPoint = new IPEndPoint(ipAddress, port);
-                        return ipEndPoint;
+                        return;
                     }
                     else
                     {
@@ -75,6 +79,5 @@ namespace Etiquetas.Bibliotecas.Rede
                 }
             }
         }
-
     }
 }

@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.GUI.Texto2", "GUI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.BLL", "BLL\Etiquetas.BLL\Etiquetas.BLL.csproj", "{887B8CA4-C8F0-4E7F-8193-46C37B4A668A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etiquetas.GUI.Texto3", "GUI\Etiquetas.GUI.Texto3\Etiquetas.GUI.Texto3.csproj", "{4384204B-253A-15FD-35FB-14F1D25FA16F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{887B8CA4-C8F0-4E7F-8193-46C37B4A668A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{887B8CA4-C8F0-4E7F-8193-46C37B4A668A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{887B8CA4-C8F0-4E7F-8193-46C37B4A668A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4384204B-253A-15FD-35FB-14F1D25FA16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4384204B-253A-15FD-35FB-14F1D25FA16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4384204B-253A-15FD-35FB-14F1D25FA16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4384204B-253A-15FD-35FB-14F1D25FA16F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -188,6 +194,7 @@ Global
 		{CA385F99-7CCC-40EA-9BCB-AB22812EDAF4} = {587082F5-54C2-4D08-865A-A0228611D6E0}
 		{754B3A82-ACF4-4362-8DCE-FEE402A94F32} = {587082F5-54C2-4D08-865A-A0228611D6E0}
 		{887B8CA4-C8F0-4E7F-8193-46C37B4A668A} = {88BC3945-B1EF-46B3-8D1F-7D2FFCE3891F}
+		{4384204B-253A-15FD-35FB-14F1D25FA16F} = {587082F5-54C2-4D08-865A-A0228611D6E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6AFFCD86-C050-4D39-BFE2-3E1D651B9743}
