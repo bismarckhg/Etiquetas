@@ -8,11 +8,16 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 {
     using Etiquetas.Bibliotecas.Rede;
     using System;
+    using System.Diagnostics.Metrics;
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Net.Sockets;
+    using System.Runtime.ConstrainedExecution;
+    using System.Runtime.Intrinsics.X86;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using static System.Reflection.Metadata.BlobBuilder;
 
     public class TcpConnector
     {
@@ -21,7 +26,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         public TcpConnector(EnderecoRede enderecoRede)
         {
             this.EnderecoDeRede = enderecoRede ?? throw new ArgumentNullException(nameof(enderecoRede));
-        }              
+        }
 
         public async Task<TcpClient> ConnectWithTimeoutAsync(CancellationToken cancellationTokenBruto, int timeoutMs)
         {
@@ -35,10 +40,36 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 var tcpClient = new TcpClient(); // O TcpClient é criado fora da Task para ser acessível
                                                  // para descarte em caso de timeout.
 
-                tcpClient.NoDelay = false; // Habilita o Nagle Algorithm
+                // Se sua aplicação envia muitos pequenos pacotes e a latência é crítica(ex: jogos, telnet, sistemas de controle em tempo real):
+                // defina NoDelay = true(desabilita Nagle).
+                // Se sua aplicação envia dados em blocos e o throughput é mais importante que a latência mínima para cada byte(ex: transferência de arquivos grandes, streaming de vídeo):
+                // defina NoDelay = false(habilita Nagle).
+                tcpClient.NoDelay = true; // Desabilita o Nagle Algorithm
                 tcpClient.ReceiveTimeout = timeoutMs;
                 tcpClient.SendTimeout = timeoutMs;
-                
+
+                // Quando KeepAlive = true ? Quando você define KeepAlive como true, você está habilitando o envio de pacotes Keep-Alive.
+                // Vantagens:
+                // Detecção de Conexões Quebradas: Ajuda a detectar se o peer remoto ainda está ativo e acessível, mesmo que não haja tráfego de dados. Isso é crucial para conexões de longa duração que podem ficar ociosas por períodos prolongados.
+                // Prevenção de Timeouts de NAT / Firewall: Muitos dispositivos de rede(como NATs e firewalls) têm timeouts para conexões ociosas.O Keep-Alive envia tráfego suficiente para manter a conexão "viva" e evitar que esses dispositivos a encerrem prematuramente.
+                // Evita Conexões "Zumbis": Sem Keep-Alive, uma conexão pode parecer ativa para uma das partes, enquanto a outra parte(ou um dispositivo intermediário) já a encerrou.Isso pode levar a tentativas de envio de dados para uma conexão morta, resultando em erros e timeouts na aplicação.
+                // Desvantagens:
+                // Tráfego de Rede Adicional: Embora os pacotes Keep-Alive sejam pequenos, eles adicionam um pequeno volume de tráfego à rede, o que pode ser uma preocupação em redes com largura de banda extremamente limitada ou em cenários de pagamento por volume de dados.
+                // Consumo de Recursos: Manter muitas conexões com Keep - Alive habilitado pode consumir um pouco mais de recursos no sistema operacional, embora geralmente seja insignificante para a maioria das aplicações.
+                // A configuração new LingerOption(true, 0) deve ser usada com extrema cautela e apenas quando você tem certeza de que a perda de dados no fechamento é aceitável ou desejada(ex: forçar o fechamento de uma conexão travada).
+                // Para a maioria das aplicações que exigem confiabilidade, o padrão(LingerOption(false, 0)) ou LingerOption(true, X) com um tempo de espera razoável(X > 0) é preferível para permitir que os dados pendentes sejam enviados.
+                tcpClient.LingerState = new LingerOption(true, timeoutMs);
+
+                // Quando Usar KeepAlive = true? É altamente recomendado para conexões TCP de longa duração que podem ter períodos de inatividade. Exemplos incluem:
+                // Serviços de Chat / Mensageria: Para manter as conexões dos clientes ativas e detectar rapidamente se um cliente se desconectou.
+                // Aplicações Cliente-Servidor de Longa Duração: Onde o cliente mantém uma conexão persistente com o servidor para receber atualizações ou enviar comandos esporadicamente.
+                // Conexões de Banco de Dados Persistentes: Para garantir que a conexão com o banco de dados não seja encerrada por um firewall ou timeout de rede.
+                // As configurações de tempo e número de tentativas para os pacotes Keep-Alive são geralmente controladas pelo sistema operacional e podem ser ajustadas em nível de sistema, ou em algumas plataformas, através de opções de Socket mais específicas(como SocketOptionName.TcpKeepAliveTime, TcpKeepAliveInterval, TcpKeepAliveRetryCount no.NET Core 3.1 + e.NET 5 +).No.NET Framework 4.7.2, você geralmente depende das configurações padrão do sistema operacional ou precisa usar P / Invoke para ajustar essas opções mais finamente.
+                // tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true)
+                // Altamente recomendado para conexões de longa duração que podem ficar ociosas, para detectar desconexões e evitar timeouts de rede.
+                // Para conexões de curta duração que são abertas, usadas e fechadas rapidamente, pode não ser estritamente necessário, mas geralmente não causa problemas.
+                // tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+
                 // Task.Run é usado aqui para envolver a chamada assíncrona com o CancellationToken,
                 // garantindo que a Task de conexão possa ser cancelada.
                 // No entanto, ConnectAsync já aceita um CancellationToken diretamente no .NET 6+.
@@ -77,9 +108,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         var ip = EnderecoDeRede.ObtemEnderecoIP();
                         var porta = EnderecoDeRede.ObtemPorta();
 
-                        // Para .NET Framework 4.7.2, TcpClient.Connect() é síncrono.
+                        // Para .NET Framework 4.7.2, TcpClient.Connect() é síncrono????????
                         // Para .NET 6+, você pode usar tcpClient.ConnectAsync().
-                        // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2.
+                        // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2????????
                         await tcpClient.ConnectAsync(ip, porta).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)

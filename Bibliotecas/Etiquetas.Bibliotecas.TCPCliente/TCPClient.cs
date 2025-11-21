@@ -1,8 +1,7 @@
-﻿using Etiquetas.Bibliotecas.Rede;
+﻿using Etiquetas.Bibliotecas.Comum.Geral;
+using Etiquetas.Bibliotecas.Rede;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -13,14 +12,30 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     public class TCPClient : IDisposable
     {
         protected TcpClient TcpCliente { get; set; }
-        protected CancellationToken CancellationTokenStop { get; set; }
-        protected CancellationToken CancellationTokenBreak { get; set; }
+        protected CancellationToken CancellationTokenStop { get; }
+        protected CancellationToken CancellationTokenBreak { get; }
 
-        public TCPClient(CancellationToken cancellationTokenStop, CancellationToken cancellationTokenBreak)
+        protected bool ThrowOnTimeout;
+
+        protected int TimeoutMS { get; }
+
+        protected Encoding TypeEncoding { get; set; }
+
+        public TCPClient(
+            CancellationToken cancellationTokenStop,
+            CancellationToken cancellationTokenBreak,
+            int timeoutMs = Timeout.Infinite,
+            bool throwOnTimeout = false,
+            Encoding encoding = null
+            )
         {
             // Constructor logic here
-            CancellationTokenBreak = cancellationTokenBreak;
-            CancellationTokenStop = cancellationTokenStop;
+            this.CancellationTokenBreak = cancellationTokenBreak;
+            this.CancellationTokenStop = cancellationTokenStop;
+            this.TimeoutMS = timeoutMs;
+
+            // Melhor usar UTF8SemBom como padrão para ZPL, JSON etc.
+            this.TypeEncoding = encoding ?? ConversaoEncoding.UTF8SemBom;
         }
 
         public TcpClient ObtemTcpClient()
@@ -38,6 +53,16 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         {
             try
             {
+                if (TcpCliente.ReceiveTimeout != TimeoutMS)
+                {
+                    this.TcpCliente.ReceiveTimeout = TimeoutMS;
+                }
+
+                if (TcpCliente.Client.ReceiveTimeout != TimeoutMS)
+                {
+                    this.TcpCliente.Client.ReceiveTimeout = TimeoutMS;
+                }
+
                 // .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run com timeout
                 var connectTask = Task.Run(() =>
                 {
@@ -58,10 +83,12 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
             catch (OperationCanceledException)
             {
+                TcpCliente?.Dispose();
                 throw; // Re-lança OperationCanceledException sem encapsular
             }
             catch (ArgumentNullException)
             {
+                TcpCliente?.Dispose();
                 throw; // Re-lança ArgumentNullException sem encapsular
             }
             catch (Exception ex)
@@ -70,7 +97,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 var enderecoRede = new EnderecoRede(tcpClientEndPoint);
                 var tcpClientIPAddress = enderecoRede.ObtemEnderecoIP();
                 var tcpClientPort = enderecoRede.ObtemPorta();
-                throw new InvalidOperationException($"Erro ao conectar com {tcpClientIPAddress}:{tcpClientPort}: {ex.Message}", ex.InnerException);
+                TcpCliente?.Dispose();
+                throw new InvalidOperationException($"Erro: {ex.Message}\r\nAo conectar com {tcpClientIPAddress}:{tcpClientPort}: ", ex.InnerException);
             }
         }
 
@@ -79,23 +107,21 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// </summary>
         /// <param name="serverIpAdress">IP Servidor de conexão</param>
         /// <param name="serverPort">Porta Servidor de conexão</param>
-        /// <param name="timeout">Time Out de conexao com o Servidor</param>
-        /// <param name="cancellationBruto">Token de cancelamento</param>
         public async Task ConnectAsync(
             string serverIpAdress,
-            int serverPort,
-            int timeoutMs = Timeout.Infinite)
+            int serverPort)
         {
 
             try
             {
+
                 var enderecoRede = new EnderecoRede(serverIpAdress, serverPort);
                 var tcpConnector = new TcpConnector(enderecoRede);
-                await tcpConnector.ConnectWithTimeoutAsync(CancellationTokenBreak, timeoutMs).ConfigureAwait(false);
+                await tcpConnector.ConnectWithTimeoutAsync(CancellationTokenBreak, this.TimeoutMS).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Erro: {ex.Message}\r\nAo conectar com {serverIpAdress}:{serverPort}: ", ex.InnerException);
             }
         }
 
@@ -124,49 +150,32 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 return false;
             }
 
-            try
-            {
-                //var conectado = TCPClient.Connected;
-                //var socket = TCPClient.Client;
-                //conectado = conectado && socket != null && socket.Connected;
+            //var conectado = TCPClient.Connected;
+            //var socket = TCPClient.Client;
+            //conectado = conectado && socket != null && socket.Connected;
 
-                var conectado = EstaAberto();
-                var temDados = conectado && (this.TcpCliente?.Available > 0);
+            var conectado = EstaAberto();
+            var temDados = conectado && (this.TcpCliente?.Available > 0);
 
-                // Verificar Depois
-                // Poll com SelectMode.SelectRead retorna true se:
-                // - Há dados para ler
-                // - A conexão foi fechada
-                // - A conexão foi resetada
-                //var socket = TCPClient.Client;
-                //bool pollResult = socket.Poll(1000, SelectMode.SelectRead);
-                // Se Poll retorna true MAS não há dados, a conexão foi fechada
-                //bool hasData = socket.Available > 0;
-                //var temDados = conectado && pollResult && hasData;
+            // Verificar Depois
+            // Poll com SelectMode.SelectRead retorna true se:
+            // - Há dados para ler
+            // - A conexão foi fechada
+            // - A conexão foi resetada
+            //var socket = TCPClient.Client;
+            //bool pollResult = socket.Poll(1000, SelectMode.SelectRead);
+            // Se Poll retorna true MAS não há dados, a conexão foi fechada
+            //bool hasData = socket.Available > 0;
+            //var temDados = conectado && pollResult && hasData;
 
-                return temDados;
-            }
-            catch (SocketException)
-            {
-                return false;
-            }
-            catch (ObjectDisposedException)
-            {
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            return temDados;
         }
 
         /// <summary>
         /// Faz a leitura do servidor TCP e retorna os dados recebidos em um array de bytes(buffer).
         /// </summary>
 
-        public byte[] ReaderBufferTCP(
-            int tamanhoBuffer,
-            int timeoutMs = Timeout.Infinite)
+        public async Task<byte[]> ReaderBufferTCP()
         {
             if (!EstaAberto())
             {
@@ -174,22 +183,78 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
 
             CancellationTokenBreak.ThrowIfCancellationRequested();
-            var netstream = TcpCliente.GetStream();
-            var tamanhoLeitura = TcpCliente.Available;
-            if (tamanhoLeitura == 0)
+
+            var netStream = TcpCliente.GetStream();
+
+            if (netStream.ReadTimeout != TimeoutMS)
             {
-                
+                netStream.ReadTimeout = TimeoutMS;
             }
+
+            var tamanhoLeitura = TcpCliente.Available;
+            var byteTemp = new byte[tamanhoLeitura];
+
+            var tentativas = 5;
+            for (int i = 0; i < tentativas; i++)
+            {
+                if (tamanhoLeitura != 0)
+                {
+                    break;
+                }
+                byteTemp = await LerComTimeoutAsync(netStream, tamanhoLeitura).ConfigureAwait(false);
+
+                await Task.Delay(100, CancellationTokenBreak).ConfigureAwait(false);
+                tamanhoLeitura = TcpCliente.Available;
+            }
+
+            if (tamanhoLeitura != 0)
+            {
+                byteTemp = await LerComTimeoutAsync(netStream, tamanhoLeitura).ConfigureAwait(false);
+            }
+            return byteTemp;
         }
 
-        protected async Task<int> LerComTimeoutAsync(
-                byte[] buffer,
-                int tamanho,
-                int timeoutMs,
-                bool throwOnTimeout = false,
-                CancellationToken cancellationBreak = default)
+        protected async Task<byte[]> LerComTimeoutAsync(
+                NetworkStream netStream,
+                int tamanhoLeitura
+            )
         {
+            // Verifica cancelamento antes de começar
+            CancellationTokenBreak.ThrowIfCancellationRequested();
 
+            try
+            {
+                var dadosLidos = 0;
+                var buffer = new byte[tamanhoLeitura];
+
+                // Executa Read síncrono em thread separada
+                return await Task.Run(async () =>
+                {
+                    try
+                    {
+                        dadosLidos = await netStream.ReadAsync(buffer, 0, tamanhoLeitura).ConfigureAwait(false);
+                        return buffer;
+                    }
+                    catch (IOException ex) when (ex.InnerException is SocketException se &&
+                                                  se.SocketErrorCode == SocketError.TimedOut)
+                    {
+                        if (!ThrowOnTimeout)
+                        {
+                            if (dadosLidos > 0)
+                            {
+                                return buffer; // Retorna bytes lidos antes do timeout
+                            }
+                            return new byte[0]; // Saida por Timeout sem exceção
+                        }
+
+                        throw new TimeoutException($"Timeout de {TimeoutMS}ms na leitura", ex);
+                    }
+                }, CancellationTokenBreak).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         #region IDisposable Support
