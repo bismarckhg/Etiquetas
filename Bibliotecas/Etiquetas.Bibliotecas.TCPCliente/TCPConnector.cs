@@ -17,18 +17,20 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using static System.Reflection.Metadata.BlobBuilder;
 
     public class TcpConnector
     {
         protected EnderecoRede EnderecoDeRede { get; }
+
+        protected int TamanhoBuffer { get; set; }
+        protected int TimeoutMs { get; set; }
 
         public TcpConnector(EnderecoRede enderecoRede)
         {
             this.EnderecoDeRede = enderecoRede ?? throw new ArgumentNullException(nameof(enderecoRede));
         }
 
-        public async Task<TcpClient> ConnectWithTimeoutAsync(CancellationToken cancellationTokenBruto, int timeoutMs)
+        public async Task<TcpClient> ConnectWithTimeoutAsync(CancellationToken cancellationTokenBruto, int tamanhoBuffer = 8192, int timeoutMs = Timeout.Infinite)
         {
             // Usamos um CancellationTokenSource para coordenar o cancelamento
             // entre a conexão e o timeout, e para cancelar a conexão se o timeout ocorrer.
@@ -45,8 +47,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 // Se sua aplicação envia dados em blocos e o throughput é mais importante que a latência mínima para cada byte(ex: transferência de arquivos grandes, streaming de vídeo):
                 // defina NoDelay = false(habilita Nagle).
                 tcpClient.NoDelay = true; // Desabilita o Nagle Algorithm
+
+                this.TimeoutMs = timeoutMs;
+
                 tcpClient.ReceiveTimeout = timeoutMs;
                 tcpClient.SendTimeout = timeoutMs;
+
+                tcpClient.ReceiveBufferSize = tamanhoBuffer;
+                tcpClient.SendBufferSize = tamanhoBuffer;
 
                 // Quando KeepAlive = true ? Quando você define KeepAlive como true, você está habilitando o envio de pacotes Keep-Alive.
                 // Vantagens:
@@ -112,6 +120,26 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         // Para .NET 6+, você pode usar tcpClient.ConnectAsync().
                         // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2????????
                         await tcpClient.ConnectAsync(ip, porta).ConfigureAwait(false);
+
+                        if (tcpClient.Client.ReceiveBufferSize != tamanhoBuffer)
+                        {
+                            tcpClient.Client.ReceiveBufferSize = tamanhoBuffer;
+                        }
+
+                        if (tcpClient.Client.SendBufferSize != tamanhoBuffer)
+                        {
+                            tcpClient.Client.SendBufferSize = tamanhoBuffer;
+                        }
+
+                        if (tcpClient.Client.ReceiveTimeout != timeoutMs)
+                        {
+                            tcpClient.Client.ReceiveTimeout = timeoutMs;
+                        }
+
+                        if (tcpClient.Client.SendTimeout != timeoutMs)
+                        {
+                            tcpClient.Client.ReceiveTimeout = timeoutMs;
+                        }
                     }
                     catch (OperationCanceledException)
                     {
