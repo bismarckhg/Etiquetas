@@ -19,7 +19,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
 
             try
             {
-                var endPoint1 = NetworkAddress.TryCreateIpEndPoint(serverIpAdress1, serverPort1);
+                var endPoint1 = new EnderecoRede(serverIpAdress1, serverPort1);
                 Console.WriteLine($"IPEndPoint1 criado com sucesso: {endPoint1}");
             }
             catch (Exception)
@@ -31,7 +31,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int serverPort2 = 9000;
             try
             {
-                var endPoint2 = NetworkAddress.TryCreateIpEndPoint(serverIpAdress2, serverPort2);
+                var endPoint2 = new EnderecoRede(serverIpAdress2, serverPort2);
                 Console.WriteLine($"IPEndPoint2 criado com sucesso: {endPoint2}");
             }
             catch (Exception)
@@ -44,7 +44,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int serverPort3 = 5000;
             try
             {
-                var endPoint3 = NetworkAddress.TryCreateIpEndPoint(serverHostName1, serverPort3);
+                var endPoint3 = new EnderecoRede(serverHostName1, serverPort3);
                 Console.WriteLine($"IPEndPoint3 criado com sucesso: {endPoint3}");
             }
             catch (Exception)
@@ -56,7 +56,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int serverPort4 = 80;
             try
             {
-                var endPoint4 = NetworkAddress.TryCreateIpEndPoint(serverHostName2, serverPort4);
+                var endPoint4 = new EnderecoRede(serverHostName2, serverPort4);
                 Console.WriteLine($"IPEndPoint4 criado com sucesso: {endPoint4}");
             }
             catch (Exception)
@@ -69,7 +69,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int serverPort5 = 1234;
             try
             {
-                var endPoint5 = NetworkAddress.TryCreateIpEndPoint(invalidIpAdress1, serverPort5);
+                var endPoint5 = new EnderecoRede(invalidIpAdress1, serverPort5);
                 Console.WriteLine($"IPEndPoint5 criado com sucesso: {endPoint5}");
             }
             catch (Exception)
@@ -81,7 +81,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int serverPort6 = 5678;
             try
             {
-                var endPoint6 = NetworkAddress.TryCreateIpEndPoint(invalidIpAdress2, serverPort6);
+                var endPoint6 = new EnderecoRede(invalidIpAdress2, serverPort6);
                 Console.WriteLine($"IPEndPoint6 criado com sucesso: {endPoint6}");
             }
             catch (Exception)
@@ -93,7 +93,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int invalidPort1 = 70000; // Porta fora do range
             try
             {
-                var endpoint7 = NetworkAddress.TryCreateIpEndPoint(validIpAdress3, invalidPort1);
+                var endpoint7 = new EnderecoRede(validIpAdress3, invalidPort1);
                 Console.WriteLine($"IPEndPoint6 criado com sucesso: {endpoint7}");
             }
             catch (Exception)
@@ -105,7 +105,7 @@ namespace Etiquetas.Bibliotecas.Rede.Exemplo
             int serverPort8 = 10000;
             try
             {
-                var endPoint8 = NetworkAddress.TryCreateIpEndPoint(nonExistentHost, serverPort8);
+                var endPoint8 = new EnderecoRede(nonExistentHost, serverPort8);
                 Console.WriteLine($"IPEndPoint6 criado com sucesso: {endPoint8}");
             }
             catch (Exception)

@@ -85,5 +85,31 @@ namespace Etiquetas.Bibliotecas.Rede
 
             }
         }
+
+        public string ObtemEnderecoIPOuNomeHost()
+        {
+            return this.EnderecoIPOuNomeHost;
+        }
+
+        public int ObtemPorta()
+        {
+            return this.Porta;
+        }
+
+        public IPEndPoint ObtemEnderecoRedeIpEndPoint()
+        {
+            return this.EnderecoRedeIpEndPoint;
+        }
+
+        public string ObtemIPePortaRede()
+        {
+            return this.IPePortaRede;
+        }
+
+        public IPAddress ObtemEnderecoIP()
+        {
+            return this.EnderecoIP;
+        }
+
     }
 }
