@@ -16,6 +16,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     public class StreamBaseTCPCliente : StreamBase
     {
         protected TcpClient TCPClient { get; set; }
+        protected TCPClient TCPClientWrapper { get; set; }
 
         public StreamBaseTCPCliente()
         {
@@ -145,70 +146,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             int timeoutMs = Timeout.Infinite,
             CancellationToken cancellationBruto = default)
         {
-            this.TCPClient = new TcpClient();
-
-            using (var timeoutCts = new CancellationTokenSource(timeoutMs))
-            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationBruto, timeoutCts.Token))
-            {
-                try
-                {
-                    // Infelizmente ConnectAsync não aceita CancellationToken no .NET Framework 4.7.2
-                    // Então usamos Task.WhenAny mesmo
-                    var byteAdress = Etiquetas.Bibliotecas.Comum.Caracteres.StringIP.EmByteArray(serverIpAdress);
-                    var ipAddress = Etiquetas.Bibliotecas.Comum.Arrays.ByteArrayEmIPAddress.Execute(byteAdress);
-
-                    this.TCPClient.Connect(ipAddress, serverPort);
-
-                    var tcpClient = new TcpClient();
-
-                    var connectTask = Task.Run(() => // Usamos async aqui para poder usar await dentro, se necessário
-                    {
-                        try
-                        {
-                            // O CancellationToken pode ser verificado antes de iniciar a conexão
-                            linkedCts.Token.ThrowIfCancellationRequested();
-
-                            // Para .NET Framework 4.7.2, TcpClient.Connect() é síncrono.
-                            // Para .NET 6+, você pode usar tcpClient.ConnectAsync().
-                            // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2.
-                            tcpClient.Connect(ipAddress, serverPort);
-                            return tcpClient;
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            // Se a Task foi cancelada antes de iniciar a conexão, ou durante a espera.
-                            // Descartar o cliente se ele foi criado mas não conectado.
-                            tcpClient.Dispose();
-                            throw; // Relançar a exceção de cancelamento
-                        }
-                        catch
-                        {
-                            // Em caso de qualquer outra exceção durante a conexão, descartar o cliente.
-                            tcpClient.Dispose();
-                            throw;
-                        }
-                    }, linkedCts.Token); // Passa o token para Task.Run para que a Task possa ser cancelada antes de iniciar
-
-                    var delayTask = Task.Delay(timeoutMs, linkedCts.Token);
-
-                    var completedTask = await Task.WhenAny(connectTask, delayTask)
-                                                    .ConfigureAwait(false);
-
-                    if (completedTask == delayTask)
-                    {
-                        await FecharAsync().ConfigureAwait(false); // O que FecharAsync faz?
-                        throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {serverIpAdress}:{serverPort}");
-                    }
-                    // await connectTask; // Linha problemática
-
-                    // Cada cliente é tratado em sua própria tarefa (não bloqueia o processo)
-                }
-                catch (OperationCanceledException)
-                {
-                    await FecharAsync().ConfigureAwait(false);
-                    throw new TimeoutException($"Timeout de {timeoutMs}ms ao conectar em {serverIpAdress}:{serverPort}");
-                }
-            }
         }
 
         /// <summary>
@@ -218,109 +155,22 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         private async Task ConnectAsync(
             CancellationToken cancellationBruto = default)
         {
-            try
-            {
-                // .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run com timeout
-                var connectTask = Task.Run(() =>
-                {
-                    this.TCPClient = this.TCPClient ?? throw new ArgumentNullException(nameof(client));
-                }, cancellationBruto);
-
-                var conectado = EstaAberto();
-
-                if (conectado)
-                {
-                    var tcpClientEndPoint = this.TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
-                    var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
-                    var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
-                }
-
-                await connectTask; // Aguarda a conexão completar ou propagar exceção
-            }
-            catch (OperationCanceledException)
-            {
-                throw; // Re-lança OperationCanceledException sem encapsular
-            }
-            catch (Exception ex)
-            {
-                var tcpClientEndPoint = this.TCPClient.Client.RemoteEndPoint as System.Net.IPEndPoint;
-                var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
-                var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
-                throw new InvalidOperationException($"Erro ao conectar com {tcpClientIPAddress}:{tcpClientPort}: {ex.Message}", ex);
-            }
         }
 
         /// <inheritdoc/>
         public override bool EstaAberto()
         {
-            var retorno = (this.TCPClient?.Connected ?? false)
-                && (this.TCPClient?.Client?.Connected ?? false);
-
-            return retorno;
         }
 
         /// <inheritdoc/>
         public override Task FecharAsync()
         {
-            TCPClient?.Close();
-            TCPClient?.Dispose();
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public override bool PossuiDados()
         {
-            if (TCPClient == null)
-                return false;
-
-            try
-            {
-                //var conectado = TCPClient.Connected;
-                //var socket = TCPClient.Client;
-                //conectado = conectado && socket != null && socket.Connected;
-
-                var conectado = EstaAberto();
-                var temDados = conectado && (TCPClient?.Available > 0);
-                // Método mais confiável: Poll + Available
-                // Poll com SelectMode.SelectRead retorna true se:
-                // - Há dados para ler
-                // - A conexão foi fechada
-                // - A conexão foi resetada
-                //var socket = TCPClient.Client;
-                //bool pollResult = socket.Poll(1000, SelectMode.SelectRead);
-                // Se Poll retorna true MAS não há dados, a conexão foi fechada
-                //bool hasData = socket.Available > 0;
-                //var temDados = conectado && pollResult && hasData;
-
-                return temDados;
-            }
-            catch (SocketException)
-            {
-                return false;
-            }
-            catch (ObjectDisposedException)
-            {
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
-        /// <inheritdoc/>
-        protected override void Dispose(bool disposing)
-        {
-            if (stDisposed) return;
-            if (disposing)
-            {
-                // Libera recursos gerenciados aqui
-                TCPClient?.Close();
-                TCPClient?.Dispose();
-                TCPClient = null;
-            }
-            // Libera recursos não gerenciados aqui
-            stDisposed = true;
-        }
     }
 }

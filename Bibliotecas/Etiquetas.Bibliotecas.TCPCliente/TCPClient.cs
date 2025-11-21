@@ -23,12 +23,17 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             CancellationTokenStop = cancellationTokenStop;
         }
 
+        public TcpClient ObtemTcpClient()
+        {
+            return this.TcpCliente;
+        }
 
         /// <summary>
         /// Conecta ao servidor TCP de forma assíncrona
         /// </summary>
         /// <param name="cancellationBruto">Token de cancelamento</param>
-        private async Task ConnectAsync(TcpClient tcpCliente
+        public async Task ConnectAsync(
+            TcpClient tcpCliente
             )
         {
             try
@@ -44,8 +49,9 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 if (conectado)
                 {
                     var tcpClientEndPoint = this.TcpCliente.Client.RemoteEndPoint as System.Net.IPEndPoint;
-                    var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
-                    var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
+                    var enderecoRede = new EnderecoRede(tcpClientEndPoint);
+                    var tcpClientIPAddress = enderecoRede.ObtemEnderecoIP();
+                    var tcpClientPort = enderecoRede.ObtemPorta();
                 }
 
                 await connectTask; // Aguarda a conexão completar ou propagar exceção
@@ -56,13 +62,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
             catch (ArgumentNullException)
             {
-                 throw; // Re-lança ArgumentNullException sem encapsular
+                throw; // Re-lança ArgumentNullException sem encapsular
             }
             catch (Exception ex)
             {
                 var tcpClientEndPoint = this.TcpCliente.Client.RemoteEndPoint as System.Net.IPEndPoint;
-                var tcpClientIPAddress = tcpClientEndPoint?.Address.ToString() ?? "Desconhecido";
-                var tcpClientPort = tcpClientEndPoint?.Port ?? 0;
+                var enderecoRede = new EnderecoRede(tcpClientEndPoint);
+                var tcpClientIPAddress = enderecoRede.ObtemEnderecoIP();
+                var tcpClientPort = enderecoRede.ObtemPorta();
                 throw new InvalidOperationException($"Erro ao conectar com {tcpClientIPAddress}:{tcpClientPort}: {ex.Message}", ex.InnerException);
             }
         }
@@ -74,35 +81,21 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <param name="serverPort">Porta Servidor de conexão</param>
         /// <param name="timeout">Time Out de conexao com o Servidor</param>
         /// <param name="cancellationBruto">Token de cancelamento</param>
-        private async Task ConnectAsync(
+        public async Task ConnectAsync(
             string serverIpAdress,
             int serverPort,
-            int timeoutMs = Timeout.Infinite,
-            CancellationToken cancellationBruto = default)
+            int timeoutMs = Timeout.Infinite)
         {
-           
 
-            using (var timeoutCts = new CancellationTokenSource(timeoutMs))
-            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(CancellationTokenBreak, timeoutCts.Token))
+            try
             {
-                try
-                {
-                    
-                    var ipEndPoint = new EnderecoRede(serverIpAdress, serverPort);
-                    var tcpConnector = new TcpConnector(serverIpAdress, serverPort);
-                    var connectTask = Task.Run(() =>
-                    {
-                        this.TcpCliente = new TcpClient();
-                        this.TcpCliente.Connect(serverIpAdress, serverPort, linkedCts.Token);
-                    }, CancellationTokenBreak);
-
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-
-
+                var enderecoRede = new EnderecoRede(serverIpAdress, serverPort);
+                var tcpConnector = new TcpConnector(enderecoRede);
+                await tcpConnector.ConnectWithTimeoutAsync(CancellationTokenBreak, timeoutMs).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 
@@ -139,7 +132,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
                 var conectado = EstaAberto();
                 var temDados = conectado && (this.TcpCliente?.Available > 0);
-                
+
                 // Verificar Depois
                 // Poll com SelectMode.SelectRead retorna true se:
                 // - Há dados para ler
@@ -165,6 +158,38 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Faz a leitura do servidor TCP e retorna os dados recebidos em um array de bytes(buffer).
+        /// </summary>
+
+        public byte[] ReaderBufferTCP(
+            int tamanhoBuffer,
+            int timeoutMs = Timeout.Infinite)
+        {
+            if (!EstaAberto())
+            {
+                throw new InvalidOperationException("Conexão TCP não está aberta.");
+            }
+
+            CancellationTokenBreak.ThrowIfCancellationRequested();
+            var netstream = TcpCliente.GetStream();
+            var tamanhoLeitura = TcpCliente.Available;
+            if (tamanhoLeitura == 0)
+            {
+                
+            }
+        }
+
+        protected async Task<int> LerComTimeoutAsync(
+                byte[] buffer,
+                int tamanho,
+                int timeoutMs,
+                bool throwOnTimeout = false,
+                CancellationToken cancellationBreak = default)
+        {
+
         }
 
         #region IDisposable Support

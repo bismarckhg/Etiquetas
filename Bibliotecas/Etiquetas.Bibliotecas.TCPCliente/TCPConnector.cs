@@ -35,6 +35,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 var tcpClient = new TcpClient(); // O TcpClient é criado fora da Task para ser acessível
                                                  // para descarte em caso de timeout.
 
+                tcpClient.NoDelay = false; // Habilita o Nagle Algorithm
+                tcpClient.ReceiveTimeout = timeoutMs;
+                tcpClient.SendTimeout = timeoutMs;
+                
                 // Task.Run é usado aqui para envolver a chamada assíncrona com o CancellationToken,
                 // garantindo que a Task de conexão possa ser cancelada.
                 // No entanto, ConnectAsync já aceita um CancellationToken diretamente no .NET 6+.
@@ -70,11 +74,13 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         // O CancellationToken pode ser verificado antes de iniciar a conexão
                         linkedCts.Token.ThrowIfCancellationRequested();
 
-                        var ipEndPoint = NetworkAddress.TryCreateIpEndPoint(ServerIpAdressString, ServerPort);
+                        var ip = EnderecoDeRede.ObtemEnderecoIP();
+                        var porta = EnderecoDeRede.ObtemPorta();
+
                         // Para .NET Framework 4.7.2, TcpClient.Connect() é síncrono.
                         // Para .NET 6+, você pode usar tcpClient.ConnectAsync().
                         // Vamos usar a versão síncrona para compatibilidade com o seu código original e .NET 4.7.2.
-                        await tcpClient.ConnectAsync(ServerIpAdressString, ServerPort).ConfigureAwait(false);
+                        await tcpClient.ConnectAsync(ip, porta).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {

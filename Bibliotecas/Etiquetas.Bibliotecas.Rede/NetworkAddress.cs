@@ -13,9 +13,27 @@ namespace Etiquetas.Bibliotecas.Rede
         protected string EnderecoIPOuNomeHost { get; }
         protected int Porta { get; }
         protected IPEndPoint EnderecoRedeIpEndPoint { get; }
+        protected EndPoint ParteEndPoint { get; }
 
         protected string IPePortaRede { get; }
         protected IPAddress EnderecoIP { get; }
+
+        public EnderecoRede(EndPoint endPoint)
+        {
+            this.ParteEndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint), "Erro: EndPoint não pode ser nulo.");
+            if (endPoint is IPEndPoint ipEndPoint)
+            {
+                this.EnderecoRedeIpEndPoint = ipEndPoint;
+                this.EnderecoIPOuNomeHost = ipEndPoint.Address.ToString();
+                this.Porta = ipEndPoint.Port;
+                this.EnderecoIP = ipEndPoint.Address;
+                this.IPePortaRede = $"{this.EnderecoIPOuNomeHost}:{this.Porta.ToString()}";
+            }
+            else
+            {
+                throw new ArgumentException("Erro: Apenas IPEndPoint é suportado atualmente.", nameof(endPoint));
+            }
+        }
 
         /// <summary>
         /// Tenta criar um IPEndPoint a partir de um endereço IP ou nome de host e uma porta.

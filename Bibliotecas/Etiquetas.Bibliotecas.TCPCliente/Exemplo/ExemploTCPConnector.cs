@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Etiquetas.Bibliotecas.Rede;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,13 +16,13 @@ namespace Etiquetas.Bibliotecas.TCPCliente.Exemplo
         // Exemplo de uso
         public static async Task Exemplo()
         {
-            IPAddress ip = IPAddress.Parse("127.0.0.1"); // Ou IPAddress.Loopback
-            int port = 12345; // Uma porta que provavelmente não terá um servidor escutando
+            string ipRede = "127.0.0.1"; // Ou IPAddress.Loopback
+            int portaRede = 12345; // Uma porta que provavelmente não terá um servidor escutando
             //string ipString = "127.0.0.1";
+            var enderecoRede = new EnderecoRede(ipRede, portaRede);
+            var connector = new TcpConnector(enderecoRede);
 
-            var connector = new TcpConnector(ip, port);
-
-            Console.WriteLine($"Tentando conectar a {ip.ToString()}:{port} com timeout de 2000ms...");
+            Console.WriteLine($"Tentando conectar a {ipRede}:{portaRede} com timeout de 2000ms...");
             try
             {
                 // Para testar o timeout, use uma porta onde não há servidor.
@@ -49,10 +50,12 @@ namespace Etiquetas.Bibliotecas.TCPCliente.Exemplo
             Console.WriteLine($"Tentando conectar a {ip.ToString()}:80 (HTTP) com timeout de 5000ms...");
             try
             {
+
+                var enderecoRede2 = new EnderecoRede(ipRede, 80);
                 // Tentar conectar a uma porta comum que pode estar aberta (ex: HTTP)
                 // Isso pode falhar se não houver um servidor HTTP na máquina local
                 // ou se o firewall bloquear.
-                var connector2 = new TcpConnector(ip, 80);
+                var connector2 = new TcpConnector(enderecoRede2);
                 using (TcpClient client = await connector2.ConnectWithTimeoutAsync(new CancellationTokenSource().Token, 5000))
                 {
                     Console.WriteLine($"Conectado com sucesso a {client.Client.RemoteEndPoint}");
