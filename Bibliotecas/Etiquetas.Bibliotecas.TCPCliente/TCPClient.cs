@@ -39,7 +39,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             int timeoutMs = Timeout.Infinite,
             bool throwOnTimeout = false,
             Encoding encoding = null
-            )
+        )
         {
             // Constructor logic here
             this.CancellationTokenBreak = cancellationTokenBreak;
@@ -62,7 +62,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <param name="cancellationBruto">Token de cancelamento</param>
         public async Task ConnectAsync(
             TcpClient tcpCliente
-            )
+        )
         {
             try
             {
@@ -139,7 +139,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <param name="serverPort">Porta Servidor de conexão</param>
         public async Task ConnectAsync(
             string serverIpAdress,
-            int serverPort)
+            int serverPort
+        )
         {
             try
             {
@@ -451,7 +452,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             NetworkStream netStream,
             byte[] buffer,
             CancellationToken cancellationToken = default
-            )
+        )
         {
             await Task.Run(async () =>
             {
