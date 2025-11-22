@@ -11,23 +11,26 @@ namespace Etiquetas.Bibliotecas.TCPCliente
     public class TCPListerner
     {
         protected TcpListener Listerner;
+        protected CancellationToken CancellationTokenBreak { get; }
+        protected CancellationToken CancellationTokenStop { get; }
 
-        public TCPListerner()
+        public TCPListerner(CancellationToken cancellationTokenBreak, CancellationToken cancellationTokenStop)
         {
-            
+            this.CancellationTokenStop = cancellationTokenStop;
+            this.CancellationTokenBreak = cancellationTokenBreak;
         }
 
-        protected async Task<TcpClient> StartListener(System.Net.IPAddress ipAdress, int port, CancellationToken cancellationBreak)
+        protected async Task<TcpClient> StartListener(System.Net.IPAddress ipAdress, int port)
         {
             Listerner = new TcpListener(ipAdress, port);
             Listerner.Start();
 
             try
             {
-                cancellationBreak.ThrowIfCancellationRequested();
-                while (cancellationBreak.IsCancellationRequested)
+                CancellationTokenBreak.ThrowIfCancellationRequested();
+                while (CancellationTokenBreak.IsCancellationRequested)
                 {
-                    var client = await AcceptTcpClientAsync(this.Listerner, cancellationBreak).ConfigureAwait(false);
+                    var client = await AcceptTcpClientAsync(this.Listerner).ConfigureAwait(false);
 
                     if (client != null)
                     {
@@ -43,20 +46,20 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
         }
 
-        protected async Task<TcpClient> AcceptTcpClientAsync(TcpListener listener, CancellationToken cancellationBreak)
+        protected async Task<TcpClient> AcceptTcpClientAsync(TcpListener listener)
         {
-            cancellationBreak.Register(() => listener.Stop());
+            CancellationTokenBreak.Register(() => listener?.Stop());
 
             // Cria uma task que completa quando o token é cancelado
             var acceptTask = listener.AcceptTcpClientAsync();
-            var cancellationTask = Task.Delay(Timeout.Infinite, cancellationBreak);
+            var cancellationTask = Task.Delay(Timeout.Infinite, CancellationTokenBreak);
 
             var completedTask = await Task.WhenAny(acceptTask, cancellationTask);
 
             if (completedTask == cancellationTask)
             {
                 // Cancelamento solicitado - para o listener
-                    listener.Stop();
+                    return null;
             }
 
             return await acceptTask;
