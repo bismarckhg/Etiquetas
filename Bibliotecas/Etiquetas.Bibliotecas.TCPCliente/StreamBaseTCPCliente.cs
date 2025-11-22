@@ -15,8 +15,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 {
     public class StreamBaseTCPCliente : StreamBase
     {
-        protected TcpClient TCPClient { get; set; }
-        protected TCPClient TCPClientWrapper { get; set; }
+        protected TCPClient ClienteTCP { get; set; }
 
         public StreamBaseTCPCliente()
         {
@@ -32,11 +31,13 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 throw new ArgumentNullException("Parâmetros inválidos!");
             }
 
-            var posicao = 0;
+            var posicaoint = 0;
             string serverIpAdress = string.Empty;
             int serverPort = 0;
             int timeout = 0;
-            var cancellationBruto = CancellationToken.None;
+            var posicaoCancellationToken = 0;
+            var cancellationTokenBruto = CancellationToken.None;
+            var cancellationTokenStop = CancellationToken.None;
 
             foreach (var item in parametros)
             {
@@ -46,29 +47,40 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                         serverIpAdress = texto;
                         break;
                     case int inteiro:
-                        switch (posicao)
+                        switch (posicaoint)
                         {
                             case 0:
                                 serverPort = inteiro > 0
                                 ? inteiro
                                 : throw new ArgumentOutOfRangeException("Porta inválida!");
-                                posicao++;
+                                posicaoint++;
                                 break;
                             case 1:
                                 timeout = inteiro;
-                                posicao++;
+                                posicaoint++;
                                 break;
                             default:
                                 break;
                         }
                         break;
-                    case TcpClient tcpClient:
-                        this.TCPClient = tcpClient;
+                    case TCPClient clienteTCP:
+                        this.ClienteTCP = clienteTCP;
                         break;
                     case CancellationToken token:
-                        cancellationBruto = token;
+                        switch (posicaoCancellationToken)
+                        {
+                            case 0:
+                                cancellationTokenBruto = token;
+                                posicaoCancellationToken++;
+                                break;
+                            case 1:
+                                cancellationTokenStop = token;
+                                posicaoCancellationToken++;
+                                break;
+                            default:
+                                break;
+                        }
                         break;
-
                     default:
                         break;
                 }
@@ -133,29 +145,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Conecta ao servidor TCP de forma assíncrona
-        /// </summary>
-        /// <param name="serverIpAdress">IP Servidor de conexão</param>
-        /// <param name="serverPort">Porta Servidor de conexão</param>
-        /// <param name="timeout">Time Out de conexao com o Servidor</param>
-        /// <param name="cancellationBruto">Token de cancelamento</param>
-        private async Task ConnectAsync(
-            string serverIpAdress,
-            int serverPort,
-            int timeoutMs = Timeout.Infinite,
-            CancellationToken cancellationBruto = default)
-        {
-        }
-
-        /// <summary>
-        /// Conecta ao servidor TCP de forma assíncrona
-        /// </summary>
-        /// <param name="cancellationBruto">Token de cancelamento</param>
-        private async Task ConnectAsync(
-            CancellationToken cancellationBruto = default)
-        {
-        }
 
         /// <inheritdoc/>
         public override bool EstaAberto()
