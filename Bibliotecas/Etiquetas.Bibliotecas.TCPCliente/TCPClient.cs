@@ -405,15 +405,15 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
                 var netStream = TcpCliente.GetStream();
 
-                if (netStream.WriteTimeout != TimeoutMS)
+                if (netStream.WriteTimeout != timeoutMs)
                 {
-                    netStream.WriteTimeout = TimeoutMS;
+                    netStream.WriteTimeout = timeoutMs;
                 }
 
                 // Envia com timeout
-                if (TimeoutMS > 0 && TimeoutMS != Timeout.Infinite)
+                if (timeoutMs > 0 && timeoutMs != Timeout.Infinite)
                 {
-                    using (var timeoutCts = new CancellationTokenSource(TimeoutMS))
+                    using (var timeoutCts = new CancellationTokenSource(timeoutMs))
                     using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(CancellationTokenBreak, timeoutCts.Token))
                     {
                         await WriteWithTimeoutAsync(netStream, buffer, linkedCts.Token).ConfigureAwait(false);
