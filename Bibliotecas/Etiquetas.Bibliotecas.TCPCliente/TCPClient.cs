@@ -156,7 +156,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Determina se a conexão TCP está aberta.
+        /// </summary>
+        /// <returns>Retorna verdadeiro se a conexao TCPClient esta aberta.</returns>
         public bool EstaAberto()
         {
             var retorno = (this.TcpCliente?.Connected ?? false)
@@ -173,7 +176,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Determina se há dados disponíveis para leitura na conexão TCP.
+        /// </summary>
+        /// <returns>Retorna verdadeiro se houver dados disponíveis para leitura.</returns>
         public bool PossuiDados()
         {
             if (this.TcpCliente == null)
@@ -428,7 +434,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 await FlushStreamAsync(netStream, CancellationTokenBreak).ConfigureAwait(false);
             }
             catch (TimeoutException ex)
-            {
+            {  
                 throw;
             }
             catch (OperationCanceledException)
@@ -492,6 +498,10 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
         #region IDisposable Support
 
+        /// <summary>
+        /// Indica se o objeto já foi descartado.
+        /// </summary>
+        /// <returns>Retorna verdadeiro se o objeto ja foi descartado.</returns>
         protected bool stDisposed = false;
 
         /// <summary>
