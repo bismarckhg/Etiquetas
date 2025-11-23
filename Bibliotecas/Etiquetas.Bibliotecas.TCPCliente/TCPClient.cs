@@ -11,17 +11,45 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 {
     public class TCPClient : IDisposable
     {
-        protected TcpClient TcpCliente { get; set; }
+        protected TcpClient Client { get; set; }
         protected CancellationToken CancellationTokenStop { get; }
         protected CancellationToken CancellationTokenBreak { get; }
 
-        protected bool ThrowOnTimeout;
+        protected bool ThrowOnTimeout { get; }
 
         protected int TimeoutMS { get; }
 
         protected int TamanhoBuffer { get; }
 
         protected Encoding TypeEncoding { get; set; }
+        /// <summary>
+        ///     ctor TCPClient
+        /// </summary>
+        /// <param name="cancellationTokenStop">Interrupção na finalizacao de um processo completo.</param>
+        /// <param name="cancellationTokenBreak">Interrupção Bruta de um processo sem finalização.</param>
+        /// <param name="tamanhoBuffer"> tamanho dos Buffers de leitura e envio do TcpClient</param>
+        /// <param name="timeoutMs">Timeout para conexao, leitura e envio.</param>
+        /// <param name="throwOnTimeout">Timeout interrupção por erro, ou apenas interrupção.</param>
+        /// <param name="encoding">Encoding para texto a ser recebido ou enviado.</param>
+        public TCPClient(
+            TcpClient tcpClient,
+            CancellationToken cancellationTokenStop,
+            CancellationToken cancellationTokenBreak,
+            int tamanhoBuffer = 8192,
+            int timeoutMs = Timeout.Infinite,
+            bool throwOnTimeout = false,
+            Encoding encoding = null
+        ) : this(
+                cancellationTokenStop,
+                cancellationTokenBreak,
+                tamanhoBuffer,
+                timeoutMs,
+                throwOnTimeout,
+                encoding
+            )
+        {
+            this.Client = tcpClient ?? throw new ArgumentNullException(nameof(tcpClient));
+        }
 
         /// <summary>
         ///     ctor TCPClient
@@ -41,6 +69,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             Encoding encoding = null
         )
         {
+            this.Client = default;
+            this.ThrowOnTimeout = throwOnTimeout;
             // Constructor logic here
             this.CancellationTokenBreak = cancellationTokenBreak;
             this.CancellationTokenStop = cancellationTokenStop;
@@ -53,81 +83,80 @@ namespace Etiquetas.Bibliotecas.TCPCliente
 
         public TcpClient ObtemTcpClient()
         {
-            return this.TcpCliente;
+            return this.Client;
         }
 
         /// <summary>
         /// Conecta ao servidor TCP de forma assíncrona
         /// </summary>
         /// <param name="cancellationBruto">Token de cancelamento</param>
-        public async Task ConnectAsync(
-            TcpClient tcpCliente
-        )
+        public async Task ConnectAsync()
         {
             try
             {
                 this.CancellationTokenBreak.ThrowIfCancellationRequested();
 
-                TcpCliente.ReceiveBufferSize = TamanhoBuffer;
-                TcpCliente.SendBufferSize = TamanhoBuffer;
-                TcpCliente.Client.ReceiveBufferSize = TamanhoBuffer;
-                TcpCliente.Client.SendBufferSize = TamanhoBuffer;
+                Client.ReceiveBufferSize = TamanhoBuffer;
+                Client.SendBufferSize = TamanhoBuffer;
+                Client.Client.ReceiveBufferSize = TamanhoBuffer;
+                Client.Client.SendBufferSize = TamanhoBuffer;
 
-                if (TcpCliente.ReceiveTimeout != TimeoutMS)
+                if (Client.ReceiveTimeout != TimeoutMS)
                 {
-                    this.TcpCliente.ReceiveTimeout = TimeoutMS;
+                    this.Client.ReceiveTimeout = TimeoutMS;
                 }
 
-                if (TcpCliente.Client.ReceiveTimeout != TimeoutMS)
+                if (Client.Client.ReceiveTimeout != TimeoutMS)
                 {
-                    this.TcpCliente.Client.ReceiveTimeout = TimeoutMS;
+                    this.Client.Client.ReceiveTimeout = TimeoutMS;
                 }
 
-                if (TcpCliente.SendTimeout != TimeoutMS)
+                if (Client.SendTimeout != TimeoutMS)
                 {
-                    this.TcpCliente.ReceiveTimeout = TimeoutMS;
+                    this.Client.ReceiveTimeout = TimeoutMS;
                 }
 
-                if (TcpCliente.Client.SendTimeout != TimeoutMS)
+                if (Client.Client.SendTimeout != TimeoutMS)
                 {
-                    this.TcpCliente.Client.ReceiveTimeout = TimeoutMS;
+                    this.Client.Client.ReceiveTimeout = TimeoutMS;
                 }
 
-                // .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run com timeout
-                var connectTask = Task.Run(() =>
-                {
-                    this.TcpCliente = tcpCliente ?? throw new ArgumentNullException(nameof(tcpCliente));
-                }, CancellationTokenBreak);
+                //// .NET 4.5 não tem ConnectAsync nativo, usamos Task.Run com timeout
+                //var connectTask = Task.Run(() =>
+                //{
+                //    this.Client.Connect();
+
+                //}, CancellationTokenBreak);
 
                 var conectado = EstaAberto();
 
                 if (conectado)
                 {
-                    var tcpClientEndPoint = this.TcpCliente.Client.RemoteEndPoint as System.Net.IPEndPoint;
+                    var tcpClientEndPoint = this.Client.Client.RemoteEndPoint as System.Net.IPEndPoint;
                     var enderecoRede = new EnderecoRede(tcpClientEndPoint);
                     var tcpClientIPAddress = enderecoRede.ObtemEnderecoIP();
                     var tcpClientPort = enderecoRede.ObtemPorta();
                 }
 
-                await connectTask; // Aguarda a conexão completar ou propagar exceção
+                //await connectTask; // Aguarda a conexão completar ou propagar exceção
             }
             catch (OperationCanceledException)
             {
-                TcpCliente?.Dispose();
+                Client?.Dispose();
                 throw; // Re-lança OperationCanceledException sem encapsular
             }
             catch (ArgumentNullException)
             {
-                TcpCliente?.Dispose();
+                Client?.Dispose();
                 throw; // Re-lança ArgumentNullException sem encapsular
             }
             catch (Exception ex)
             {
-                var tcpClientEndPoint = this.TcpCliente.Client.RemoteEndPoint as System.Net.IPEndPoint;
+                var tcpClientEndPoint = this.Client.Client.RemoteEndPoint as System.Net.IPEndPoint;
                 var enderecoRede = new EnderecoRede(tcpClientEndPoint);
                 var tcpClientIPAddress = enderecoRede.ObtemEnderecoIP();
                 var tcpClientPort = enderecoRede.ObtemPorta();
-                TcpCliente?.Dispose();
+                Client?.Dispose();
                 throw new InvalidOperationException($"Erro: {ex.Message}\r\nAo conectar com {tcpClientIPAddress}:{tcpClientPort}: ", ex.InnerException);
             }
         }
@@ -162,8 +191,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <returns>Retorna verdadeiro se a conexao TCPClient esta aberta.</returns>
         public bool EstaAberto()
         {
-            var retorno = (this.TcpCliente?.Connected ?? false)
-                && (this.TcpCliente?.Client?.Connected ?? false);
+            var retorno = (this.Client?.Connected ?? false)
+                && (this.Client?.Client?.Connected ?? false);
 
             return retorno;
         }
@@ -171,8 +200,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <inheritdoc/>
         public Task FecharAsync()
         {
-            this.TcpCliente?.Close();
-            this.TcpCliente?.Dispose();
+            this.Client?.Close();
+            this.Client?.Dispose();
             return Task.CompletedTask;
         }
 
@@ -182,7 +211,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <returns>Retorna verdadeiro se houver dados disponíveis para leitura.</returns>
         public bool PossuiDados()
         {
-            if (this.TcpCliente == null)
+            if (this.Client == null)
             {
                 return false;
             }
@@ -192,7 +221,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             //conectado = conectado && socket != null && socket.Connected;
 
             var conectado = EstaAberto();
-            var temDados = conectado && (this.TcpCliente?.Available > 0);
+            var temDados = conectado && (this.Client?.Available > 0);
 
             // Verificar Depois
             // Poll com SelectMode.SelectRead retorna true se:
@@ -223,14 +252,14 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     throw new InvalidOperationException("Conexão TCP não está aberta.");
                 }
 
-                var netStream = TcpCliente.GetStream();
+                var netStream = Client.GetStream();
 
                 if (netStream.ReadTimeout != TimeoutMS)
                 {
                     netStream.ReadTimeout = TimeoutMS;
                 }
 
-                var tamanhoLeitura = TcpCliente.Available;
+                var tamanhoLeitura = Client.Available;
                 var byteTemp = new byte[tamanhoLeitura];
 
                 var tentativas = 5;
@@ -245,7 +274,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     byteTemp = await LerComOuSemTimeoutAsync(netStream, tamanhoLeitura).ConfigureAwait(false);
 
                     await Task.Delay(100, CancellationTokenBreak).ConfigureAwait(false);
-                    tamanhoLeitura = TcpCliente.Available;
+                    tamanhoLeitura = Client.Available;
                 }
 
                 if (tamanhoLeitura != 0)
@@ -409,7 +438,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                     throw new InvalidOperationException("Conexão TCP não está aberta.");
                 }
 
-                var netStream = TcpCliente.GetStream();
+                var netStream = Client.GetStream();
 
                 if (netStream.WriteTimeout != timeoutMs)
                 {
@@ -431,15 +460,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 }
 
                 // Garante que os dados foram enviados
-                await FlushStreamAsync(netStream, CancellationTokenBreak).ConfigureAwait(false);
-            }
-            catch (TimeoutException ex)
-            {  
-                throw;
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
+                await FlushStreamAsync(netStream).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -464,7 +485,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             {
                 try
                 {
-                    await netStream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                    await netStream.WriteAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception)
                 {
@@ -479,8 +500,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <param name="cancellationToken">|Cancellation Token com timeout ou apenas Break</param>
         /// <param name="netStream">NetworkStream da conexao TcpClient</param>
         protected async Task FlushStreamAsync(
-            NetworkStream netStream,
-            CancellationToken cancellationToken = default
+            NetworkStream netStream
         )
         {
             await Task.Run(() =>
@@ -493,7 +513,7 @@ namespace Etiquetas.Bibliotecas.TCPCliente
                 {
                     throw;
                 }
-            }, cancellationToken).ConfigureAwait(false);
+            }, CancellationTokenBreak).ConfigureAwait(false);
         }
 
         #region IDisposable Support

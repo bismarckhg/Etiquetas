@@ -14,14 +14,6 @@ namespace Etiquetas.Bibliotecas.Streams.Interfaces
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
         /// <returns>Uma tarefa que representa a operação de escrita.</returns>
-        Task EscreverAsync<T>(params object[] parametros);
-
-        /// <summary>
-        /// Escreve dados no stream de forma assíncrona.
-        /// </summary>
-        /// <param name="parametros">Parâmetros adicionais para a operação de escrita.</param>
-        /// <returns>Uma tarefa que representa a operação de escrita.</returns>
         Task EscreverAsync<T>(ITaskParametros parametros);
-
     }
 }

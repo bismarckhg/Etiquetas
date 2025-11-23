@@ -14,13 +14,6 @@ namespace Etiquetas.Bibliotecas.Streams.Interfaces
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais para a operação de leitura.</param>
         /// <returns>Uma tarefa que representa a operação de leitura, retornando o objeto lido.</returns>
-        Task<T> LerAsync<T>(params object[] parametros);
-
-        /// <summary>
-        /// Lê dados do stream de forma assíncrona.
-        /// </summary>
-        /// <param name="parametros">Parâmetros adicionais para a operação de leitura.</param>
-        /// <returns>Uma tarefa que representa a operação de leitura, retornando o objeto lido.</returns>
         Task<T> LerAsync<T>(ITaskParametros parametros);
     }
 }

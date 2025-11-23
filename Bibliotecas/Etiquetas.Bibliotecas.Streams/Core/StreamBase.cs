@@ -11,9 +11,12 @@ namespace Etiquetas.Bibliotecas.Streams.Core
     /// </summary>
     public abstract class StreamBase : IStreamConexao
     {
-        protected bool stDisposed = false;
 
- 
+        protected StreamBase() : base()
+        {
+            
+        }
+
         /// <summary>
         /// Implementação virtual do método EstaAberto. As classes derivadas devem sobrescrevê-lo.
         /// </summary>
@@ -29,19 +32,20 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         /// </summary>
         /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
         /// <returns>Uma tarefa que representa a operação de conexão.</returns>
-        public abstract Task ConectarAsync(params object[] parametros);
-
-        /// <summary>
-        /// Implementação virtual do método ConectarAsync. As classes derivadas podem sobrescrevê-lo.
-        /// </summary>
-        /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
-        /// <returns>Uma tarefa que representa a operação de conexão.</returns>
         public abstract Task ConectarAsync(ITaskParametros parametros);
         
         /// <summary>
         /// Implementação virtual do método FecharAsync. As classes derivadas podem sobrescrevê-lo.
         /// </summary>
         public abstract Task FecharAsync();
+
+        public abstract Task ConectarReaderOnlyUnshareAsync();
+
+        public abstract Task ConectarWriterAndReaderUnshareAsync();
+
+        #region Dispose Pattern
+
+        protected bool stDisposed = false;
 
         /// <summary>
         /// Realiza a liberação de recursos.
@@ -70,10 +74,6 @@ namespace Etiquetas.Bibliotecas.Streams.Core
             stDisposed = true;
         }
 
-        public abstract Task ConectarReaderOnlyUnshareAsync();
-
-        public abstract Task ConectarWriterAndReaderUnshareAsync();
-
         /// <summary>
         /// Verifica se o objeto foi descartado
         /// </summary>
@@ -90,5 +90,7 @@ namespace Etiquetas.Bibliotecas.Streams.Core
         {
             Dispose(false);
         }
+
+        #endregion
     }
 }

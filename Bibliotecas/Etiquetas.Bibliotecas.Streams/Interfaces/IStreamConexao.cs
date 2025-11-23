@@ -13,13 +13,6 @@ namespace Etiquetas.Bibliotecas.Streams.Interfaces
         /// </summary>
         /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
         /// <returns>Uma tarefa que representa a operação de conexão.</returns>
-        Task ConectarAsync(params object[] parametros);
-
-        /// <summary>
-        /// Abre a conexão de forma assíncrona.
-        /// </summary>
-        /// <param name="parametros">Parâmetros necessários para a conexão, como endereço IP e porta.</param>
-        /// <returns>Uma tarefa que representa a operação de conexão.</returns>
         Task ConectarAsync(ITaskParametros parametros);
 
         /// <summary>
