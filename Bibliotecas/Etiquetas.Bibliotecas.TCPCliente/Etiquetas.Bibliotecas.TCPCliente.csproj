@@ -27,16 +27,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Anterior\Anterior\StreamBaseTCPCliente.cs" />
+    <Compile Remove="Anterior\Anterior\StreamTCPCliente.cs" />
     <Compile Remove="Anterior\StreamBaseTCPCliente.cs" />
+    <Compile Remove="Anterior\StreamTCPCliente.cs" />
     <Compile Remove="Exemplo\ExemploStreamTCPClient.cs" />
-    <Compile Remove="StreamBaseTCPCliente - Cópia.cs" />
+    <Compile Remove="StreamTCPCliente - Cópia.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Anterior\Anterior\StreamBaseTCPCliente.cs" />
     <None Include="Anterior\Anterior\StreamTCPCliente.cs" />
+    <None Include="Anterior\StreamTCPCliente.cs" />
     <None Include="Exemplo\ExemploStreamTCPClient.cs" />
-    <None Include="StreamBaseTCPCliente - Cópia.cs" />
+    <None Include="StreamTCPCliente - Cópia.cs" />
   </ItemGroup>
 
   <ItemGroup>

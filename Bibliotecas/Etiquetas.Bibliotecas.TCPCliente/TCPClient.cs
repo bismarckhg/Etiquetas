@@ -466,7 +466,6 @@ namespace Etiquetas.Bibliotecas.TCPCliente
             {
                 throw;
             }
-
         }
 
         /// <summary>

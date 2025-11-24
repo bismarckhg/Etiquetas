@@ -219,27 +219,12 @@
             Inicializa uma nova instância da classe <see cref="T:Etiquetas.Bibliotecas.Xml.StreamXml"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.LerAsync``1(System.Object[])">
-            <summary>
-            Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
-            </summary>
-            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-            <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.LerAsync``1(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>
             Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="T:System.Xml.Linq.XDocument"/>.
             </summary>
             <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
             <returns>Um <see cref="T:System.Xml.Linq.XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EscreverAsync``1(System.Object[])">
-            <summary>
-            Escreve o <see cref="T:System.Xml.Linq.XDocument"/> fornecido para o arquivo de forma assíncrona.
-            Se o arquivo já existir, ele será sobrescrito.
-            </summary>
-            <param name="dados">O <see cref="T:System.Xml.Linq.XDocument"/> a ser salvo.</param>
-            <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.StreamXml.EscreverAsync``1(Etiquetas.Bibliotecas.TaskCore.Interfaces.ITaskParametros)">
             <summary>

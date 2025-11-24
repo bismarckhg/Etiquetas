@@ -14,11 +14,47 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.TCPCliente
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class StreamTCPCliente : IStreamLeitura, IStreamEscrita
-    {
 
+    public class StreamTCPCliente : StreamBaseTCPCliente, IStreamLeitura, IStreamEscrita
+    {
+        protected NetworkStream NetStream;
+
+        /// <summary>
+        /// Leitura assíncrona de dados do stream TCP Cliente.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parametros"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Task<T> LerAsync<T>(ITaskParametros parametros)
+        {
+            if (typeof(T) == typeof(byte[]))
+            {
+                return (Task<T>)(object)this.ClienteTCP.LerBufferAsync(
+                    );
+            }
+
+            throw new InvalidCastException($"Tipo de retorno não suportado: {typeof(T).FullName}");
+        }
+
+        /// <summary>
+        /// Gravação assíncrona de dados no stream TCP Cliente.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parametros"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task EscreverAsync<T>(ITaskParametros parametros)
+        {
+            var buffer = parametros.RetornaSeExistir<byte[]>("buffer");
+            var timeout = parametros.RetornaSeExistir<int>("timeout");
+            var addLineBreak = parametros.RetornaSeExistir<bool>("addLineBreak");
+
+            await this.ClienteTCP.GravarBufferAsync(
+                buffer,
+                timeout,
+                addLineBreak
+            );
+        }
     }
 }

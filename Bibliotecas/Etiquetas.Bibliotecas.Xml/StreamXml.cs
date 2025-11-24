@@ -85,100 +85,6 @@ namespace Etiquetas.Bibliotecas.Xml
         /// </summary>
         /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
         /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
-        public async Task<T> LerAsync<T>(params object[] parametros)
-        {
-            if (!File.Exists(NomeECaminhoArquivo))
-            {
-                return default;
-            }
-
-            await Task.Run(() => ArrayObjectosParametrosLerAsync<T>(parametros)).ConfigureAwait(false);
-
-            return await LerAsync<T>().ConfigureAwait(false);
-        }
-
-        protected async Task<T> ArrayObjectosParametrosLerAsync<T>(params object[] parametros)
-        {
-            var pendente = new ConcurrentDictionary<Type, int>
-            {
-                [typeof(CancellationToken)] = 1,
-                [typeof(Encoding)] = 2,
-                [typeof(Func<T, bool>)] = 3
-            };
-            var subRootName = string.Empty;
-            var itemNameSubRoot = string.Empty;
-            Func<T, bool> predicate = null;
-
-            var lista = new ConcurrentDictionary<Type, int>();
-            foreach (var item in parametros)
-            {
-                var ok = false;
-                var posicaoString = 0;
-                var posicao = 0;
-                switch (item)
-                {
-                    case string texto:
-                        switch (posicaoString)
-                        {
-                            case 0:
-                                subRootName = texto;
-                                posicaoString++;
-                                break;
-                            case 1:
-                                itemNameSubRoot = texto;
-                                posicaoString++;
-                                break;
-                            default:
-                                throw new ArgumentException($"Parametro string não esperado na posição {posicao}!");
-                        }
-                        break;
-                    case CancellationToken cancellationToken:
-                        CancelToken = cancellationToken;
-                        ok = pendente.TryRemove(cancellationToken.GetType(), out posicao)
-                            ? lista.TryAdd(cancellationToken.GetType(), posicao)
-                            : throw new ArgumentException("Parametro CancellationToken Duplicado!!");
-                        break;
-                    case Encoding encoding:
-                        EncodingTexto = encoding;
-                        ok = pendente.TryRemove(encoding.GetType(), out posicao)
-                            ? lista.TryAdd(encoding.GetType(), posicao)
-                            : throw new ArgumentException("Parametro Encoding Duplicado!!");
-                        break;
-                    case Func<T, bool> func:
-                        predicate = func;
-                        ok = pendente.TryRemove(func.GetType(), out posicao)
-                            ? lista.TryAdd(func.GetType(), posicao)
-                            : throw new ArgumentException("Parametro Func<T, bool> Duplicado!!");
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            var hasPredicate = predicate != null;
-            var hasItemName = !StringEhNuloVazioComEspacosBranco.Execute(itemNameSubRoot);
-            var hasSubRoot = !StringEhNuloVazioComEspacosBranco.Execute(subRootName);
-
-            if (!hasPredicate && !hasItemName)
-            {
-                if (hasSubRoot)
-                    return await LerAsync<T>(FS, subRootName, EncodingTexto, CancelToken).ConfigureAwait(false);
-
-                return await LerAsync<T>(FS, EncodingTexto, CancelToken).ConfigureAwait(false);
-            }
-
-            if (!hasSubRoot)
-                throw new ArgumentNullException(nameof(subRootName), "SubRootName é obrigatório quando Predicate ou ItemNameSubRoot são fornecidos.");
-
-            return await LerAsync<T>(FS, subRootName, itemNameSubRoot, predicate, EncodingTexto, CancelToken).ConfigureAwait(false);
-
-        }
-
-        /// <summary>
-        /// Lê o conteúdo do arquivo XML de forma assíncrona e o retorna como um <see cref="XDocument"/>.
-        /// </summary>
-        /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-        /// <returns>Um <see cref="XDocument"/> com o conteúdo do arquivo, ou null se o arquivo não existir.</returns>
         public async Task<T> LerAsync<T>(ITaskParametros parametros)
         {
             if (EstaAberto() == false)
@@ -235,20 +141,6 @@ namespace Etiquetas.Bibliotecas.Xml
 
             // Retorne o resultado ou faça o processamento necessário
             return desserializacao;
-        }
-
-        /// <summary>
-        /// Escreve o <see cref="XDocument"/> fornecido para o arquivo de forma assíncrona.
-        /// Se o arquivo já existir, ele será sobrescrito.
-        /// </summary>
-        /// <param name="dados">O <see cref="XDocument"/> a ser salvo.</param>
-        /// <param name="parametros">Parâmetros adicionais (não utilizados nesta implementação).</param>
-        public async Task EscreverAsync<T>(params object[] parametros)
-        {
-            //if (dados == null)
-            //    throw new ArgumentNullException(nameof(dados));
-
-            //await Task.Run(() => dados.Save(_caminhoArquivo, SaveOptions.None)).ConfigureAwait(false);
         }
 
         /// <summary>
