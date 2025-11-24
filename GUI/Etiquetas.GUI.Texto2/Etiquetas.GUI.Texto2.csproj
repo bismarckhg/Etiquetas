@@ -62,5 +62,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.TaskCore\Etiquetas.Bibliotecas.TaskCore.csproj" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

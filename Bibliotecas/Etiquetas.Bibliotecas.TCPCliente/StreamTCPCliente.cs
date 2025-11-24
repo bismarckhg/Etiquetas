@@ -30,8 +30,8 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         {
             if (typeof(T) == typeof(byte[]))
             {
-                return (Task<T>)(object)this.ClienteTCP.LerBufferAsync(
-                    );
+                var retorno = this.ClienteTCP.LerBufferAsync();
+                return (Task<T>)(object)retorno;
             }
 
             throw new InvalidCastException($"Tipo de retorno não suportado: {typeof(T).FullName}");
@@ -46,15 +46,18 @@ namespace Etiquetas.Bibliotecas.TCPCliente
         /// <exception cref="NotImplementedException"></exception>
         public async Task EscreverAsync<T>(ITaskParametros parametros)
         {
-            var buffer = parametros.RetornaSeExistir<byte[]>("buffer");
-            var timeout = parametros.RetornaSeExistir<int>("timeout");
-            var addLineBreak = parametros.RetornaSeExistir<bool>("addLineBreak");
+            if (typeof(T) == typeof(byte[]))
+            {
+                var buffer = parametros.RetornaSeExistir<byte[]>("buffer");
+                var timeout = parametros.RetornaSeExistir<int>("timeout");
+                var addLineBreak = parametros.RetornaSeExistir<bool>("addLineBreak");
 
-            await this.ClienteTCP.GravarBufferAsync(
-                buffer,
-                timeout,
-                addLineBreak
-            );
+                await this.ClienteTCP.GravarBufferAsync(
+                    buffer,
+                    timeout,
+                    addLineBreak
+                );
+            }
         }
     }
 }
