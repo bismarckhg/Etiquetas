@@ -1,0 +1,725 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Application</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.DescricaoMedicamento">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.PrincipioAtivo1">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.PrincipioAtivo2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.CodigoMaterial">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.Validade">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.Lote">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.MatriculaFuncionario">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.CodigoBarras">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.DataHoraInicio">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.DataHoraFim">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.StatusEtiqueta">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.DescricaoStatus">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.QuantidadeSolicitada">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.FaltaImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.JobName">
+            <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.Application.DTOs.FaltaImprimirDto">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.IdEtiquetaImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.NomeDoJOB">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.DataImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.StatusImpressora">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.DescricaoStatusImpressora">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.FaltaImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.IsOnline">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.IsError">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.State">
+            <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.Application.Mappers.FaltaImprimirMapper">
+            <summary>
+            Classe de mapeamento entre FaltaImprimir e FaltaImprimirDto.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.FaltaImprimirMapper.ToEntity(Etiquetas.Core.Interfaces.IFaltaImprimirDto)">
+            <summary>
+            Converte um DTO de FaltaImprimir para uma entidade FaltaImprimir.
+            </summary>
+            <param name="dto">DTO de Falta Imprimir.</param>
+            <returns>Retorna entidade Falta Imprimir.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.FaltaImprimirMapper.ToDTO(Etiquetas.Core.Interfaces.IFaltaImprimir)">
+            <summary>
+            Converte uma entidade FaltaImprimir para um DTO de FaltaImprimir.
+            </summary>
+            <param name="entity">entidide Falta Imprimir.</param>
+            <returns>Retorna DTO de Falta Imprimir.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.FaltaImprimirMapper.AssignStatusState(Etiquetas.Core.Interfaces.IFaltaImprimirDto)">
+            <summary>
+            Atribui o status e o estado com base no código de status da impressora.
+            </summary>
+            <param name="dto">DTO de Falta Imprimir</param>
+            <returns>Retorna Entidade Falta Imprimir.</returns>
+        </member>
+        <member name="T:Etiquetas.Application.Pipeline.EtiquetaPipeline">
+            <summary>
+            Pipeline TPL Dataflow completo para processamento de etiquetas Sato.
+            Processa pacotes quebrados, separa por ETX, transforma em itens individuais.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Pipeline.EtiquetaPipeline._montarPacotesBlock">
+            <summary>
+            BLOCO 1: Recebe pacote de bytes bruto e monta pacotes completos usando buffer.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Pipeline.EtiquetaPipeline._parsePacoteBlock">
+            <summary>
+            BLOCO 2: Faz parsing de cada pacote completo em SatoDto.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Pipeline.EtiquetaPipeline._validarPacoteBlock">
+            <summary>
+            BLOCO 3: Valida pacotes Sato.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Pipeline.EtiquetaPipeline._broadcastPacoteBlock">
+            <summary>
+            BLOCO 4: Broadcast para múltiplos destinos (FaltaImprimir + Atualização Etiqueta).
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Pipeline.EtiquetaPipeline._gravarFaltaImprimirBlock">
+            <summary>
+            BLOCO 5: Grava registro de FaltaImprimir no LiteDB.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Pipeline.EtiquetaPipeline._atualizarEtiquetaBlock">
+            <summary>
+            BLOCO 6: Atualiza campo FaltaImpressao da etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Pipeline.EtiquetaPipeline"/> class.
+            </summary>
+            <param name="connectionString">String de conexão do LiteDB.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.InicializarIndices">
+            <summary>
+            Inicializa índices no LiteDB.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.AbrirEtiquetaAsync(Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem)">
+            <summary>
+            Abre uma nova etiqueta de impressão e grava no LiteDB.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.MontarPacotesCompletos(Etiquetas.Application.Pipeline.Messages.PacoteSatoMensagem)">
+            <summary>
+            Monta pacotes completos a partir de bytes quebrados usando buffer.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.ParsePacoteSato(System.Byte[])">
+            <summary>
+            Faz parsing de um pacote completo em SatoDto.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.ValidarPacote(Etiquetas.Application.Pipeline.Messages.PacoteProcessadoMensagem)">
+            <summary>
+            Valida pacote Sato.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.GravarFaltaImprimirAsync(Etiquetas.Application.Pipeline.Messages.PacoteProcessadoMensagem)">
+            <summary>
+            Grava registro de FaltaImprimir no LiteDB (cada cópia impressa).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.AtualizarEtiquetaAsync(Etiquetas.Application.Pipeline.Messages.PacoteProcessadoMensagem)">
+            <summary>
+            Atualiza campo FaltaImpressao da etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.FecharEtiquetaAsync(Etiquetas.Application.Pipeline.Messages.FecharEtiquetaMensagem)">
+            <summary>
+            Fecha uma etiqueta manualmente.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.AbrirEtiquetaAsync(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64,System.String)">
+            <summary>
+            Envia mensagem para abrir uma nova etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.AbrirEtiquetaAsync(Etiqueta.Application.DTOs.ISatoDto)">
+            <summary>
+            Envia mensagem para abrir uma nova etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.ProcessarPacoteSatoAsync(System.Byte[],System.String)">
+            <summary>
+            Envia pacote de bytes recebido da impressora Sato.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.FecharEtiquetaAsync(System.Int64,System.String)">
+            <summary>
+            Envia mensagem para fechar etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.AguardarProcessamentoPacotesAsync">
+            <summary>
+            Aguarda conclusão de todos os blocos de pacotes Sato.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.CompletarAsync">
+            <summary>
+            Completa todo o pipeline.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.ObterStatusBuffers">
+            <summary>
+            Retorna status dos buffers de pacotes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.LimparBuffer(System.String)">
+            <summary>
+            Limpa buffer de uma origem específica.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Pipeline.EtiquetaPipeline.Dispose">
+            <summary>
+            Libera recursos do pipeline.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem">
+            <summary>
+            Mensagem para abrir uma nova etiqueta de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.CodigoMaterial">
+            <summary>
+            Gets or sets - Código do material.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.CodigoBarras">
+            <summary>
+            Gets or sets - Código de barras.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.DescricaoMedicamento">
+            <summary>
+            Gets or sets - Descrição do medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.PrincipioAtivo1">
+            <summary>
+            Gets or sets - Primeiro princípio ativo.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.PrincipioAtivo2">
+            <summary>
+            Gets or sets - Segundo princípio ativo.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.Lote">
+            <summary>
+            Gets or sets - Número do lote.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.Validade">
+            <summary>
+            Gets or sets - Data de validade.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.MatriculaFuncionario">
+            <summary>
+            Gets or sets - Matrícula do funcionário.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.QuantidadeSolicitada">
+            <summary>
+            Gets or sets - Quantidade de cópias solicitadas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.AbrirEtiquetaMensagem.JobName">
+            <summary>
+            Gets or sets - Nome do JOB de impressão.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Pipeline.Messages.EtiquetaMensagemBase">
+            <summary>
+            Mensagem base para operações do pipeline de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.EtiquetaMensagemBase.MessageId">
+            <summary>
+            Gets or sets - Identificador único da mensagem.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.EtiquetaMensagemBase.Timestamp">
+            <summary>
+            Gets or sets - Timestamp da mensagem.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Pipeline.Messages.FecharEtiquetaMensagem">
+            <summary>
+            Mensagem para fechar uma etiqueta de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.FecharEtiquetaMensagem.IdEtiqueta">
+            <summary>
+            Gets or sets - ID da etiqueta a ser fechada.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.FecharEtiquetaMensagem.JobName">
+            <summary>
+            Gets or sets - Nome do JOB.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Pipeline.Messages.PacoteProcessadoMensagem">
+            <summary>
+            Resultado do processamento de um pacote Sato individual.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.PacoteProcessadoMensagem.SatoDto">
+            <summary>
+            Gets or sets - DTO Sato processado.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.PacoteProcessadoMensagem.EhValido">
+            <summary>
+            Gets or sets - Indica se o pacote é válido.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Pipeline.Messages.PacoteSatoMensagem">
+            <summary>
+            Mensagem contendo pacote de bytes recebido da impressora Sato.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.PacoteSatoMensagem.PacoteBytes">
+            <summary>
+            Gets or sets - Array de bytes recebido da impressora.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.PacoteSatoMensagem.TamanhoRecebido">
+            <summary>
+            Gets or sets - Número de bytes recebidos.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Pipeline.Messages.PacoteSatoMensagem.Origem">
+            <summary>
+            Gets or sets - Origem do pacote (porta TCP, etc).
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Services.PacoteSatoBufferService">
+            <summary>
+            Serviço responsável por armazenar pacotes incompletos e montá-los quando completos.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PacoteSatoBufferService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.PacoteSatoBufferService"/> class.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PacoteSatoBufferService.ProcessarBytes(System.String,System.Byte[])">
+            <summary>
+            Processa bytes recebidos, retornando pacotes completos encontrados.
+            Armazena bytes incompletos no buffer para processamento futuro.
+            </summary>
+            <param name="origem">Identificador da origem (ex: "Porta2", "TCP:192.168.1.100").</param>
+            <param name="bytesRecebidos">Array de bytes recebidos da impressora.</param>
+            <returns>Lista de pacotes completos prontos para parsing.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PacoteSatoBufferService.ExtrairPacoteCompleto(System.Collections.Generic.List{System.Byte})">
+            <summary>
+            Tenta extrair um pacote completo do buffer.
+            Remove os bytes do buffer se encontrar um pacote válido.
+            </summary>
+            <param name="buffer">Buffer de bytes pendentes.</param>
+            <returns>Array de bytes do pacote completo, ou null se não houver pacote completo.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PacoteSatoBufferService.LimparBuffer(System.String)">
+            <summary>
+            Limpa o buffer de uma origem específica.
+            </summary>
+            <param name="origem">Identificador da origem.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PacoteSatoBufferService.ObterStatusBuffers">
+            <summary>
+            Retorna informações sobre os buffers pendentes.
+            </summary>
+            <returns>Dicionário com origem e quantidade de bytes pendentes.</returns>
+        </member>
+        <member name="T:Etiquetas.Application.Services.PendingInsertService">
+            <summary>
+            Serviço para inserção de etiquetas pendentes.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.PendingInsertService.connString">
+            <summary>
+            String de conexão com o banco de dados LiteDB.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.PendingInsertService.resolver">
+            <summary>
+            Resolvedor de IDs de etiquetas.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.PendingInsertService.pendQueue">
+            <summary>
+            Fila de operações pendentes.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.PendingInsertService.regLogger">
+            <summary>
+            Logger de registro.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingInsertService.#ctor(System.String,Etiquetas.Infrastructure.PendingOperationQueue,Etiquetas.Infrastructure.ConsoleLogger,Etiquetas.Core.Interfaces.IEtiquetaIdResolver)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.PendingInsertService"/> class for managing pending insert
+            operations.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Application.Services.PendingInsertService"/> para gerenciar operações de inserção pendentes.
+            </summary>
+            <remarks>Use este construtor para configurar o serviço com a conexão de banco de dados necessária,
+            fila de operações pendentes e mecanismo de registro. O parâmetro <paramref name="resolver"/> é opcional e
+            deve ser fornecido se a resolução do ID da impressora for necessária para operações pendentes.</remarks>        /// <param name="connectionString">A Conneção String usada para conectar no LiteDB database. Não pode ser nulo ou vazio.</param>
+            <param name="pendingQueue">A fila que armazena as operações pendentes a serem processadas.Cannot be null.</param>
+            <param name="logger">O registrador usado para registrar eventos operacionais. Se nulo, um valor padrão.<see cref="T:Etiquetas.Infrastructure.ConsoleLogger"/> is used.</param>
+            <param name="resolver">Um opcional que resolve o ID do DTO de retorno da impressora Sato. Se não for especificado, a resolvido o ID da impressora
+            não estará disponível.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingInsertService.TryInsertOrEnqueueAsync(Etiqueta.Application.DTOs.SatoDto,Etiquetas.Domain.Entities.EtiquetaImpressao,System.Threading.CancellationToken)">
+            <summary>
+            Tenta inserir o rótulo especificado diretamente ou o coloca em fila para processamento posterior,
+            caso a inserção imediata não seja possível.
+            </summary>
+            <remarks>Se o identificador do rótulo puder ser resolvido a partir do trabalho Sato fornecido, o 
+            rótulo será inserido imediatamente e o método retornará <see langword="true"/>. Se o identificador
+            não puder ser resolvido, o rótulo será enfileirado para processamento posterior e o método 
+            retornará <see langword="false"/>.</remarks>
+            <param name="sato">As informações do trabalho Sato usadas para resolver o identificador do rótulo e o contexto do trabalho. Não pode ser `null`.</param>
+            <param name="toInsert">O rótulo a ser inserido ou enfileirado. A propriedade `EtiquetaImpressao.Id` pode ser definida se a inserção
+            for bem-sucedida. Não pode ser `null`.</param>
+            <param name="ct">Um token de cancelamento que pode ser usado para cancelar a operação assíncrona.</param>
+            <returns><see langword="true"/> se o rótulo foi inserido diretamente; caso contrário, <see langword="false"/> se o rótulo
+            foi enfileirado para processamento posterior.</returns>
+        </member>
+        <member name="T:Etiquetas.Application.Services.SatoParserService">
+            <summary>
+            Implementação do serviço de parser Sato.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.SatoParserService.Parse(System.Byte[])">
+            <summary>
+            Faz o parser do pacote Sato e retorna uma lista de DTOs.
+            </summary>
+            <param name="package">Pacotes lido.</param>
+            <returns>Coleção de DTO de Sato.</returns>
+        </member>
+        <member name="T:Etiqueta.Application.DTOs.SatoDto">
+            <summary>
+            
+            O objetivo deste protocolo de comunicação é retornar a condição da Impressora Sato e responder como um status ao host, recebendo quatro tipos de comandos de solicitação e comando de impressão.
+            No servidor de soquete do TCP/IP,
+            a Porta 1 é usada para recepção de dados de impressão,
+            a Porta 2 é usada para conexão da segunda porta de retorno de status da impressora,
+            a Porta 3 é usada para conexão de 1 porta para recebimento de dados de impressão e de retorno de status da impressora.
+            
+            Quando a Porta 3 é usada,
+            apenas os dados de retorno de status e os dados de solicitação de configuração de operação da impressora são retornados ao host.
+            
+            Não use conexões da Porta 3 em conjunto com a Porta 1 ou com a Porta 2.
+            
+            Não é possível usar conexão das 3 portas ao mesmo tempo.
+            
+            Somente a conexao simultanea da Porta 1 e 2. Ou somente da Porta 3.
+            
+            Não é possível ter várias sessões conectadas ao mesmo tempo a cada Socket.
+            
+            Status4/Cycle response mode Conexao da Porta 1 e 2 ou da Porta 3.
+            
+            O status da impressora é emitido em um determinado período (intervalo de 500 a 1000 ms).
+            
+            O status da impressora é retornado quando este produto recebe o comando de solicitação de status do host.
+            
+            ProtocoloRecebido Exemplo:
+            000 000 [constENQ][constSTX]00A000000                [constETX]
+            
+                              -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                              |   NumeroBytesEnviados1    |   NumeroBytesEnviados2    |  constENQ |  constSTX |   Job ID    |Status|             NumeroFaltaLabels           |                               Job Name (Nome do  Job)                                                         |  constETX |
+                              |---------------------------|---------------------------|------|------|-------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+            Sequencia Campos: |    1 |    2 |    3 |    4 |    1 |    2 |    3 |    4 |    1 |    1 |    1 |    2 |    1 |    1 |    2 |    3 |    4 |    5 |    6 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |    1 |
+            Dados:            |    0 |    0 |    0 |      |    0 |    0 |    0 |      | [constENQ]| [constSTX]|    0 |    0 |    A |    0 |    0 |    0 |    0 |    0 |    0 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 | [constETX]|
+            Decimal:          |    0 |    0 |    0 |   32 |    0 |    0 |    0 |   28 |    5 |    2 |   48 |   48 |   65 |   48 |   48 |   48 |   48 |   48 |   48 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |    3 |
+            Hexadecimal:      |  00H |  00H |  00H |  20H |  00H |  00H |  00H |  1CH |  05H |  02H |  30H |  30H |  41H |  30H |  30H |  30H |  30H |  30H |  30H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  03H |
+                              ----------------------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+                              |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |   29 |   30 |   31 |   32 |   33 |   34 |   35 |   36 |
+                                     NumeroBytesEnviados1 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |   29 |   30 |   31 |   32 |
+                                                                 NumeroBytesEnviados2 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |
+                                                                                      |------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+                                                                                   
+            TamanhoProtocolo
+            = 4 + 4 = 8
+            = 8 + 1 = 9
+            = 9 + 1 = 10
+            = 10 + 2 = 12
+            = 12 + 1 = 13
+            = 13 + 6 = 19
+            = 19 + 16 = 35
+            = 35 + 1 = 36
+            
+            Representa um objeto de transferência de dados retornado pela Impressora Sato,
+            referente a cada copia impressa de um JOB de impressão de etiquetas.
+            </summary>
+            <remarks>Cada pacote possui o numero e nome do JOB de impressão, e a quantidade de etiquetas que faltam imprimir.</remarks>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.RetornoImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.ENQ">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.PosicaoENQRetornoImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.STX">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.PosicaoSTXRetornoImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobId">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobId1">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobId2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.Status">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir1">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir3">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir4">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir5">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.NumeroFaltaImprimir6">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName1">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName3">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName4">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName5">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName6">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName7">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName8">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName9">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName10">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName11">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName12">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName13">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName14">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName15">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.JobName16">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.ETX">
+            <summary>
+            Gets - Byte de End of Text (constETX) enviado pela impressora Sato.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.SatoDto.PosicaoETXRetornoImpressao">
+            <summary>
+            Gets - Posição do Byte de End of Text (constETX) no array RetornoImpressao. 
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.SatoDto.EhValido">
+            <summary>
+            Verifica se o protocolo retornado pela Impressora Sato é válido.
+            </summary>
+            <returns>Verdadeiro se validações basicas estiverem verdadeiras.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.SatoDto.GetJobId">
+            <summary>
+            Gets - Identificador do JOB de impressão.
+            </summary>
+            <returns>Retorna string JobId concatenação char.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.SatoDto.GetRetornoImpressao(System.Int32)">
+            <summary>
+            Gets - Retorna o byte de Retorno da Impressão na posição informada.
+            </summary>
+            <param name="posicao">posicao no array de retorno da impressão.</param>
+            <returns>Retorna byte de Retorbno Impressao.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.SatoDto.GetNumeroFaltaImprimir">
+            <summary>
+            Gets - Numero de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+            <returns>Falta Imprimir cocatenado em long.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.SatoDto.GetPosicaoEmRetornoImpressao(System.Byte)">
+            <summary>
+            Gets - Retorna a posição do valor informado no array RetornoImpressao.
+            </summary>
+            <param name="valor">Obtem a posicao do valor do byte informado dentro do Array RetornoImpressao.</param>
+            <returns>Retorna a posicao no array de RetornoImpressao do valor do byte informado.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.SatoDto.GetJobName">
+            <summary>
+            Gets - Nome do JOB de impressão.
+            </summary>
+            <returns>string com o JobName concatenado byte.</returns>
+        </member>
+        <member name="T:Etiqueta.Application.Mappers.EtiquetaMapper">
+            <summary>
+            Classe de mapeamento entre EtiquetaImpressao e EtiquetaImpressaoDto.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.CriaDTO(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64)">
+            <summary>
+            Creates a new <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> instance.
+            Cria uma nova instância de <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> preenchida com o material especificado e
+            informações sobre o medicamento.
+            </summary>
+            <param name="id">O identificador único do material. Maior do que zero.</param>
+            <param name="codigoMaterial">A descrição do medicamento. Não pode ser nula.</param>
+            <param name="codigoBarras">O código de barras associado ao material. Não pode ser nulo.</param>
+            <param name="descricaoMedicamento">Descrição do medicamento. Não pode ser nulo.</param>
+            <param name="principioAtivo1">A primeira parte do Nome do Principio Ativo.</param>
+            <param name="principioAtivo2">A segunda parte do Nome do Principio ativo.</param>
+            <param name="lote">Numero do lote do medicamento. Não pode ser nulo.</param>
+            <param name="validade">Data de validade do material. Não pode ser nulo.</param>
+            <param name="matriculaFuncionario">Matrícula do funcionário que solicitou a impressão. Não pode ser nulo.</param>
+            <param name="quantidadeSolicitada">Quantidade de etiquetas solicitadas para impressão. Maior do que zero.</param>
+            <returns>An <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> Uma instancia contendo EtiquetaImpressaoDto contendo os detalhes do material para impressão da etiqueta.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ToEntity(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto)">
+            <summary>
+            Converte um DTO de EtiquetaImpressao para a entidade EtiquetaImpressao.
+            </summary>
+            <param name="dto">recebe DTO Etiqueta impressao.</param>
+            <returns>Retorna entidade EtiquetaImpressao.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ToDto(Etiquetas.Domain.Entities.EtiquetaImpressao)">
+            <summary>
+            Converte uma entidade <see cref="T:Etiquetas.Domain.Entities.EtiquetaImpressao"/> em seu objeto de transferência de dados <see cref="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto"/> correspondente.
+            </summary>
+            <param name="ent">A instância de <see cref="T:Etiquetas.Domain.Entities.EtiquetaImpressao"/> a ser convertida. Pode ser <see langword="null"/>.</param>
+            <returns>Um <see cref="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto"/> representando os dados de <paramref name="ent"/>, ou <see
+            langword="null"/> se <paramref name="ent"/> for <see langword="null"/>.</returns>
+        </member>
+        <member name="T:Etiqueta.Application.Mappers.SatoToFaltaMapper">
+            <summary>
+            Mapeador de SatoDto para FaltaImprimir.
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.SatoToFaltaMapper.Map(System.Collections.Generic.IEnumerable{Etiqueta.Application.DTOs.ISatoDto})">
+            <summary>
+            Mapeia uma coleção de ISatoDto para uma coleção de IFaltaImprimir.
+            </summary>
+            <param name="satoList">Coleção de SatoDto.</param>
+            <returns>retorna Coleção de Entidade de Falta Imprimir.</returns>
+        </member>
+    </members>
+</doc>

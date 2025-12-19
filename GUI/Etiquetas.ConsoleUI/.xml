@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.ConsoleUI</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.ConsoleUI.PacoteSatoSimulado">
+            <summary>
+            Simulador de Pacote Sato para testes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.PacoteSatoSimulado.CriarPacote(System.String,System.String,System.Char,System.Int64)">
+            <summary>
+            Cria um pacote Sato simulado para testes.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.ConsoleUI.Program">
+            <summary>
+            Ponto de entrada da aplicação console.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.Program.Main(System.String[])">
+            <summary>
+            Ponto de entrada principal da aplicação.
+            </summary>
+            <param name="args">args de complemento de entrada principal.</param>
+            <returns>Retorna uma tarefa.</returns>
+        </member>
+        <member name="T:Etiquetas.ConsoleUI.SimuladorEtiquetasImpressao">
+            <summary>
+            Simulador de Etiquetas para Impressão.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.SimuladorEtiquetasImpressao.RetornoDto">
+            <summary>
+            Lista DTO de Etiquetas para simulação.
+            </summary>
+            <returns>Lista DTO Etiqueta Impressao.</returns>
+        </member>
+        <member name="T:Etiquetas.ConsoleUI.TcpSimulatorAnterior">
+            <summary>
+            Simulador de cliente TCP para testes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.TcpSimulatorAnterior.CreateSimulatedClient(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Cria um <see cref="T:System.Net.Sockets.TcpClient"/> conectado a um servidor TCP local que simula o envio
+            de uma sequência de mensagens.
+            </summary>
+            <remarks>O <see cref="T:System.Net.Sockets.TcpClient"/> retornado é imediatamente conectado a um
+            servidor TCP local que começa a enviar mensagens de bytes aleatórios. Cada mensagem termina com o valor de byte 0x03 (ETX).
+            O servidor fecha a conexão após o envio de todas as mensagens. <para> Este método destina-se a testes ou
+            cenários de simulação em que um cliente precisa receber um fluxo de mensagens de um servidor TCP. </para> <para>
+            O chamador é responsável por descartar o <see cref="T:System.Net.Sockets.TcpClient"/> retornado quando ele
+            não for mais necessário. </para></remarks>
+            <param name="totalMessages">O número total de mensagens a serem enviadas pelo servidor simulado. Deve ser não negativo. O padrão é 100.</param>
+            <param name="bytesPerMessage">O tamanho, em bytes, de cada mensagem enviada pelo servidor simulado. Deve ser positivo. O padrão é 256.</param>
+            <param name="intervalMs">O intervalo, em milissegundos, entre cada mensagem enviada pelo servidor simulado. Deve ser não negativo. O padrão é 10.</param>
+            <returns>Uma instância de <see cref="T:System.Net.Sockets.TcpClient"/> conectada a um servidor local. O servidor irá
+            enviar de forma assíncrona <paramref name="totalMessages"/> mensagens, cada uma com <paramref name="bytesPerMessage"/>
+            bytes, no intervalo especificado de <paramref name="intervalMs"/>.</returns>
+        </member>
+        <member name="T:Etiquetas.ConsoleUI.TcpSimulator">
+            <summary>
+            Simulador de cliente TCP para testes.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.TcpSimulator.CreateSimulatedClient(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Cria um <see cref="T:System.Net.Sockets.TcpClient"/> conectado a um servidor TCP local que simula o envio
+            de uma sequência de mensagens.
+            </summary>
+            <remarks>O <see cref="T:System.Net.Sockets.TcpClient"/> retornado é imediatamente conectado a um
+            servidor TCP local que começa a enviar mensagens de bytes aleatórios. Cada mensagem termina com o valor de byte 0x03 (ETX).
+            O servidor fecha a conexão após o envio de todas as mensagens. <para> Este método destina-se a testes ou
+            cenários de simulação em que um cliente precisa receber um fluxo de mensagens de um servidor TCP. </para> <para>
+            O chamador é responsável por descartar o <see cref="T:System.Net.Sockets.TcpClient"/> retornado quando ele
+            não for mais necessário. </para></remarks>
+            <param name="totalMessages">O número total de mensagens a serem enviadas pelo servidor simulado. Deve ser não negativo. O padrão é 100.</param>
+            <param name="bytesPerMessage">O tamanho, em bytes, de cada mensagem enviada pelo servidor simulado. Deve ser positivo. O padrão é 256.</param>
+            <param name="intervalMs">O intervalo, em milissegundos, entre cada mensagem enviada pelo servidor simulado. Deve ser não negativo. O padrão é 10.</param>
+            <returns>Uma instância de <see cref="T:System.Net.Sockets.TcpClient"/> conectada a um servidor local. O servidor irá
+            enviar de forma assíncrona <paramref name="totalMessages"/> mensagens, cada uma com <paramref name="bytesPerMessage"/>
+            bytes, no intervalo especificado de <paramref name="intervalMs"/>.</returns>
+        </member>
+        <member name="T:Etiquetas.ConsoleUI.TesteEtiquetaPipeline">
+            <summary>
+            Classe de teste para o pipeline de etiquetas.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.TesteEtiquetaPipeline.Teste">
+            <summary>
+            Método de teste do pipeline de etiquetas.
+            </summary>
+            <returns>Retorna uma tarefa.</returns>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.TesteEtiquetaPipeline.CriarPacoteSatoSimulado(System.String,System.String,System.Char,System.Int64)">
+            <summary>
+            Cria um pacote Sato simulado para testes.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.ConsoleUI.TestePooled">
+            <summary>
+            Ponto de entrada da aplicação console para teste com buffer pool.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.TestePooled.Teste">
+            <summary>
+            Ponto de entrada principal da aplicação.
+            </summary>
+            <returns>Retorna uma tarefa.</returns>
+        </member>
+    </members>
+</doc>

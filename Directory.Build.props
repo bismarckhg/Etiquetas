@@ -1,9 +1,49 @@
 <Project>
   <PropertyGroup>
+    <!--
+    Define os frameworks-alvo para todos os projetos que importarem este arquivo.
+    Usamos 'TargetFrameworks' (no plural) para habilitar o multi-targeting.
+    Os frameworks são separados por ponto e vírgula.
+    -->
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
+
+    <!--
+    Configurações adicionais que podem ser úteis para projetos multi-target.
+    Por exemplo, para garantir que o código C# 7.3 seja usado.
+    -->
     <LangVersion>7.3</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>$(IntermediateOutputPath)$(AssemblyName).xml</DocumentationFile>
+
+     <!--
+     Configurações para pacotes NuGet, se aplicável.
+     Por exemplo, para definir a versão do pacote, autor, etc.
+     -->
+     <Authors>Bismarck Heringer de Góes</Authors>
+     <Company>Bismarck.net.br</Company>
+     <Product>Estação Etiquetadora</Product>
+     <Copyright>Registrado ® $([System.DateTime]::Now.Year)</Copyright>
+     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+     <RepositoryUrl>https://github.com/bismarckhg/Etiquetas</RepositoryUrl>
+     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(IsTestProject)'=='true'">
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <!--
+  Configurações específicas para .NET Framework (net472) se necessário.
+  Por exemplo, referências a assemblies do GAC que não são incluídos por padrão no SDK-style.
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <!-- Exemplo: Adicionar referência a System.Configuration para .NET Framework -->
+    <Reference Include="System.Configuration" />
+    <!-- Outras referências específicas do .NET Framework, se houver -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="all" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
 </Project>

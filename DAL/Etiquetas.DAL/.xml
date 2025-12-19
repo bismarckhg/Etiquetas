@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.DAL</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository">
+            <summary>
+            Implementação do repositório de EtiquetaImpressao.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.privLiteDbContext">
+            <summary>
+            Instância do contexto do LiteDB.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.#ctor(Etiquetas.Core.ILiteDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository"/> class.
+            Inicializa uma nova instancia da classe <see cref="T:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository"/>.
+            </summary>
+            <param name="context">instancia do contexto do LiteDB.</param>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.InsertAsync(Etiquetas.Core.Interfaces.IEtiquetaImpressao)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.UpdateAsync(Etiquetas.Core.Interfaces.IEtiquetaImpressao)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.DeleteAsync(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.GetByIdAsync(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.GetByPeriodAsync(System.DateTime,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.GetAllAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.FindByJobNameAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.FindByCodigoBarrasAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.EtiquetaImpressaoRepository.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository">
+            <summary>
+            Implementação do repositório de FaltaImprimir.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository.privLiteDbContext">
+            <summary>
+            Instância do contexto do LiteDB.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository.#ctor(Etiquetas.Core.ILiteDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository"/> class.
+            Inicializa uma nova instancia da classe <see cref="T:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository"/>.
+            </summary>
+            <param name="context">parametro com instancia do contexto do LiteDB.</param>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository.GetByEtiquetaImpressaoIdAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository.InsertAsync(Etiquetas.Core.Interfaces.IFaltaImprimir)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.DAL.Data.Repositories.FaltaImprimirRepository.GetByIdAsync(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.DAL.LiteDbContext">
+            <summary>
+            Implementação do contexto do LiteDB.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.DAL.LiteDbContext.privLiteDB">
+            <summary>
+            Instância do LiteDB.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.DAL.LiteDbContext.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.DAL.LiteDbContext"/> class.
+            Inicializa uma nova instancia da classe <see cref="T:Etiquetas.DAL.LiteDbContext"/>.
+            </summary>
+            <param name="connectionString">parametro de conexão string do Banco de dados do liteDB</param>
+        </member>
+        <member name="P:Etiquetas.DAL.LiteDbContext.Database">
+            <summary>
+            Gets the database.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.DAL.LiteDbContext.EnsureIndices">
+            <summary>
+            Ensure the indices.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.DAL.LiteDbContext.Dispose">
+            <summary>
+            Disposes the LiteDB instance.
+            </summary>
+        </member>
+    </members>
+</doc>

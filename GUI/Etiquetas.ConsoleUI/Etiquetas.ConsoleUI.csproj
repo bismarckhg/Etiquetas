@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Etiquetas.Application\Etiquetas.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Etiquetas.Core\Etiquetas.Core.csproj" />
+    <ProjectReference Include="..\..\DAL\Etiquetas.DAL\Etiquetas.DAL.csproj" />
+    <ProjectReference Include="..\..\Domain\Etiquetas.Domain\Etiquetas.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Etiquetas.Infrastructure\Etiquetas.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Data\Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

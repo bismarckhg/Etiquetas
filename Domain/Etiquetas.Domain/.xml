@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Domain</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.Domain.Entities.EtiquetaImpressao">
+            <summary>
+            Entidade que representa uma Etiqueta de Impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.DescricaoMedicamento">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.PrincipioAtivo1">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.PrincipioAtivo2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.CodigoMaterial">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.Validade">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.Lote">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.MatriculaFuncionario">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.CodigoBarras">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.DataHoraInicio">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.DataHoraFim">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.StatusEtiqueta">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.QuantidadeSolicitada">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.FaltaImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.JobName">
+            <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.Domain.Entities.FaltaImprimir">
+            <summary>
+            Entidade que representa uma Falta de Impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.IdEtiquetaImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.NomeDoJOB">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.DataImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.StatusImpressora">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.FaltaImpressao">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.IsOnline">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.IsError">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.State">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

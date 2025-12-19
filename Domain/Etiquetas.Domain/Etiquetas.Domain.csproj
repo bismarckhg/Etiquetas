@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Etiquetas.Core\Etiquetas.Core.csproj" />
+  </ItemGroup>
+</Project>

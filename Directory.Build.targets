@@ -1,3 +1,8 @@
 <Project>
-
+  <Target Name="EnforceLangVersion" BeforeTargets="CoreCompile">
+    <Error Text="LangVersion deve ser 7.3 (atual: '$(LangVersion)')." Condition="'$(LangVersion)' != '7.3'" />
+  </Target>
+  <Target Name="EnforceXmlDocs" BeforeTargets="CoreCompile" Condition="'$(IsTestProject)'!='true'">
+    <Error Text="GenerateDocumentationFile deve ser 'true' para projetos de produção." Condition="'$(GenerateDocumentationFile)' != 'true'" />
+  </Target>
 </Project>

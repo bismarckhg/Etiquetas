@@ -1,0 +1,734 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Etiquetas.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Etiquetas.Core.Constants.PadraoConstantes">
+            <summary>
+            Constantes padrão utilizadas na aplicação.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Core.Constants.PadraoConstantes.ConstSTX">
+            <summary>
+            Representa o caractere de controle ASCII - Start of Text (constSTX), com valor = 2.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Core.Constants.PadraoConstantes.ConstETX">
+            <summary>
+            Representa o caractere de controle ASCII - End of Text (constETX), com valore = 3.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Core.Constants.PadraoConstantes.ConstENQ">
+            <summary>
+            Representa o ASCII control character constENQ (Enquiry), com o valor de 5.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Core.Constants.PadraoConstantes.ConstTamanhoProtocolo">
+            <summary>
+            Representa o tamanho do protocolo de comunicação da Impressora Sato.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IContratoEntidade">
+            <summary>
+            Define o contrato para o repositório de contratos.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IEtiquetaIdResolver">
+            <summary>
+            Resolve o Id da etiqueta baseado na informação da Impressora SATO.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.Interfaces.IEtiquetaIdResolver.ResolveEtiquetaIdAsync(Etiqueta.Application.DTOs.ISatoDto)">
+            <summary>
+            Resuelve el Id de la etiqueta basado en la información del Sato.
+            </summary>
+            <param name="sato">Sato DTO dos dados recebidos da impressora SATO</param>
+            <returns>Retorna o Id da Etiqueta</returns>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IEtiquetaImpressao">
+            <summary>
+            Esta entidade encapsula todas as informações relevantes para o controle de Etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.Id">
+            <summary>
+            Gets or sets - obtém ou define o identificador único da solicitação de impressão da etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.DescricaoMedicamento">
+            <summary>
+            Gets or sets - obtém ou define a descrição completa do medicamento para o qual a etiqueta será impressa.
+            Não pode ser nulo ou vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.PrincipioAtivo1">
+            <summary>
+            Gets or sets - obtém ou define o primeira parte do texto do princípio ativo do medicamento.
+            Pode ser nulo ou vazio se não aplicável.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.PrincipioAtivo2">
+            <summary>
+            Gets or sets - obtém ou define o segunda parte do texto do princípio ativo do medicamento, se houver.
+            Pode ser nulo ou vazio se não aplicável.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.CodigoMaterial">
+            <summary>
+            Gets or sets - obtém ou define o código de material associado ao medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.Validade">
+            <summary>
+            Gets or sets - obtém ou define a data de validade do lote do medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.Lote">
+            <summary>
+            Gets or sets - obtém ou define o número do lote do medicamento.
+            Não pode ser nulo ou vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.MatriculaFuncionario">
+            <summary>
+            Gets or sets - obtém ou define a matrícula do funcionário que solicitou ou iniciou a impressão.
+            Não pode ser nulo ou vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.CodigoBarras">
+            <summary>
+            Gets or sets - obtém ou define o código de barras a ser impresso na etiqueta.
+            Não pode ser nulo ou vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.DataHoraInicio">
+            <summary>
+            Gets or sets - obtém ou define a data e hora de início do processo de impressão da etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.DataHoraFim">
+            <summary>
+            Gets or sets - obtém ou define a data e hora de término do processo de impressão da etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.StatusEtiqueta">
+            <summary>
+            Gets or sets - obtém ou define o status atual da impressão da etiqueta.
+            'P' - Pendente, 'C' - Concluída.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.QuantidadeSolicitada">
+            <summary>
+            Gets or sets - obtém ou define a quantidade de Etiquetas que foram solicitadas a serem impressas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.FaltaImpressao">
+            <summary>
+            Gets or sets - obtém ou define a quantidade de Etiquetas que ainda faltam ser impressas para esta solicitação.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.JobName">
+            <summary>
+            Gets or sets - obtém ou define o nome do trabalho de impressão associado a esta etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.Interfaces.IEtiquetaImpressao.Equals(System.Object)">
+            <summary>
+            Sobrescreve o método Equals para comparar objetos com base no Id.
+            </summary>
+            <param name="obj">O objeto a ser comparado.</param>
+            <returns>True se os objetos forem iguais; caso contrário, False.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.Interfaces.IEtiquetaImpressao.GetHashCode">
+            <summary>
+            Sobrescreve o método GetHashCode baseado no Id.
+            </summary>
+            <returns>O código hash do objeto.</returns>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto">
+            <summary>
+            Objeto de transferência de dados (DTO) para a entidade EtiquetaImpressao.
+            Utilizado para transferir dados entre a camada de aplicação e a interface de usuário ou API.
+            </summary>
+            <remarks>Esta classe destina-se ao uso interno e facilita a transferência de dados relacionados aos dados da etiqueta.</remarks>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.Id">
+            <summary>
+            Gets or sets - obtém ou define o identificador único da etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.DescricaoMedicamento">
+            <summary>
+            Gets or sets - obtém ou define a descrição do medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.PrincipioAtivo1">
+            <summary>
+            Gets or sets - obtém ou define o primeiro princípio ativo.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.PrincipioAtivo2">
+            <summary>
+            Gets or sets - obtém ou define o segundo princípio ativo.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.CodigoMaterial">
+            <summary>
+            Gets or sets - obtém ou define o código do material.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.Validade">
+            <summary>
+            Gets or sets - obtém ou define a data de validade.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.Lote">
+            <summary>
+            Gets or sets - obtém ou define o lote do medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.MatriculaFuncionario">
+            <summary>
+            Gets or sets - obtém ou define a matrícula do funcionário responsável.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.CodigoBarras">
+            <summary>
+            Gets or sets - obtém ou define o código de barras.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.DataHoraInicio">
+            <summary>
+            Gets or sets - obtém ou define a data e hora de início da impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.DataHoraFim">
+            <summary>
+            Gets or sets - obtém ou define a data e hora de fim da impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.StatusEtiqueta">
+            <summary>
+            Gets or sets - obtém ou define o status da impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.DescricaoStatus">
+            <summary>
+            Gets or sets - obtém ou define a descrição do status.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.QuantidadeSolicitada">
+            <summary>
+            Gets or sets - obtém ou define a quantidade solicitada para impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.FaltaImpressao">
+            <summary>
+            Gets or sets - obtém ou define a quantidade restante a ser impressa.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.JobName">
+            <summary>
+            Gets or sets - obtém ou define o nome do trabalho de impressão associado a esta etiqueta.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IFaltaImprimir">
+            <summary>
+            Representa uma solicitação de Impressão de uma copia da etiqueta e o seu status.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.Id">
+            <summary>
+            Gets or sets - obtém ou define o identificador único da solicitação de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.IdEtiquetaImpressao">
+            <summary>
+            Gets or sets - obtém ou define o identificador da etiqueta de impressão associado.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.NomeDoJOB">
+            <summary>
+            Gets or sets - obtém ou define o nome do JOB de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.DataImpressao">
+            <summary>
+            Gets or sets - obtém ou define a data da impressão de uma Etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.StatusImpressora">
+            <summary>
+            Gets or sets - obtém ou define o status da impressão da Etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.FaltaImpressao">
+            <summary>
+            Gets or sets - obtém ou define a quantidade de etiquetas que faltam ser impressas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.IsOnline">
+            <summary>
+            Gets or sets a value indicating whether 
+            Gets or sets - obtém ou define se a impressora está online.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.IsError">
+            <summary>
+            Gets or sets a value indicating whether 
+            Gets or sets - obtém ou define se houve um erro na impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimir.State">
+            <summary>
+            Gets or sets - obtém ou define o estado atual da impressão.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IFaltaImprimirDto">
+            <summary>
+            Objeto de transferência de dados (DTO) para a entidade FaltaImprimir.
+            </summary>
+            <remarks>Esta classe destina-se ao uso interno e facilita a transferência de dados relacionados a itens
+            de copias impressas com status e copias faltantes. Não se destina ao uso direto em APIs externas.</remarks>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.Id">
+            <summary>
+            Gets or sets - obtém ou define o identificador único da solicitação de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.IdEtiquetaImpressao">
+            <summary>
+            Gets or sets - obtém ou define o identificador da etiqueta de impressão associado.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.NomeDoJOB">
+            <summary>
+            Gets or sets - obtém ou define o nome do JOB de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.DataImpressao">
+            <summary>
+            Gets or sets - obtém ou define a data da impressão de uma Etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.StatusImpressora">
+            <summary>
+            Gets or sets - obtém ou define o status da impressão da Etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.DescricaoStatusImpressora">
+            <summary>
+            Gets or sets - A descrição do status da impressão da etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.FaltaImpressao">
+            <summary>
+            Gets or sets - obtém ou define a quantidade de etiquetas que faltam ser impressas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.IsOnline">
+            <summary>
+            Gets or sets a value indicating whether 
+            Gets or sets - obtém ou define se a impressora está online.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.IsError">
+            <summary>
+            Gets or sets a value indicating whether 
+            Gets or sets - obtém ou define se houve um erro na impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IFaltaImprimirDto.State">
+            <summary>
+            Gets or sets - obtém ou define o estado atual da impressão.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Core.IEtiquetaImpressaoRepository">
+            <summary>
+            Repositório para operações CRUD de Etiqueta de Impressão.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.GetByIdAsync(System.Int64)">
+            <summary>
+            Obtém uma etiqueta de impressão pelo seu Id.
+            </summary>
+            <param name="id">id de uma etiqueta de impressão.</param>
+            <returns>Retorna a entidade do id da etiqueta de impressão.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.GetByPeriodAsync(System.DateTime,System.DateTime)">
+            <summary>
+            Obtém etiquetas de impressão dentro de um período específico.
+            </summary>
+            <param name="start">Periodo inicial da etiqueta de impressão.</param>
+            <param name="end">Periodo final da etiqueta de impressão.</param>
+            <returns>Retorna a Colleção de etiquetas de impressão do periodo informado.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.GetAllAsync">
+            <summary>
+            Obtém todas as etiquetas de impressão.
+            </summary>
+            <returns>Retorna uma coleção com todas as Etiquetas de impressão da base.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.InsertAsync(Etiquetas.Core.Interfaces.IEtiquetaImpressao)">
+            <summary>
+            Insere uma nova etiqueta de impressão.
+            </summary>
+            <param name="etiqueta">entidade a ser inserida na tabela etiqueta de impressão.</param>
+            <returns>return retorna uma tarefa TASK e depois o resultado.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.UpdateAsync(Etiquetas.Core.Interfaces.IEtiquetaImpressao)">
+            <summary>
+            Atualiza uma etiqueta de impressão existente.
+            </summary>
+            <param name="etiqueta">entidade a ser atualizada na tabela de etiqueta de impressão.</param>
+            <returns>return retorna uma tarefa TASK e depois o resultado.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.DeleteAsync(System.Int64)">
+            <summary>
+            Exclui uma etiqueta de impressão pelo seu Id.
+            </summary>
+            <param name="id">id da etiqueta de impressão a ser excluida.</param>
+            <returns>return retorna uma tarefa TASK e depois o resultado.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.FindByJobNameAsync(System.String)">
+            <summary>
+            Obtém uma etiqueta de impressão pelo nome do job.
+            </summary>
+            <param name="jobName">informa o job name para busca da etiqueta de impressão.</param>
+            <returns>retorna uma tarefa TASK e depois o resultado da entidade da Etiqueta de Impressão.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaImpressaoRepository.FindByCodigoBarrasAsync(System.String)">
+            <summary>
+            Obtém uma etiqueta de impressão pelo código de barras.
+            </summary>
+            <param name="codigoBarras">codigo de barras para procuta das etiquetas de Impressão.</param>
+            <returns>Retorna etiqueta pelo codigo de barras.</returns>
+        </member>
+        <member name="T:Etiquetas.Core.IEtiquetaService">
+            <summary>
+            Interface para o serviço de etiquetas.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaService.ObterEtiquetaImpressaoPorIdAsync(System.Int64)">
+            <summary>
+            Obtém uma etiqueta de impressão pelo seu ID.
+            </summary>
+            <param name="id">Id da etiqueta a ser selecionada.</param>
+            <returns>Retorna a etqueta selecionada pelo Id.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaService.ObterTodasEtiquetaImpressaoAsync">
+            <summary>
+            Obtém todas as etiquetas de impressão.
+            </summary>
+            <returns>Retorna coleção das etiquetas de impressao da tabela.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaService.ObterEtiquetaImpressaoPorPeriodoAsync(System.DateTime,System.DateTime)">
+            <summary>
+            Obtém etiquetas de impressão dentro de um período específico.
+            </summary>
+            <param name="inicio">Periodo Inicial das Etiquetas.</param>
+            <param name="fim">Periodo Final das Etiquetas.</param>
+            <returns>Return Coleção de etqiuetas de impressão.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IEtiquetaService.ObterTodasFaltaImprimirDeEtiquetaImpressaoPorIdEtiquetaImpressaoAsync(System.String)">
+            <summary>
+            Obtém todas as faltas de impressão associadas a uma etiqueta de impressão pelo ID da etiqueta.
+            </summary>
+            <param name="id">Id etiqueta impressão para obter todas as Falta Imprimir.</param>
+            <returns>Retorna coleção Falta Imprimir.</returns>
+        </member>
+        <member name="T:Etiquetas.Core.IFaltaImprimirRepository">
+            <summary>
+            Repositório para operações CRUD de Falta Imprimir.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.IFaltaImprimirRepository.GetByIdAsync(System.Int64)">
+            <summary>
+            Obtém uma etiqueta de impressão pelo seu Id.
+            </summary>
+            <param name="id">id de uma etiqueta de impressão.</param>
+            <returns>Retorna a entidade do id da etiqueta de impressão.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IFaltaImprimirRepository.GetByEtiquetaImpressaoIdAsync(System.String)">
+            <summary>
+            Obtém todas a colleção de Falta Imprimir vinculado ao Id de uma etiqueta de impressão.
+            </summary>
+            <param name="idEtiqueta">Id de uma etiqueta de impressão.</param>
+            <returns>retorna coleção de Falta Imprimir de uma etiqueta de impressão.</returns>
+        </member>
+        <member name="M:Etiquetas.Core.IFaltaImprimirRepository.InsertAsync(Etiquetas.Core.Interfaces.IFaltaImprimir)">
+            <summary>
+            Insere um nova entidade Falta Imprimir.
+            </summary>
+            <param name="faltaImprimir">entidade falta imprimir.</param>
+            <returns>return retorna uma tarefa TASK.</returns>
+        </member>
+        <member name="T:Etiquetas.Core.ILiteDbContext">
+            <summary>
+            Interface para o contexto do LiteDB.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.ILiteDbContext.Database">
+            <summary>
+            Gets - Obtém a instância do banco de dados LiteDB.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.ILiteDbContext.EnsureIndices">
+            <summary>
+            Garante que os índices necessários estejam criados no banco de dados.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Core.ISatoParserService">
+            <summary>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+            Interface para o serviço de parser Sato.    
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Core.ISatoParserService.Parse(System.Byte[])">
+            <summary>
+            Faz o parser do pacote Sato e retorna uma lista de DTOs.
+            </summary>
+            <param name="package">Pacoye de leitura da Impressora Sato.</param>
+            <returns>Lista de Pacotes formatados da impressora sato.</returns>
+        </member>
+        <member name="T:Etiqueta.Application.DTOs.ISatoDto">
+            <summary>
+            
+            O objetivo deste protocolo de comunicação é retornar a condição da Impressora Sato e responder como um status ao host, recebendo quatro tipos de comandos de solicitação e comando de impressão.
+            No servidor de soquete do TCP/IP,
+            a Porta 1 é usada para recepção de dados de impressão,
+            a Porta 2 é usada para conexão da segunda porta de retorno de status da impressora,
+            a Porta 3 é usada para conexão de 1 porta para recebimento de dados de impressão e de retorno de status da impressora.
+            
+            Quando a Porta 3 é usada,
+            apenas os dados de retorno de status e os dados de solicitação de configuração de operação da impressora são retornados ao host.
+            
+            Não use conexões da Porta 3 em conjunto com a Porta 1 ou com a Porta 2.
+            
+            Não é possível usar conexão das 3 portas ao mesmo tempo.
+            
+            Somente a conexao simultanea da Porta 1 e 2. Ou somente da Porta 3.
+            
+            Não é possível ter várias sessões conectadas ao mesmo tempo a cada Socket.
+            
+            Status4/Cycle response mode Conexao da Porta 1 e 2 ou da Porta 3.
+            
+            O status da impressora é emitido em um determinado período (intervalo de 500 a 1000 ms).
+            
+            O status da impressora é retornado quando este produto recebe o comando de solicitação de status do host.
+            
+            ProtocoloRecebido Exemplo:
+            000 000 [ENQ][STX]00A000000                [ETX]
+            
+                              -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                              |   NumeroBytesEnviados1    |   NumeroBytesEnviados2    |  ENQ |  STX |   Job ID    |Status|             NumeroFaltaLabels           |                               Job Name (Nome do  Job)                                                         |  ETX |
+                              |---------------------------|---------------------------|------|------|-------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+            Sequencia Campos: |    1 |    2 |    3 |    4 |    1 |    2 |    3 |    4 |    1 |    1 |    1 |    2 |    1 |    1 |    2 |    3 |    4 |    5 |    6 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |    1 |
+            Dados:            |    0 |    0 |    0 |      |    0 |    0 |    0 |      | [ENQ]| [STX]|    0 |    0 |    A |    0 |    0 |    0 |    0 |    0 |    0 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 | [ETX]|
+            Decimal:          |    0 |    0 |    0 |   32 |    0 |    0 |    0 |   28 |    5 |    2 |   48 |   48 |   65 |   48 |   48 |   48 |   48 |   48 |   48 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |   32 |    3 |
+            Hexadecimal:      |  00H |  00H |  00H |  20H |  00H |  00H |  00H |  1CH |  05H |  02H |  30H |  30H |  41H |  30H |  30H |  30H |  30H |  30H |  30H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  20H |  03H |
+                              ----------------------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+                              |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |   29 |   30 |   31 |   32 |   33 |   34 |   35 |   36 |
+                                     NumeroBytesEnviados1 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |   29 |   30 |   31 |   32 |
+                                                                 NumeroBytesEnviados2 |    1 |    2 |    3 |    4 |    5 |    6 |    7 |    8 |    9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |
+                                                                                      |------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+                                                                                   
+            TamanhoProtocolo
+            = 4 + 4 = 8
+            = 8 + 1 = 9
+            = 9 + 1 = 10
+            = 10 + 2 = 12
+            = 12 + 1 = 13
+            = 13 + 6 = 19
+            = 19 + 16 = 35
+            = 35 + 1 = 36
+            
+            Representa um objeto de transferência de dados retornado pela Impressora Sato,
+            referente a cada copia impressa de um JOB de impressão de etiquetas.
+            </summary>
+            <remarks>Cada pacote possui o numero e nome do JOB de impressão, e a quantidade de etiquetas que faltam imprimir.</remarks>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.RetornoImpressao">
+            <summary>
+            Gets or sets - Retorno da Impressora Sato na segunda porta, referente a quantidade de copias que faltam imprimir.
+            Array de byte[28].
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.ENQ">
+            <summary>
+            Gets - Byte de Enquiry (ENQ) enviado pela impressora Sato.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.PosicaoENQRetornoImpressao">
+            <summary>
+            Gets - Posição do Byte de Enquiry (ENQ) no array RetornoImpressao.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.STX">
+            <summary>
+            Gets - Byte de Start of Text (STX) enviado pela impressora Sato.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.PosicaoETXRetornoImpressao">
+            <summary>
+            Gets - Posição do Byte de Start of Text (STX) no array RetornoImpressao.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobId">
+            <summary>
+            Gets - Identificador do JOB de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobId1">
+            <summary>
+            Gets - Identificador (digito2) do JOB de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobId2">
+            <summary>
+            Gets - Identificador (digito1) do JOB de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.Status">
+            <summary>
+            Gets - Status da impressão do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir">
+            <summary>
+            Gets - Numero de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir1">
+            <summary>
+            Gets - Numero(digito 1) de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir2">
+            <summary>
+            Gets - Numero(digito 2) de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir3">
+            <summary>
+            Gets - Numero(digito 3) de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir4">
+            <summary>
+            Gets - Numero(digito 4) de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir5">
+            <summary>
+            Gets - Numero(digito 5) de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.NumeroFaltaImprimir6">
+            <summary>
+            Gets - Numero(digito 6) de etiquetas que faltam imprimir do JOB de etiquetas.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName">
+            <summary>
+            Gets - Nome do JOB de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName1">
+            <summary>
+            Gets - Nome do JOB de impressão byte 1(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName2">
+            <summary>
+            Gets - Nome do JOB de impressão byte 2(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName3">
+            <summary>
+            Gets - Nome do JOB de impressão byte 3(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName4">
+            <summary>
+            Gets - Nome do JOB de impressão byte 4(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName5">
+            <summary>
+            Gets - Nome do JOB de impressão byte 5(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName6">
+            <summary>
+            Gets - Nome do JOB de impressão byte 6(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName7">
+            <summary>
+            Gets - Nome do JOB de impressão byte 7(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName8">
+            <summary>
+            Gets - Nome do JOB de impressão byte 8(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName9">
+            <summary>
+            Gets - Nome do JOB de impressão byte 9(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName10">
+            <summary>
+            Gets - Nome do JOB de impressão byte 10(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName11">
+            <summary>
+            Gets - Nome do JOB de impressão byte 11(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName12">
+            <summary>
+            Gets - Nome do JOB de impressão byte 12(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName13">
+            <summary>
+            Gets - Nome do JOB de impressão byte 13(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName14">
+            <summary>
+            Gets - Nome do JOB de impressão byte 14(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName15">
+            <summary>
+            Gets - Nome do JOB de impressão byte 15(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.JobName16">
+            <summary>
+            Gets - Nome do JOB de impressão byte 16(byte por byte).
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.ETX">
+            <summary>
+            Gets - Byte de End of Text (ETX) enviado pela impressora Sato.
+            </summary>
+        </member>
+        <member name="P:Etiqueta.Application.DTOs.ISatoDto.PosicaoSTXRetornoImpressao">
+            <summary>
+            Gets - Posição do Byte de End of Text (ETX) no array RetornoImpressao. 
+            </summary>
+        </member>
+        <member name="M:Etiqueta.Application.DTOs.ISatoDto.EhValido">
+            <summary>
+            Verifica se o protocolo retornado pela Impressora Sato é válido.
+            </summary>
+            <returns>Verdadeiro se validações basicas estiverem verdadeiras.</returns>
+        </member>
+    </members>
+</doc>
