@@ -1,9 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Etiquetas.Application.DTOs;
+using Etiquetas.Bibliotecas.ControleFilaDados;
 using Etiquetas.Core.Interfaces;
 using Etiquetas.Domain.Entities;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Etiqueta.Application.Mappers
 {
@@ -60,6 +62,249 @@ namespace Etiqueta.Application.Mappers
 
             return dto;
         }
+
+        public static IEtiquetaImpressaoDto SpolerToDto(this string impressao, IPosicaoCamposEtiqueta posicaoCamposEtiqueta)
+        {
+            if (impressao == null)
+            {
+                return null;
+            }
+
+
+
+            return new EtiquetaImpressaoDto
+            {
+                Id = ent.Id,
+                DescricaoMedicamento = ent.DescricaoMedicamento,
+                PrincipioAtivo1 = ent.PrincipioAtivo1,
+                PrincipioAtivo2 = ent.PrincipioAtivo2,
+                CodigoMaterial = ent.CodigoMaterial.ToString(),
+                CodigoBarras = ent.CodigoBarras,
+                Lote = ent.Lote,
+                Validade = ent.Validade.ToString("o"),
+                DataHoraInicio = ent.DataHoraInicio.ToString("o"),
+                DataHoraFim = ent.DataHoraFim.ToString("o"),
+                StatusEtiqueta = ent.StatusEtiqueta,
+                QuantidadeSolicitada = ent.QuantidadeSolicitada,
+                FaltaImpressao = ent.FaltaImpressao,
+            };
+        }
+
+
+
+
+
+
+
+        /// <summary>
+        /// Extrai o código da primeira linha (texto entre aspas)
+        /// </summary>
+        /// <param name="message">Mensagem completa</param>
+        /// <returns>Código extraído ou null se não encontrado</returns>
+        protected IEtiquetaImpressaoDto ExtrairDadosEtiqueta(string message, IPosicaoCamposEtiqueta posicaoCamposEtiqueta)
+        {
+
+            if (string.IsNullOrEmpty(message))
+                return null;
+
+            var dados = new EtiquetaImpressaoDto();
+
+            try
+            {
+                var linhas = QuebraComandosZPLEmLinhasIndividuais(message);
+
+                // Alias locais para evitar acessos repetidos a campos
+                var posCodigo = posicaoCamposEtiqueta.PosicaoCodigo;
+                //var posDesc1 = posicaoCamposEtiqueta.PosicaoDescricao1;
+                //var posDesc2 = posicaoCamposEtiqueta.PosicaoDescricao2;
+                //var posEmbalagem = posicaoCamposEtiqueta.PosicaoEmbalagem;
+                //var posLote = posicaoCamposEtiqueta.PosicaoLote;
+                //var posValidade = posicaoCamposEtiqueta.PosicaoDataValidade;
+                //var posUsuario = posicaoCamposEtiqueta.PosicaoUsuario;
+                //var posCodigoBarras = posicaoCamposEtiqueta.PosicaoCodigoBarras;
+                //var cmdCopias = posicaoCamposEtiqueta.ComandoNumeroCopias;
+
+                var marcadorFD = posicaoCamposEtiqueta.MarcadorInicialTexto; // ex.: "^FD"
+                var marcadorFS = posicaoCamposEtiqueta.MarcadorFinalTexto;   // ex.: "^FS"
+
+                // Detecta qual campo é esta linha (prefix match)
+                Campo campo = Campo.Nenhum;
+
+                foreach (var cmd in linhas)
+                {
+                    // Remove apenas espaços à esquerda para preservar posições depois de ^FD
+                    var line = cmd?.TrimStart();
+                    if (EhStringNuloVazioComEspacosBranco.Execute(line)) continue;
+
+                    if (line.StartsWith(posCodigo, StringComparison.Ordinal)) campo = Campo.Codigo;
+                    else if (line.StartsWith(posDesc1, StringComparison.Ordinal)) campo = Campo.Descricao1;
+                    else if (line.StartsWith(posDesc2, StringComparison.Ordinal)) campo = Campo.Descricao2;
+                    else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal)) campo = Campo.Embalagem;
+                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal)) campo = Campo.Usuario;
+                    else if (line.StartsWith(posLote, StringComparison.Ordinal)) campo = Campo.Lote;
+                    else if (line.StartsWith(posValidade, StringComparison.Ordinal)) campo = Campo.Validade;
+                    else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal)) campo = Campo.CodigoBarras;
+                    else if (line.StartsWith(cmdCopias, StringComparison.Ordinal)) campo = Campo.Copias;
+
+                    //if (campo == Campo.Nenhum)
+                    //    continue;
+
+                    // Extrai o texto alvo da linha (entre ^FD ... ^FS) ou após ^PQ
+                    var texto = ExtrairValorLinha(line, marcadorFD, marcadorFS, cmdCopias);
+                    if (string.IsNullOrEmpty(texto))
+                        continue;
+
+                    switch (campo)
+                    {
+                        case Campo.Codigo:
+                            // Somente dígitos (rápido, ASCII 0-9); troque por sua rotina se necessário
+                            dados.Codigo = StringExtrairSomenteDigitosNumericos.Execute(texto);
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Descricao1:
+                            dados.Descricao1 = texto;
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Descricao2:
+                            dados.Descricao2 = texto;
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Embalagem:
+                            dados.Embalagem = texto;
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Usuario:
+                            dados.Usuario = texto;
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Lote:
+                            dados.Lote = texto;
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Validade:
+                            dados.Validade = texto;
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.CodigoBarras:
+                            var digito = Pictogramas.Bibliotecas.EAN13.CalcularDigitoVerificador(texto);
+                            var ean13 = texto + digito.ToString();
+                            dados.CodigoBarras = ean13; // mantém como texto original
+                            campo = Campo.Nenhum;
+                            break;
+
+                        case Campo.Copias:
+                            dados.Copias = texto; // se quiser validar numérico, faça aqui
+                            campo = Campo.Nenhum;
+                            break;
+                    }
+                }
+
+                return dados;
+            }
+            catch (Exception ex)
+            {
+                //OnErrorOccurred(ex);
+                //return null;
+            }
+
+            // Extrai: ^FD ... ^FS   ou   ^PQ...
+            string ExtrairValorLinha(string line, string marcadorFD, string marcadorFS, string comandoCopias)
+            {
+                if (line == null) return null;
+
+                // 1) Tenta ^FD ... ^FS
+                int idxFD = line.IndexOf(marcadorFD, StringComparison.Ordinal);
+                if (idxFD >= 0)
+                {
+                    int ini = idxFD + marcadorFD.Length;
+
+                    int idxFS = -1;
+                    if (!string.IsNullOrEmpty(marcadorFS))
+                        idxFS = line.IndexOf(marcadorFS, ini, StringComparison.Ordinal);
+
+                    int fim = (idxFS >= 0) ? idxFS : line.Length;
+                    int len = fim - ini;
+
+                    if (len > 0)
+                        return line.Substring(ini, len);
+                }
+
+                // 2) Se não tem ^FD, tenta ^PQ (cópias)
+                int idxPQ = line.IndexOf(comandoCopias, StringComparison.Ordinal);
+                if (idxPQ >= 0)
+                {
+                    int ini = idxPQ + comandoCopias.Length; // ex.: "^PQ"
+                                                            // Alguns formatos usam "^PQ," ou "^PQ,"
+                    while (ini < line.Length && (line[ini] == ':' || line[ini] == ',' || line[ini] == ' ')) ini++;
+                    var rest = line.Substring(ini).Trim();
+                    return rest.Length > 0 ? rest : null;
+                }
+
+                return null;
+            }
+        }
+
+        // --- Tipos/Helpers locais ---
+        private enum Campo
+        {
+            Nenhum = 0,
+            Codigo,
+            Descricao1,
+            Descricao2,
+            Embalagem,
+            Lote,
+            Validade,
+            Usuario,
+            CodigoBarras,
+            Copias
+        }
+
+        /// <summary>
+        /// Quebra comandos ZPL em linhas individuais.
+        /// </summary>
+        /// <param name="texto">Sppoler comandos ZPL</param>
+        /// <returns>Array string com linhas separadas.</returns>
+        private static string[] QuebraComandosZPLEmLinhasIndividuais(string texto)
+        {
+
+            // Separa comandos por quebra de linhas, removendo linhas vazias
+            //var quebraLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
+            var quebraLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
+
+            var quebraComandosEmLinhas = new ConcurrentQueue<IReadOnlyList<string>>();
+            foreach (var linha in quebraLinhas)
+            {
+                // Processa cada linha individualmente
+                // Separa varios comandos que estão em uma mesma linhas, em comandos com linhas individuais, mantendo o inicio de comando "^"
+                //var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
+                var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
+
+                quebraComandosEmLinhas.EnqueueBatch(quebralinhaComandoEmLinhas);
+            }
+
+            return quebraComandosEmLinhas.ToFlattenedArraySnapshot();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// Converte um DTO de EtiquetaImpressao para a entidade EtiquetaImpressao.
