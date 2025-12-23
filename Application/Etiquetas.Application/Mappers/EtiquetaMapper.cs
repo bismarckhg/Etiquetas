@@ -102,7 +102,7 @@ namespace Etiqueta.Application.Mappers
         /// </summary>
         /// <param name="message">Mensagem completa</param>
         /// <returns>Código extraído ou null se não encontrado</returns>
-        protected IEtiquetaImpressaoDto ExtrairDadosEtiqueta(string message, IPosicaoCamposEtiqueta posicaoCamposEtiqueta)
+        private static IEtiquetaImpressaoDto ExtrairDadosEtiqueta(string message, IPosicaoCamposEtiqueta posicaoCamposEtiqueta)
         {
 
             if (string.IsNullOrEmpty(message))
@@ -115,7 +115,7 @@ namespace Etiqueta.Application.Mappers
                 var linhas = QuebraComandosZPLEmLinhasIndividuais(message);
 
                 // Alias locais para evitar acessos repetidos a campos
-                var posCodigo = posicaoCamposEtiqueta.PosicaoCodigo;
+                //var posCodigoMaterial1 = posicaoCamposEtiqueta.PosicaoCodigo;
                 //var posDesc1 = posicaoCamposEtiqueta.PosicaoDescricao1;
                 //var posDesc2 = posicaoCamposEtiqueta.PosicaoDescricao2;
                 //var posEmbalagem = posicaoCamposEtiqueta.PosicaoEmbalagem;
@@ -131,11 +131,85 @@ namespace Etiqueta.Application.Mappers
                 // Detecta qual campo é esta linha (prefix match)
                 Campo campo = Campo.Nenhum;
 
+                var posicaoCmd1 = string.Empty;
+                var posicaoCmd2 = string.Empty;
+
                 foreach (var cmd in linhas)
                 {
                     // Remove apenas espaços à esquerda para preservar posições depois de ^FD
                     var line = cmd?.TrimStart();
                     if (EhStringNuloVazioComEspacosBranco.Execute(line)) continue;
+
+                    if (line.StartsWith(posicaoCamposEtiqueta.CodigoMaterialCmd1, StringComparison.Ordinal))
+                    {
+                        posicaoCmd1 = posicaoCamposEtiqueta.CodigoMaterialCmd1;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamentoCmd1, StringComparison.Ordinal))
+                    {
+                        posicaoCmd1 = posicaoCamposEtiqueta.DescricaoMedicamentoCmd1;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta., StringComparison.Ordinal))
+                    {
+                    }
+                    else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal))
+                    {
+                    }
+                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posLote, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posValidade, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(cmdCopias, StringComparison.Ordinal))
+                    {
+
+                    }
+                    if (line.StartsWith(posCodigo, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posDesc1, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posDesc2, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posLote, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posValidade, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal))
+                    {
+
+                    }
+                    else if (line.StartsWith(cmdCopias, StringComparison.Ordinal))
+                    {
+
+                    }
 
                     if (line.StartsWith(posCodigo, StringComparison.Ordinal)) campo = Campo.CodigoMaterial;
                     else if (line.StartsWith(posDesc1, StringComparison.Ordinal)) campo = Campo.DescricaoMedicamento1;

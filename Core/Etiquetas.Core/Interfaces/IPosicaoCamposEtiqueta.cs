@@ -38,32 +38,42 @@ namespace Etiquetas.Core.Interfaces
         string CodigoBarrasCmd2 { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Posicionamento do Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// Gets or Sets - Posicionamento da Primeira Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string DescricaoMedicamentoCmd1 { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Posicionamento do Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// Gets or Sets - Posicionamento da Primeira Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string DescricaoMedicamentoCmd2 { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Posicionamento do Primeira parte do Pricipio antivo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// Gets or Sets - Posicionamento da Segunda Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// </summary>
+        string DescricaoMedicamento2Cmd1 { get; set; }
+
+        /// <summary>
+        /// Gets or Sets - Posicionamento da Segunda Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// </summary>
+        string DescricaoMedicamento2Cmd2 { get; set; }
+
+        /// <summary>
+        /// Gets or Sets - Posicionamento da Primeira parte do Pricipio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string PrincipioAtivo1Cmd1 { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Posicionamento do Primeira parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// Gets or Sets - Posicionamento da Primeira parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string PrincipioAtivo1Cmd2 { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Posicionamento do Segunda parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// Gets or Sets - Posicionamento da Segunda parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string PrincipioAtivo2Cmd1 { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Posicionamento do Segunda parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// Gets or Sets - Posicionamento da Segunda parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string PrincipioAtivo2Cmd2 { get; set; }
 

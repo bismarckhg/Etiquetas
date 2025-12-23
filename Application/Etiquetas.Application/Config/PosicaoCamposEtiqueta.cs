@@ -37,10 +37,16 @@ namespace Etiquetas.Application.Config
         public string DescricaoMedicamentoCmd2 { get; set; }
 
         /// <inheritdoc/>
-        public string PrincipioAtivo1Cmd1 { get; set; }
+        public string DescricaoMedicamento2Cmd1 { get; set; }
 
         /// <inheritdoc/>
-        public string PrincipioAtivo1Cmd2 { get; set; }
+        public string DescricaoMedicamento2Cmd2 { get; set; }
+
+        /// <inheritdoc/>
+        public string PrincipioAtivoCmd1 { get; set; }
+
+        /// <inheritdoc/>
+        public string PrincipioAtivoCmd2 { get; set; }
 
         /// <inheritdoc/>
         public string PrincipioAtivo2Cmd1 { get; set; }
