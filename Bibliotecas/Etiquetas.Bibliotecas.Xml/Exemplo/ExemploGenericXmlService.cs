@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -8,11 +8,17 @@ using Etiquetas.Bibliotecas.Xml.Servicos;
 
 namespace Etiquetas.Bibliotecas.Xml.Exemplo
 {
+    /// <summary>
+    /// Classe de exemplo demonstrando o uso do GenericXmlService.
+    /// </summary>
     public class ExemploGenericXmlService
     {
         private readonly GenericXmlService _xmlService;
         private readonly XmlDataGenerator _dataGenerator;
 
+        /// <summary>
+        /// Construtor padrão.
+        /// </summary>
         public ExemploGenericXmlService()
         {
             _xmlService = new GenericXmlService();

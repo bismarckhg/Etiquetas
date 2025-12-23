@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace Etiquetas.Core.Interfaces
 {
     /// <summary>
@@ -66,6 +68,16 @@ namespace Etiquetas.Core.Interfaces
         string PrincipioAtivo2Cmd2 { get; set; }
 
         /// <summary>
+        /// Gets or Sets - Posicionamento da Embalagem do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// </summary>
+        string EmbalagemCmd1 { get; set; }
+
+        /// <summary>
+        /// Gets or Sets - Posicionamento da Embalagem do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
+        /// </summary>
+        string EmbalagemCmd2 { get; set; }
+
+        /// <summary>
         /// Gets or Sets - Posicionamento do Lote do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string LoteCmd1 { get; set; }
@@ -94,5 +106,10 @@ namespace Etiquetas.Core.Interfaces
         /// Gets or Sets - Posicionamento do Código do Usuario. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
         /// </summary>
         string CodigoUsuarioCmd2 { get; set; }
+
+        /// <summary>
+        /// Gets or Sets - Comando com a Quantidade de Copias da etiqueta. Cmd representa o comando para definir a quantidade de copias na impressora
+        /// </summary>
+        string CopiasCmd { get; set; }
     }
 }

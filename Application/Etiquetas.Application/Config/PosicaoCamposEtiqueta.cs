@@ -49,6 +49,12 @@ namespace Etiquetas.Application.Config
         public string PrincipioAtivo2Cmd2 { get; set; }
 
         /// <inheritdoc/>
+        public string EmbalagemCmd1 { get; set; }
+
+        /// <inheritdoc/>
+        public string EmbalagemCmd2 { get; set; }
+
+        /// <inheritdoc/>
         public string LoteCmd1 { get; set; }
 
         /// <inheritdoc/>
@@ -65,5 +71,8 @@ namespace Etiquetas.Application.Config
 
         /// <inheritdoc/>
         public string CodigoUsuarioCmd2 { get; set; }
+
+        /// <inheritdoc/>
+        public string CopiasCmd { get; set; }
     }
 }

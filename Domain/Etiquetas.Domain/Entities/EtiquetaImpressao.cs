@@ -1,6 +1,5 @@
 using System;
 using Etiquetas.Core.Interfaces;
-using LiteDB;
 
 namespace Etiquetas.Domain.Entities
 {
@@ -9,15 +8,18 @@ namespace Etiquetas.Domain.Entities
     /// </summary>
     public class EtiquetaImpressao : IEtiquetaImpressao
     {
+        // BsonIdAttribute está correto, pois o atributo é referenciado como [BsonId]
         /// <inheritdoc/>
-        [BsonId]
         public long Id { get; set; }
 
         /// <inheritdoc/>
         public string DescricaoMedicamento { get; set; }
 
         /// <inheritdoc/>
-        public string PrincipioAtivo1 { get; set; }
+        public string DescricaoMedicamento2 { get; set; }
+
+        /// <inheritdoc/>
+        public string PrincipioAtivo { get; set; }
 
         /// <inheritdoc/>
         public string PrincipioAtivo2 { get; set; }

@@ -13,16 +13,22 @@ namespace Etiquetas.Core.Interfaces
         long Id { get; set; }
 
         /// <summary>
-        /// Gets or sets - obtém ou define a descrição completa do medicamento para o qual a etiqueta será impressa.
+        /// Gets or sets - obtém ou define a primeira parte da descrição completa do medicamento para o qual a etiqueta será impressa.
         /// Não pode ser nulo ou vazio.
         /// </summary>
         string DescricaoMedicamento { get; set; }
 
         /// <summary>
+        /// Gets or sets - obtém ou define segunda parte da descrição completa do medicamento para o qual a etiqueta será impressa.
+        /// Não pode ser nulo ou vazio.
+        /// </summary>
+        string DescricaoMedicamento2 { get; set; }
+
+        /// <summary>
         /// Gets or sets - obtém ou define o primeira parte do texto do princípio ativo do medicamento.
         /// Pode ser nulo ou vazio se não aplicável.
         /// </summary>
-        string PrincipioAtivo1 { get; set; }
+        string PrincipioAtivo { get; set; }
 
         /// <summary>
         /// Gets or sets - obtém ou define o segunda parte do texto do princípio ativo do medicamento, se houver.

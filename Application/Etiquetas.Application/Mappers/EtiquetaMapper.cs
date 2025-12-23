@@ -1,4 +1,5 @@
 using Etiquetas.Application.DTOs;
+using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.ControleFilaDados;
 using Etiquetas.Core.Interfaces;
 using Etiquetas.Domain.Entities;
@@ -136,11 +137,11 @@ namespace Etiqueta.Application.Mappers
                     var line = cmd?.TrimStart();
                     if (EhStringNuloVazioComEspacosBranco.Execute(line)) continue;
 
-                    if (line.StartsWith(posCodigo, StringComparison.Ordinal)) campo = Campo.Codigo;
-                    else if (line.StartsWith(posDesc1, StringComparison.Ordinal)) campo = Campo.Descricao1;
-                    else if (line.StartsWith(posDesc2, StringComparison.Ordinal)) campo = Campo.Descricao2;
+                    if (line.StartsWith(posCodigo, StringComparison.Ordinal)) campo = Campo.CodigoMaterial;
+                    else if (line.StartsWith(posDesc1, StringComparison.Ordinal)) campo = Campo.DescricaoMedicamento1;
+                    else if (line.StartsWith(posDesc2, StringComparison.Ordinal)) campo = Campo.DescricaoMedicamento2;
                     else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal)) campo = Campo.Embalagem;
-                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal)) campo = Campo.Usuario;
+                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal)) campo = Campo.CodigoUsuario;
                     else if (line.StartsWith(posLote, StringComparison.Ordinal)) campo = Campo.Lote;
                     else if (line.StartsWith(posValidade, StringComparison.Ordinal)) campo = Campo.Validade;
                     else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal)) campo = Campo.CodigoBarras;
@@ -156,18 +157,18 @@ namespace Etiqueta.Application.Mappers
 
                     switch (campo)
                     {
-                        case Campo.Codigo:
+                        case Campo.CodigoMaterial:
                             // Somente dígitos (rápido, ASCII 0-9); troque por sua rotina se necessário
-                            dados.Codigo = StringExtrairSomenteDigitosNumericos.Execute(texto);
+                            dados.CodigoMaterial = Etiquetas.Bibliotecas.Comum.Numericos.StringExtrairSomenteDigitosNumericos.Execute(texto);
                             campo = Campo.Nenhum;
                             break;
 
-                        case Campo.Descricao1:
-                            dados.Descricao1 = texto;
+                        case Campo.DescricaoMedicamento1:
+                            dados.DescricaoMedicamento = texto;
                             campo = Campo.Nenhum;
                             break;
 
-                        case Campo.Descricao2:
+                        case Campo.DescricaoMedicamento2:
                             dados.Descricao2 = texto;
                             campo = Campo.Nenhum;
                             break;
@@ -177,7 +178,7 @@ namespace Etiqueta.Application.Mappers
                             campo = Campo.Nenhum;
                             break;
 
-                        case Campo.Usuario:
+                        case Campo.CodigoUsuario:
                             dados.Usuario = texto;
                             campo = Campo.Nenhum;
                             break;
@@ -255,13 +256,15 @@ namespace Etiqueta.Application.Mappers
         private enum Campo
         {
             Nenhum = 0,
-            Codigo,
-            Descricao1,
-            Descricao2,
+            CodigoMaterial,
+            DescricaoMedicamento1,
+            DescricaoMedicamento2,
+            PrincipioAtivo1,
+            PrincipioAtivo2,
             Embalagem,
             Lote,
             Validade,
-            Usuario,
+            CodigoUsuario,
             CodigoBarras,
             Copias
         }

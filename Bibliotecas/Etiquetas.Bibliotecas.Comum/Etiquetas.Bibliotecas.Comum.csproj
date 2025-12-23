@@ -58,7 +58,6 @@
   <ItemGroup>
     <Folder Include="Datas\" />
     <Folder Include="Geral\" />
-    <Folder Include="Numericos\" />
   </ItemGroup>
 
   <ItemGroup>

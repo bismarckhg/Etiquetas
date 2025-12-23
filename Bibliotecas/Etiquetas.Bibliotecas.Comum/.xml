@@ -511,5 +511,17 @@
             UTF-8 sem BOM (recomendado p/ JSON, ZPL etc.)
             </summary>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Numericos.StringExtrairSomenteDigitosNumericos">
+            <summary>
+            Extrai somente os dígitos numéricos de uma string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Numericos.StringExtrairSomenteDigitosNumericos.Execute(System.String)">
+            <summary>
+            Extrai somente os dígitos numéricos de uma string.
+            </summary>
+            <param name="s">string contendo os digitos numéricos.</param>
+            <returns>retorna a string somente com os digitos numéricos.</returns>
+        </member>
     </members>
 </doc>
