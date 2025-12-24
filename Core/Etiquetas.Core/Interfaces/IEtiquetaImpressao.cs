@@ -56,7 +56,7 @@ namespace Etiquetas.Core.Interfaces
         /// Gets or sets - obtém ou define a matrícula do funcionário que solicitou ou iniciou a impressão.
         /// Não pode ser nulo ou vazio.
         /// </summary>
-        string MatriculaFuncionario { get; set; }
+        string CodigoUsuario { get; set; }
 
         /// <summary>
         /// Gets or sets - obtém ou define o código de barras a ser impresso na etiqueta.

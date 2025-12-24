@@ -18,9 +18,14 @@ namespace Etiquetas.Core.Interfaces
         string DescricaoMedicamento { get; set; }
 
         /// <summary>
+        /// Gets or sets - obtém ou define a descrição do medicamento.
+        /// </summary>
+        string DescricaoMedicamento2 { get; set; }
+
+        /// <summary>
         /// Gets or sets - obtém ou define o primeiro princípio ativo.
         /// </summary>
-        string PrincipioAtivo1 { get; set; }
+        string PrincipioAtivo { get; set; }
 
         /// <summary>
         /// Gets or sets - obtém ou define o segundo princípio ativo.
@@ -43,9 +48,14 @@ namespace Etiquetas.Core.Interfaces
         string Lote { get; set; }
 
         /// <summary>
+        /// Gets or sets - obtém ou define a Embalagem do medicamento.
+        /// </summary>
+        string Embalagem { get; set; }
+
+        /// <summary>
         /// Gets or sets - obtém ou define a matrícula do funcionário responsável.
         /// </summary>
-        string MatriculaFuncionario { get; set; }
+        string CodigoUsuario { get; set; }
 
         /// <summary>
         /// Gets or sets - obtém ou define o código de barras.

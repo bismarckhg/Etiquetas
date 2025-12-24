@@ -13,7 +13,10 @@ namespace Etiquetas.Application.DTOs
         public string DescricaoMedicamento { get; set; }
 
         /// <inheritdoc/>
-        public string PrincipioAtivo1 { get; set; }
+        public string DescricaoMedicamento2 { get; set; }
+
+        /// <inheritdoc/>
+        public string PrincipioAtivo { get; set; }
 
         /// <inheritdoc/>
         public string PrincipioAtivo2 { get; set; }
@@ -28,7 +31,10 @@ namespace Etiquetas.Application.DTOs
         public string Lote { get; set; }
 
         /// <inheritdoc/>
-        public string MatriculaFuncionario { get; set; }
+        public string Embalagem { get; set; }
+
+        /// <inheritdoc/>
+        public string CodigoUsuario { get; set; }
 
         /// <inheritdoc/>
         public string CodigoBarras { get; set; }

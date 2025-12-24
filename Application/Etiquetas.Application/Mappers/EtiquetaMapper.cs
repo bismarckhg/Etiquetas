@@ -49,14 +49,14 @@ namespace Etiqueta.Application.Mappers
                 dto.CodigoMaterial = codigoMaterial;
                 dto.CodigoBarras = codigoBarras;
                 dto.DescricaoMedicamento = descricaoMedicamento;
-                dto.PrincipioAtivo1 = principioAtivo1;
+                dto.PrincipioAtivo = principioAtivo1;
                 dto.PrincipioAtivo2 = principioAtivo2;
                 dto.Lote = lote;
                 dto.Validade = validade;
                 dto.DataHoraInicio = DateTime.Now.ToString("o");
                 dto.DataHoraFim = DateTime.Now.ToString("o");
                 dto.StatusEtiqueta = 'P';
-                dto.MatriculaFuncionario = matriculaFuncionario;
+                dto.CodigoUsuario = matriculaFuncionario;
                 dto.QuantidadeSolicitada = quantidadeSolicitada;
                 dto.FaltaImpressao = quantidadeSolicitada;
             }
@@ -77,7 +77,7 @@ namespace Etiqueta.Application.Mappers
             {
                 Id = ent.Id,
                 DescricaoMedicamento = ent.DescricaoMedicamento,
-                PrincipioAtivo1 = ent.PrincipioAtivo1,
+                PrincipioAtivo = ent.PrincipioAtivo1,
                 PrincipioAtivo2 = ent.PrincipioAtivo2,
                 CodigoMaterial = ent.CodigoMaterial.ToString(),
                 CodigoBarras = ent.CodigoBarras,
@@ -125,8 +125,8 @@ namespace Etiqueta.Application.Mappers
                 //var posCodigoBarras = posicaoCamposEtiqueta.PosicaoCodigoBarras;
                 //var cmdCopias = posicaoCamposEtiqueta.ComandoNumeroCopias;
 
-                var marcadorFD = posicaoCamposEtiqueta.MarcadorInicialTexto; // ex.: "^FD"
-                var marcadorFS = posicaoCamposEtiqueta.MarcadorFinalTexto;   // ex.: "^FS"
+                var marcadorInicioTexto = posicaoCamposEtiqueta.MarcadorInicialTexto; // ex.: "^FD"
+                var marcadorFimTexto = posicaoCamposEtiqueta.MarcadorFinalTexto;   // ex.: "^FS"
 
                 // Detecta qual campo é esta linha (prefix match)
                 Campo campo = Campo.Nenhum;
@@ -140,6 +140,7 @@ namespace Etiqueta.Application.Mappers
                     var line = cmd?.TrimStart();
                     if (EhStringNuloVazioComEspacosBranco.Execute(line)) continue;
 
+                    // Verifica Posicao dos Campos (alguns modelos usam dois comandos diferentes para o mesmo campo, um de linha e outro de coluna).
                     if (line.StartsWith(posicaoCamposEtiqueta.CodigoMaterialCmd1, StringComparison.Ordinal))
                     {
                         posicaoCmd1 = posicaoCamposEtiqueta.CodigoMaterialCmd1;
@@ -148,84 +149,137 @@ namespace Etiqueta.Application.Mappers
                     {
                         posicaoCmd1 = posicaoCamposEtiqueta.DescricaoMedicamentoCmd1;
                     }
-                    else if (line.StartsWith(posicaoCamposEtiqueta., StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1, StringComparison.Ordinal))
                     {
+                        posicaoCmd1 = posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1;
                     }
-                    else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo1Cmd1, StringComparison.Ordinal))
                     {
+                        posicaoCmd1 = posicaoCamposEtiqueta.PrincipioAtivo1Cmd1;
                     }
-                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo2Cmd1, StringComparison.Ordinal))
                     {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.PrincipioAtivo2Cmd1;
                     }
-                    else if (line.StartsWith(posLote, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.EmbalagemCmd1, StringComparison.Ordinal))
                     {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.EmbalagemCmd1;
                     }
-                    else if (line.StartsWith(posValidade, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoUsuarioCmd1, StringComparison.Ordinal))
                     {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.CodigoUsuarioCmd1;
                     }
-                    else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.LoteCmd1, StringComparison.Ordinal))
                     {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.LoteCmd1;
                     }
-                    else if (line.StartsWith(cmdCopias, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.ValidadeCmd1, StringComparison.Ordinal))
                     {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.ValidadeCmd1;
                     }
-                    if (line.StartsWith(posCodigo, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoBarrasCmd1, StringComparison.Ordinal))
                     {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.CodigoBarrasCmd1;
                     }
-                    else if (line.StartsWith(posDesc1, StringComparison.Ordinal))
+                    else if (line.StartsWith(posicaoCamposEtiqueta.CopiasCmd, StringComparison.Ordinal))
                     {
-
-                    }
-                    else if (line.StartsWith(posDesc2, StringComparison.Ordinal))
-                    {
-
-                    }
-                    else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal))
-                    {
-
-                    }
-                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal))
-                    {
-
-                    }
-                    else if (line.StartsWith(posLote, StringComparison.Ordinal))
-                    {
-
-                    }
-                    else if (line.StartsWith(posValidade, StringComparison.Ordinal))
-                    {
-
-                    }
-                    else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal))
-                    {
-
-                    }
-                    else if (line.StartsWith(cmdCopias, StringComparison.Ordinal))
-                    {
-
+                        posicaoCmd1 = posicaoCamposEtiqueta.CopiasCmd;
                     }
 
-                    if (line.StartsWith(posCodigo, StringComparison.Ordinal)) campo = Campo.CodigoMaterial;
-                    else if (line.StartsWith(posDesc1, StringComparison.Ordinal)) campo = Campo.DescricaoMedicamento1;
-                    else if (line.StartsWith(posDesc2, StringComparison.Ordinal)) campo = Campo.DescricaoMedicamento2;
-                    else if (line.StartsWith(posEmbalagem, StringComparison.Ordinal)) campo = Campo.Embalagem;
-                    else if (line.StartsWith(posUsuario, StringComparison.Ordinal)) campo = Campo.CodigoUsuario;
-                    else if (line.StartsWith(posLote, StringComparison.Ordinal)) campo = Campo.Lote;
-                    else if (line.StartsWith(posValidade, StringComparison.Ordinal)) campo = Campo.Validade;
-                    else if (line.StartsWith(posCodigoBarras, StringComparison.Ordinal)) campo = Campo.CodigoBarras;
-                    else if (line.StartsWith(cmdCopias, StringComparison.Ordinal)) campo = Campo.Copias;
+                    // Verifica segunda posição (alguns modelos usam dois comandos diferentes para o mesmo campo, um de linha e outro de coluna).
+                    if (line.StartsWith(posicaoCamposEtiqueta.CodigoMaterialCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.CodigoMaterialCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamentoCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.DescricaoMedicamentoCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo1Cmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.PrincipioAtivo1Cmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo2Cmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.PrincipioAtivo2Cmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.EmbalagemCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.EmbalagemCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoUsuarioCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.CodigoUsuarioCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.LoteCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.LoteCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.ValidadeCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.ValidadeCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoBarrasCmd2, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = posicaoCamposEtiqueta.CodigoBarrasCmd2;
+                    }
+                    else if (line.StartsWith(posicaoCamposEtiqueta.CopiasCmd, StringComparison.Ordinal))
+                    {
+                        posicaoCmd2 = String.Empty;
+                    }
 
-                    //if (campo == Campo.Nenhum)
-                    //    continue;
+                    // Define qual campo esta sendo processado
+                    if (posicaoCmd1 == posicaoCamposEtiqueta.CodigoMaterialCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.CodigoMaterialCmd2)
+                    {
+                        campo = Campo.CodigoMaterial;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.DescricaoMedicamentoCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.DescricaoMedicamentoCmd2)
+                    {
+                        campo = Campo.DescricaoMedicamento1;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2)
+                    {
+                        campo = Campo.DescricaoMedicamento2;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.PrincipioAtivo1Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.PrincipioAtivo1Cmd2)
+                    {
+                        campo = Campo.PrincipioAtivo1;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.PrincipioAtivo2Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.PrincipioAtivo2Cmd2)
+                    {
+                        campo = Campo.PrincipioAtivo2;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.EmbalagemCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.EmbalagemCmd2)
+                    {
+                        campo = Campo.Embalagem;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.CodigoUsuarioCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.CodigoUsuarioCmd2)
+                    {
+                        campo = Campo.CodigoUsuario;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.LoteCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.LoteCmd2)
+                    {
+                        campo = Campo.Lote;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.ValidadeCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.ValidadeCmd2)
+                    {
+                        campo = Campo.Validade;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.CodigoBarrasCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.CodigoBarrasCmd2)
+                    {
+                        campo = Campo.CodigoBarras;
+                    }
+                    else if (posicaoCmd1 == posicaoCamposEtiqueta.CopiasCmd && posicaoCmd2 == string.Empty)
+                    {
+                        campo = Campo.Copias;
+                    }
 
                     // Extrai o texto alvo da linha (entre ^FD ... ^FS) ou após ^PQ
-                    var texto = ExtrairValorLinha(line, marcadorFD, marcadorFS, cmdCopias);
+                    var texto = ExtrairValorLinha(line, marcadorInicioTexto, marcadorFimTexto, cmdCopias);
                     if (string.IsNullOrEmpty(texto))
                         continue;
 
@@ -243,7 +297,7 @@ namespace Etiqueta.Application.Mappers
                             break;
 
                         case Campo.DescricaoMedicamento2:
-                            dados.Descricao2 = texto;
+                            dados.DescricaoMedicamento2 = texto;
                             campo = Campo.Nenhum;
                             break;
 
@@ -408,7 +462,7 @@ namespace Etiqueta.Application.Mappers
             {
                 Id = dto.Id,
                 DescricaoMedicamento = dto.DescricaoMedicamento,
-                PrincipioAtivo1 = dto.PrincipioAtivo1,
+                PrincipioAtivo1 = dto.PrincipioAtivo,
                 PrincipioAtivo2 = dto.PrincipioAtivo2,
                 CodigoMaterial = codigoMaterial,
                 CodigoBarras = dto.CodigoBarras,
@@ -439,7 +493,7 @@ namespace Etiqueta.Application.Mappers
             {
                 Id = ent.Id,
                 DescricaoMedicamento = ent.DescricaoMedicamento,
-                PrincipioAtivo1 = ent.PrincipioAtivo1,
+                PrincipioAtivo = ent.PrincipioAtivo1,
                 PrincipioAtivo2 = ent.PrincipioAtivo2,
                 CodigoMaterial = ent.CodigoMaterial.ToString(),
                 CodigoBarras = ent.CodigoBarras,

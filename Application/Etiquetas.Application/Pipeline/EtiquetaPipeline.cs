@@ -245,7 +245,7 @@ namespace Etiquetas.Application.Pipeline
                 PrincipioAtivo2 = msg.PrincipioAtivo2 ?? string.Empty,
                 Lote = msg.Lote ?? string.Empty,
                 Validade = validade,
-                MatriculaFuncionario = msg.MatriculaFuncionario ?? string.Empty,
+                CodigoUsuario = msg.MatriculaFuncionario ?? string.Empty,
                 DataHoraInicio = DateTime.Now,
                 DataHoraFim = DateTime.MinValue,
                 StatusEtiqueta = 'P', // Pendente
