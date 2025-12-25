@@ -5,6 +5,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.ControleFilaDados\Etiquetas.Bibliotecas.ControleFilaDados.csproj" />
+    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.SATO\Etiquetas.Bibliotecas.SATO.csproj" />
     <ProjectReference Include="..\..\Core\Etiquetas.Core\Etiquetas.Core.csproj" />
     <ProjectReference Include="..\..\DAL\Etiquetas.DAL\Etiquetas.DAL.csproj" />
     <ProjectReference Include="..\..\Domain\Etiquetas.Domain\Etiquetas.Domain.csproj" />

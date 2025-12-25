@@ -1,0 +1,42 @@
+using Etiquetas.Bibliotecas.ControleFilaDados;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Etiquetas.Bibliotecas.SATO
+{
+    /// <summary>
+    /// Quebra comandos ZPL em linhas individuais.
+    /// </summary>
+    public static class QuebraComandosZPLEmLinhasIndividuais
+    {
+        /// <summary>
+        /// Quebra comandos ZPL em linhas individuais.
+        /// </summary>
+        /// <param name="texto">Sppoler comandos ZPL</param>
+        /// <returns>Array string com linhas separadas.</returns>
+        public static string[] Execute(string texto)
+        {
+
+            // Separa comandos por quebra de linhas, removendo linhas vazias
+            //var quebraLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
+            var quebraLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
+
+            var quebraComandosEmLinhas = new ConcurrentQueue<IReadOnlyList<string>>();
+            foreach (var linha in quebraLinhas)
+            {
+                // Processa cada linha individualmente
+                // Separa varios comandos que estão em uma mesma linhas, em comandos com linhas individuais, mantendo o inicio de comando "^"
+                //var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
+                var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
+
+                quebraComandosEmLinhas.EnqueueBatch(quebralinhaComandoEmLinhas);
+            }
+
+            return quebraComandosEmLinhas.ToFlattenedArraySnapshot();
+        }
+    }
+}

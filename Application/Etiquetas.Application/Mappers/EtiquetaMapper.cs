@@ -1,12 +1,13 @@
-using Etiquetas.Application.DTOs;
-using Etiquetas.Bibliotecas.Comum.Caracteres;
-using Etiquetas.Bibliotecas.ControleFilaDados;
-using Etiquetas.Core.Interfaces;
-using Etiquetas.Domain.Entities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Etiquetas.Application.DTOs;
+using Etiquetas.Bibliotecas.Comum.Caracteres;
+using Etiquetas.Bibliotecas.ControleFilaDados;
+using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Core.Interfaces;
+using Etiquetas.Domain.Entities;
 
 namespace Etiqueta.Application.Mappers
 {
@@ -41,7 +42,7 @@ namespace Etiqueta.Application.Mappers
             string lote,
             string validade,
             string matriculaFuncionario,
-            long quantidadeSolicitada)
+            string quantidadeSolicitada)
         {
             var nomeJOb = $"{id}_{DateTime.Now:ddHHmmss}";
             var dto = new EtiquetaImpressaoDto();
@@ -112,7 +113,7 @@ namespace Etiqueta.Application.Mappers
 
             try
             {
-                var linhas = QuebraComandosZPLEmLinhasIndividuais(message);
+                var linhas = QuebraComandosZPLEmLinhasIndividuais.Execute(message);
 
                 // Alias locais para evitar acessos repetidos a campos
                 //var posCodigoMaterial1 = posicaoCamposEtiqueta.PosicaoCodigo;
@@ -279,7 +280,7 @@ namespace Etiqueta.Application.Mappers
                     }
 
                     // Extrai o texto alvo da linha (entre ^FD ... ^FS) ou após ^PQ
-                    var texto = ExtrairValorLinha(line, marcadorInicioTexto, marcadorFimTexto, posicaoCamposEtiqueta.CopiasCmd);
+                    var texto = ExtrairTextoDaLinhaEntreMarcadoresDeTextos.Execute(line, marcadorInicioTexto, marcadorFimTexto, posicaoCamposEtiqueta.CopiasCmd);
                     if (string.IsNullOrEmpty(texto))
                     {
                         continue;
@@ -325,7 +326,21 @@ namespace Etiqueta.Application.Mappers
 
                         case Campo.CodigoBarras:
                             //var digito = Pictogramas.Bibliotecas.EAN13.CalcularDigitoVerificador(texto);
-                            var ean13 = texto + digito.ToString();
+                            var ean13 = texto;
+
+                            if (ean13.Length == 12)
+                            {
+                                var digito = EAN13.CalcularDigitoVerificador(ean13);
+                                ean13 = $"{texto}{digito}";
+                            }
+
+                            if (ean13.Length != 13)
+                            {
+                                // Código inválido, ignora
+                                campo = Campo.Nenhum;
+                                break;
+                            }
+
                             dados.CodigoBarras = ean13; // mantém como texto original
                             campo = Campo.Nenhum;
                             break;
@@ -344,42 +359,6 @@ namespace Etiqueta.Application.Mappers
                 //OnErrorOccurred(ex);
                 //return null;
             }
-
-            // Extrai: ^FD ... ^FS   ou   ^PQ...
-            string ExtrairValorLinha(string line, string marcadorFD, string marcadorFS, string comandoCopias)
-            {
-                if (line == null) return null;
-
-                // 1) Tenta ^FD ... ^FS
-                int idxFD = line.IndexOf(marcadorFD, StringComparison.Ordinal);
-                if (idxFD >= 0)
-                {
-                    int ini = idxFD + marcadorFD.Length;
-
-                    int idxFS = -1;
-                    if (!string.IsNullOrEmpty(marcadorFS))
-                        idxFS = line.IndexOf(marcadorFS, ini, StringComparison.Ordinal);
-
-                    int fim = (idxFS >= 0) ? idxFS : line.Length;
-                    int len = fim - ini;
-
-                    if (len > 0)
-                        return line.Substring(ini, len);
-                }
-
-                // 2) Se não tem ^FD, tenta ^PQ (cópias)
-                int idxPQ = line.IndexOf(comandoCopias, StringComparison.Ordinal);
-                if (idxPQ >= 0)
-                {
-                    int ini = idxPQ + comandoCopias.Length; // ex.: "^PQ"
-                                                            // Alguns formatos usam "^PQ," ou "^PQ,"
-                    while (ini < line.Length && (line[ini] == ':' || line[ini] == ',' || line[ini] == ' ')) ini++;
-                    var rest = line.Substring(ini).Trim();
-                    return rest.Length > 0 ? rest : null;
-                }
-
-                return null;
-            }
         }
 
         // --- Tipos/Helpers locais ---
@@ -397,32 +376,6 @@ namespace Etiqueta.Application.Mappers
             CodigoUsuario,
             CodigoBarras,
             Copias
-        }
-
-        /// <summary>
-        /// Quebra comandos ZPL em linhas individuais.
-        /// </summary>
-        /// <param name="texto">Sppoler comandos ZPL</param>
-        /// <returns>Array string com linhas separadas.</returns>
-        private static string[] QuebraComandosZPLEmLinhasIndividuais(string texto)
-        {
-
-            // Separa comandos por quebra de linhas, removendo linhas vazias
-            //var quebraLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
-            var quebraLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
-
-            var quebraComandosEmLinhas = new ConcurrentQueue<IReadOnlyList<string>>();
-            foreach (var linha in quebraLinhas)
-            {
-                // Processa cada linha individualmente
-                // Separa varios comandos que estão em uma mesma linhas, em comandos com linhas individuais, mantendo o inicio de comando "^"
-                //var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
-                var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
-
-                quebraComandosEmLinhas.EnqueueBatch(quebralinhaComandoEmLinhas);
-            }
-
-            return quebraComandosEmLinhas.ToFlattenedArraySnapshot();
         }
 
 
@@ -453,12 +406,18 @@ namespace Etiqueta.Application.Mappers
 
             long codigoMaterial = 0;
             long.TryParse(dto.CodigoMaterial, out codigoMaterial);
-            DateTime validade = DateTime.MinValue;
-            DateTime.TryParse(dto.Validade, out validade);
+            //DateTime validade = DateTime.MinValue;
+            if (DateTime.TryParse(dto.Validade, out var validade))
+            {
+
+            }
+
             DateTime inicio = DateTime.MinValue;
             DateTime.TryParse(dto.DataHoraInicio, out inicio);
             DateTime fim = DateTime.MinValue;
             DateTime.TryParse(dto.DataHoraFim, out fim);
+            long.TryParse(dto.QuantidadeSolicitada, out long quantidadeSolicitada);
+            long.TryParse(dto.FaltaImpressao, out long faltaImpressao);
 
             return new EtiquetaImpressao
             {
@@ -475,8 +434,8 @@ namespace Etiqueta.Application.Mappers
                 DataHoraInicio = inicio,
                 DataHoraFim = fim,
                 StatusEtiqueta = dto.StatusEtiqueta,
-                QuantidadeSolicitada = dto.QuantidadeSolicitada,
-                FaltaImpressao = dto.FaltaImpressao,
+                QuantidadeSolicitada = quantidadeSolicitada,
+                FaltaImpressao = faltaImpressao,
             };
         }
 
