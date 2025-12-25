@@ -239,7 +239,7 @@ namespace Etiqueta.Application.Mappers
                     }
                     else if (posicaoCmd1 == posicaoCamposEtiqueta.DescricaoMedicamentoCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.DescricaoMedicamentoCmd2)
                     {
-                        campo = Campo.DescricaoMedicamento1;
+                        campo = Campo.DescricaoMedicamento;
                     }
                     else if (posicaoCmd1 == posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2)
                     {
@@ -247,7 +247,7 @@ namespace Etiqueta.Application.Mappers
                     }
                     else if (posicaoCmd1 == posicaoCamposEtiqueta.PrincipioAtivo1Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.PrincipioAtivo1Cmd2)
                     {
-                        campo = Campo.PrincipioAtivo1;
+                        campo = Campo.PrincipioAtivo;
                     }
                     else if (posicaoCmd1 == posicaoCamposEtiqueta.PrincipioAtivo2Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.PrincipioAtivo2Cmd2)
                     {
@@ -279,9 +279,11 @@ namespace Etiqueta.Application.Mappers
                     }
 
                     // Extrai o texto alvo da linha (entre ^FD ... ^FS) ou após ^PQ
-                    var texto = ExtrairValorLinha(line, marcadorInicioTexto, marcadorFimTexto, cmdCopias);
+                    var texto = ExtrairValorLinha(line, marcadorInicioTexto, marcadorFimTexto, posicaoCamposEtiqueta.CopiasCmd);
                     if (string.IsNullOrEmpty(texto))
+                    {
                         continue;
+                    }
 
                     switch (campo)
                     {
@@ -291,7 +293,7 @@ namespace Etiqueta.Application.Mappers
                             campo = Campo.Nenhum;
                             break;
 
-                        case Campo.DescricaoMedicamento1:
+                        case Campo.DescricaoMedicamento:
                             dados.DescricaoMedicamento = texto;
                             campo = Campo.Nenhum;
                             break;
@@ -307,7 +309,7 @@ namespace Etiqueta.Application.Mappers
                             break;
 
                         case Campo.CodigoUsuario:
-                            dados.Usuario = texto;
+                            dados.CodigoUsuario = texto;
                             campo = Campo.Nenhum;
                             break;
 
@@ -322,14 +324,14 @@ namespace Etiqueta.Application.Mappers
                             break;
 
                         case Campo.CodigoBarras:
-                            var digito = Pictogramas.Bibliotecas.EAN13.CalcularDigitoVerificador(texto);
+                            //var digito = Pictogramas.Bibliotecas.EAN13.CalcularDigitoVerificador(texto);
                             var ean13 = texto + digito.ToString();
                             dados.CodigoBarras = ean13; // mantém como texto original
                             campo = Campo.Nenhum;
                             break;
 
                         case Campo.Copias:
-                            dados.Copias = texto; // se quiser validar numérico, faça aqui
+                            dados.QuantidadeSolicitada = texto; // se quiser validar numérico, faça aqui
                             campo = Campo.Nenhum;
                             break;
                     }
@@ -385,9 +387,9 @@ namespace Etiqueta.Application.Mappers
         {
             Nenhum = 0,
             CodigoMaterial,
-            DescricaoMedicamento1,
+            DescricaoMedicamento,
             DescricaoMedicamento2,
-            PrincipioAtivo1,
+            PrincipioAtivo,
             PrincipioAtivo2,
             Embalagem,
             Lote,
@@ -462,10 +464,12 @@ namespace Etiqueta.Application.Mappers
             {
                 Id = dto.Id,
                 DescricaoMedicamento = dto.DescricaoMedicamento,
-                PrincipioAtivo1 = dto.PrincipioAtivo,
+                DescricaoMedicamento2 = dto.DescricaoMedicamento2,
+                PrincipioAtivo = dto.PrincipioAtivo,
                 PrincipioAtivo2 = dto.PrincipioAtivo2,
                 CodigoMaterial = codigoMaterial,
                 CodigoBarras = dto.CodigoBarras,
+                Embalagem = dto.Embalagem,
                 Lote = dto.Lote,
                 Validade = validade,
                 DataHoraInicio = inicio,
@@ -493,11 +497,13 @@ namespace Etiqueta.Application.Mappers
             {
                 Id = ent.Id,
                 DescricaoMedicamento = ent.DescricaoMedicamento,
-                PrincipioAtivo = ent.PrincipioAtivo1,
+                DescricaoMedicamento2 = ent.DescricaoMedicamento2,
+                PrincipioAtivo = ent.PrincipioAtivo,
                 PrincipioAtivo2 = ent.PrincipioAtivo2,
                 CodigoMaterial = ent.CodigoMaterial.ToString(),
                 CodigoBarras = ent.CodigoBarras,
                 Lote = ent.Lote,
+                Embalagem = ent.Embalagem,
                 Validade = ent.Validade.ToString("o"),
                 DataHoraInicio = ent.DataHoraInicio.ToString("o"),
                 DataHoraFim = ent.DataHoraFim.ToString("o"),

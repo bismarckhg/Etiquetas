@@ -85,12 +85,12 @@ namespace Etiquetas.Core.Interfaces
         /// <summary>
         /// Gets or sets - obtém ou define a quantidade solicitada para impressão.
         /// </summary>
-        long QuantidadeSolicitada { get; set; }
+        string QuantidadeSolicitada { get; set; }
 
         /// <summary>
         /// Gets or sets - obtém ou define a quantidade restante a ser impressa.
         /// </summary>
-        long FaltaImpressao { get; set; }
+        string FaltaImpressao { get; set; }
 
         /// <summary>
         /// Gets or sets - obtém ou define o nome do trabalho de impressão associado a esta etiqueta.

@@ -52,10 +52,10 @@ namespace Etiquetas.Application.DTOs
         public string DescricaoStatus { get; set; }
 
         /// <inheritdoc/>
-        public long QuantidadeSolicitada { get; set; }
+        public string QuantidadeSolicitada { get; set; }
 
         /// <inheritdoc/>
-        public long FaltaImpressao { get; set; }
+        public string FaltaImpressao { get; set; }
 
         /// <inheritdoc/>
         public string JobName { get; set; }

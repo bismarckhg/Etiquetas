@@ -34,6 +34,9 @@ namespace Etiquetas.Domain.Entities
         public string Lote { get; set; }
 
         /// <inheritdoc/>
+        public string Embalagem { get; set; }
+
+        /// <inheritdoc/>
         public string CodigoUsuario { get; set; }
 
         /// <inheritdoc/>

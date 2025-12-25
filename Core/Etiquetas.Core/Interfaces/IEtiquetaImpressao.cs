@@ -53,6 +53,12 @@ namespace Etiquetas.Core.Interfaces
         string Lote { get; set; }
 
         /// <summary>
+        /// Gets or sets - obtém ou define a descrição da embalagem do medicamento.
+        /// Não pode ser nulo ou vazio.
+        /// </summary>
+        string Embalagem { get; set; }
+
+        /// <summary>
         /// Gets or sets - obtém ou define a matrícula do funcionário que solicitou ou iniciou a impressão.
         /// Não pode ser nulo ou vazio.
         /// </summary>
