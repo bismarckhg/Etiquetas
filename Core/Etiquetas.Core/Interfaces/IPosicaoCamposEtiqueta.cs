@@ -28,7 +28,7 @@ namespace Etiquetas.Core.Interfaces
         IConfiguracaoCampo DescricaoMedicamento2 { get; }
 
         /// <summary>Obtém a configuração do campo Princípio Ativo 1</summary>
-        IConfiguracaoCampo PrincipioAtivo1 { get; }
+        IConfiguracaoCampo PrincipioAtivo { get; }
 
         /// <summary>Obtém a configuração do campo Princípio Ativo 2</summary>
         IConfiguracaoCampo PrincipioAtivo2 { get; }

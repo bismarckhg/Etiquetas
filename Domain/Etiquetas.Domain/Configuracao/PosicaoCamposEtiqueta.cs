@@ -16,6 +16,7 @@ namespace Etiquetas.Domain.Configuracao
     public class PosicaoCamposEtiqueta : IPosicaoCamposEtiqueta
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="PosicaoCamposEtiqueta"/> class.
         /// Inicializa uma nova instância da classe <see cref="PosicaoCamposEtiqueta"/>,
         /// carregando todas as configurações do appsettings.xml.
         /// </summary>
@@ -45,7 +46,7 @@ namespace Etiquetas.Domain.Configuracao
         public IConfiguracaoCampo DescricaoMedicamento2 { get; private set; }
 
         /// <inheritdoc/>
-        public IConfiguracaoCampo PrincipioAtivo1 { get; private set; }
+        public IConfiguracaoCampo PrincipioAtivo { get; private set; }
 
         /// <inheritdoc/>
         public IConfiguracaoCampo PrincipioAtivo2 { get; private set; }
@@ -96,7 +97,7 @@ namespace Etiquetas.Domain.Configuracao
             CodigoMaterial = CarregarCampo("CodigoMaterial");
             DescricaoMedicamento = CarregarCampo("DescricaoMedicamento");
             DescricaoMedicamento2 = CarregarCampo("DescricaoMedicamento2");
-            PrincipioAtivo1 = CarregarCampo("PrincipioAtivo1");
+            PrincipioAtivo = CarregarCampo("PrincipioAtivo");
             PrincipioAtivo2 = CarregarCampo("PrincipioAtivo2");
             Embalagem = CarregarCampo("Embalagem");
             Lote = CarregarCampo("Lote");
@@ -115,9 +116,9 @@ namespace Etiquetas.Domain.Configuracao
         {
             return new ConfiguracaoCampo
             {
-                Comando1 = ObterConfiguracao($"Campo_{nomeCampo}_Cmd1", ""),
-                Comando2 = ObterConfiguracao($"Campo_{nomeCampo}_Cmd2", ""),
-                Obrigatorio = ObterConfiguracaoBoolean($"Campo_{nomeCampo}_Obrigatorio", false)
+                Comando1 = ObterConfiguracao($"Campo_{nomeCampo}_Cmd1", string.Empty),
+                Comando2 = ObterConfiguracao($"Campo_{nomeCampo}_Cmd2", string.Empty),
+                Obrigatorio = ObterConfiguracaoBoolean($"Campo_{nomeCampo}_Obrigatorio", false),
             };
         }
 
@@ -137,13 +138,15 @@ namespace Etiquetas.Domain.Configuracao
         /// Obtém uma configuração booleana do appsettings.xml.
         /// </summary>
         /// <param name="chave">Chave da configuração</param>
-        /// <param name="valorPadrao">Valor padrão se a chave não existir</param>
+        /// <param name="valorPadrao">Valor padrão se a chave não existir.</param>
         /// <returns>Valor da configuração ou valor padrão</returns>
         private bool ObterConfiguracaoBoolean(string chave, bool valorPadrao)
         {
             var valor = ConfigurationManager.AppSettings[chave];
             if (string.IsNullOrWhiteSpace(valor))
+            {
                 return valorPadrao;
+            }
 
             bool resultado;
             return bool.TryParse(valor, out resultado) ? resultado : valorPadrao;
