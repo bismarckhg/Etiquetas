@@ -1,4 +1,5 @@
 using System.Net;
+using Etiquetas.Application.Configuracao;
 
 namespace Etiquetas.Core.Interfaces
 {
@@ -7,119 +8,55 @@ namespace Etiquetas.Core.Interfaces
     /// </summary>
     public interface IPosicaoCamposEtiqueta
     {
-        /// <summary>
-        /// Gets or Sets - Marcador Inicial do Texto em comando Impressoras ZPL, EPL ou SBPL.
-        /// </summary>
-        string MarcadorInicialTexto { get; set; }
 
         /// <summary>
-        /// Gets or Sets - Marcador Final do Texto em comando Impressoras ZPL, EPL ou SBPL.
+        /// Interface que define o contrato para configuração de posições de campos em etiquetas.
         /// </summary>
-        string MarcadorFinalTexto { get; set; }
+        public interface IPosicaoCamposEtiqueta
+        {
+            /// <summary>Obtém o tipo de linguagem de impressão utilizada</summary>
+            TipoLinguagemImpressao TipoLinguagem { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Código do Material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string CodigoMaterialCmd1 { get; set; }
+            /// <summary>Obtém o marcador que indica o início do texto (ex: "^FD" no ZPL)</summary>
+            string MarcadorInicialTexto { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Código do Material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string CodigoMaterialCmd2 { get; set; }
+            /// <summary>Obtém o marcador que indica o fim do texto (ex: "^FS" no ZPL)</summary>
+            string MarcadorFinalTexto { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Código de Barras. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string CodigoBarrasCmd1 { get; set; }
+            /// <summary>Obtém a configuração do campo Código do Material</summary>
+            ConfiguracaoCampo CodigoMaterial { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Código de Barras. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string CodigoBarrasCmd2 { get; set; }
+            /// <summary>Obtém a configuração do campo Descrição do Medicamento</summary>
+            ConfiguracaoCampo DescricaoMedicamento { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Primeira Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string DescricaoMedicamentoCmd1 { get; set; }
+            /// <summary>Obtém a configuração do campo Descrição do Medicamento 2</summary>
+            ConfiguracaoCampo DescricaoMedicamento2 { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Primeira Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string DescricaoMedicamentoCmd2 { get; set; }
+            /// <summary>Obtém a configuração do campo Princípio Ativo 1</summary>
+            ConfiguracaoCampo PrincipioAtivo1 { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Segunda Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string DescricaoMedicamento2Cmd1 { get; set; }
+            /// <summary>Obtém a configuração do campo Princípio Ativo 2</summary>
+            ConfiguracaoCampo PrincipioAtivo2 { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Segunda Parte da Descrição do Medicamento. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string DescricaoMedicamento2Cmd2 { get; set; }
+            /// <summary>Obtém a configuração do campo Embalagem</summary>
+            ConfiguracaoCampo Embalagem { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Primeira parte do Pricipio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string PrincipioAtivo1Cmd1 { get; set; }
+            /// <summary>Obtém a configuração do campo Lote</summary>
+            ConfiguracaoCampo Lote { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Primeira parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string PrincipioAtivo1Cmd2 { get; set; }
+            /// <summary>Obtém a configuração do campo Validade</summary>
+            ConfiguracaoCampo Validade { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Segunda parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string PrincipioAtivo2Cmd1 { get; set; }
+            /// <summary>Obtém a configuração do campo Código do Usuário</summary>
+            ConfiguracaoCampo CodigoUsuario { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Segunda parte do principio ativo. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string PrincipioAtivo2Cmd2 { get; set; }
+            /// <summary>Obtém a configuração do campo Código de Barras</summary>
+            ConfiguracaoCampo CodigoBarras { get; }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Embalagem do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string EmbalagemCmd1 { get; set; }
+            /// <summary>Obtém a configuração do campo Número de Cópias</summary>
+            ConfiguracaoCampo Copias { get; }
+        }
 
-        /// <summary>
-        /// Gets or Sets - Posicionamento da Embalagem do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string EmbalagemCmd2 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Lote do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string LoteCmd1 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Lote do material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string LoteCmd2 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Data de Validade do Material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string ValidadeCmd1 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Data de Validade do Material. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string ValidadeCmd2 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Código do Usuario. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string CodigoUsuarioCmd1 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Posicionamento do Código do Usuario. Cmd1 e Cmd2 representam Posicao Coluna e linhas, podendo ser comandos separados ou não
-        /// </summary>
-        string CodigoUsuarioCmd2 { get; set; }
-
-        /// <summary>
-        /// Gets or Sets - Comando com a Quantidade de Copias da etiqueta. Cmd representa o comando para definir a quantidade de copias na impressora
-        /// </summary>
-        string CopiasCmd { get; set; }
     }
 }
+

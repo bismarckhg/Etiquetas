@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <appSettings>
+        <!-- Configurações ZPL -->
+        <add key="ZPL_MarcadorInicioTexto" value="^FD"/>
+        <add key="ZPL_MarcadorFimTexto" value="^FS"/>
+        <add key="ZPL_ComandoPosicao" value="^FO"/>
+        <add key="ZPL_ComandoCopias" value="^PQ"/>
+        <add key="ZPL_ComandoBarras" value="^BY"/>
+
+        <!-- Configurações SBPL (ESC=Chr(27)) -->
+        <add key="SBPL_MarcadorESC" value="27"/>
+        <add key="SBPL_ComandoHorizontal" value="H"/>
+        <add key="SBPL_ComandoVertical" value="V"/>
+        <add key="SBPL_MarcadorInicioTexto" value=""/>
+        <add key="SBPL_MarcadorFimTexto" value=""/>
+
+        <!-- Configurações EPL -->
+        <add key="EPL_ComandoTexto" value="A"/>
+        <add key="EPL_ComandoBarras" value="B"/>
+        <add key="EPL_MarcadorInicioTexto" value="&quot;"/>
+        <add key="EPL_MarcadorFimTexto" value="&quot;"/>
+
+        <!-- Exemplo: Campos ZPL -->
+        <!-- Código Material - Posição única em ^FO -->
+        <add key="Campo_CodigoMaterial_Cmd1" value="^FO0010,0005"/>
+        <add key="Campo_CodigoMaterial_Cmd2" value=""/>
+        <add key="Campo_CodigoMaterial_Obrigatorio" value="true"/>
+
+        <!-- Descrição 1 - Posição única -->
+        <add key="Campo_DescricaoMedicamento_Cmd1" value="^FO0010,0025"/>
+        <add key="Campo_DescricaoMedicamento_Cmd2" value=""/>
+        <add key="Campo_DescricaoMedicamento_Obrigatorio" value="true"/>
+
+        <!-- Descrição 2 - Posição única -->
+        <add key="Campo_DescricaoMedicamento2_Cmd1" value="^FO0010,0045"/>
+        <add key="Campo_DescricaoMedicamento2_Cmd2" value=""/>
+        <add key="Campo_DescricaoMedicamento2_Obrigatorio" value="false"/>
+
+        <!-- Princípio Ativo 1 -->
+        <add key="Campo_PrincipioAtivo1_Cmd1" value="^FO0010,0065"/>
+        <add key="Campo_PrincipioAtivo1_Cmd2" value=""/>
+        <add key="Campo_PrincipioAtivo1_Obrigatorio" value="false"/>
+
+        <!-- Princípio Ativo 2 -->
+        <add key="Campo_PrincipioAtivo2_Cmd1" value="^FO0010,0085"/>
+        <add key="Campo_PrincipioAtivo2_Cmd2" value=""/>
+        <add key="Campo_PrincipioAtivo2_Obrigatorio" value="false"/>
+
+        <!-- Embalagem -->
+        <add key="Campo_Embalagem_Cmd1" value="^FO0010,0105"/>
+        <add key="Campo_Embalagem_Cmd2" value=""/>
+        <add key="Campo_Embalagem_Obrigatorio" value="true"/>
+
+        <!-- Lote -->
+        <add key="Campo_Lote_Cmd1" value="^FO0200,0005"/>
+        <add key="Campo_Lote_Cmd2" value=""/>
+        <add key="Campo_Lote_Obrigatorio" value="true"/>
+
+        <!-- Validade -->
+        <add key="Campo_Validade_Cmd1" value="^FO0200,0025"/>
+        <add key="Campo_Validade_Cmd2" value=""/>
+        <add key="Campo_Validade_Obrigatorio" value="true"/>
+
+        <!-- Usuário -->
+        <add key="Campo_CodigoUsuario_Cmd1" value="^FO0200,0045"/>
+        <add key="Campo_CodigoUsuario_Cmd2" value=""/>
+        <add key="Campo_CodigoUsuario_Obrigatorio" value="false"/>
+
+        <!-- Código de Barras -->
+        <add key="Campo_CodigoBarras_Cmd1" value="^FO0050,0150"/>
+        <add key="Campo_CodigoBarras_Cmd2" value=""/>
+        <add key="Campo_CodigoBarras_Obrigatorio" value="true"/>
+
+        <!-- Cópias -->
+        <add key="Campo_Copias_Cmd1" value="^PQ"/>
+        <add key="Campo_Copias_Cmd2" value=""/>
+        <add key="Campo_Copias_Obrigatorio" value="false"/>
+
+        <!-- Exemplo: Campos SBPL (2 comandos separados) -->
+        <!--
+        <add key="Campo_CodigoMaterial_Cmd1" value="<ESC>H0010"/>
+        <add key="Campo_CodigoMaterial_Cmd2" value="<ESC>V0005"/>
+        -->
+
+        <!-- Exemplo: Campos EPL (comando único com posição) -->
+        <!--
+        <add key="Campo_CodigoMaterial_Cmd1" value="A50,100,0,3,1,1"/>
+        <add key="Campo_CodigoMaterial_Cmd2" value=""/>
+        -->
+    </appSettings>
+</configuration>

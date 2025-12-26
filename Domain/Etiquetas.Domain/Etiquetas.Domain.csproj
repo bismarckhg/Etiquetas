@@ -5,4 +5,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Etiquetas.Core\Etiquetas.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="AppSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

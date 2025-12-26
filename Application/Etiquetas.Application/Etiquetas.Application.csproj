@@ -3,6 +3,12 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Mappers\EtiquetaMapper - Cópia.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Mappers\EtiquetaMapper - Cópia.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.ControleFilaDados\Etiquetas.Bibliotecas.ControleFilaDados.csproj" />
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.SATO\Etiquetas.Bibliotecas.SATO.csproj" />
