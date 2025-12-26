@@ -1,3 +1,5 @@
+using Etiquetas.Core.Enum;
+using Etiquetas.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,35 +8,21 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Domain.Configuracao
 {
-
     /// <summary>
     /// Representa a configuração completa de um campo específico na etiqueta.
     /// </summary>
-    public class ConfiguracaoCampo
+    public class ConfiguracaoCampo : IConfiguracaoCampo
     {
-        /// <summary>
-        /// Obtém ou define o primeiro comando de posicionamento do campo.
-        /// Pode conter a posição completa (comando único) ou apenas uma coordenada (H ou V).
-        /// </summary>
+        /// <inheritdoc/>
         public string Comando1 { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o segundo comando de posicionamento do campo.
-        /// Usado quando o posicionamento é dividido em dois comandos (H/V ou V/H).
-        /// Deixe vazio para comando único.
-        /// </summary>
+        /// <inheritdoc/>
         public string Comando2 { get; set; }
 
-        /// <summary>
-        /// Obtém ou define se o campo é obrigatório.
-        /// Se true, gerará erro de validação quando o campo estiver vazio.
-        /// </summary>
+        /// <inheritdoc/>
         public bool Obrigatorio { get; set; }
 
-        /// <summary>
-        /// Obtém ou define o tipo de posicionamento utilizado por este campo.
-        /// Calculado automaticamente baseado em Comando1 e Comando2.
-        /// </summary>
+        /// <inheritdoc/>
         public TipoPosicionamento TipoPosicionamento
         {
             get

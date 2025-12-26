@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etiquetas.Core.Enum;
 using Etiquetas.Core.Interfaces;
 
 namespace Etiquetas.Domain.Configuracao
@@ -25,20 +26,47 @@ namespace Etiquetas.Domain.Configuracao
             CarregarConfiguracoes();
         }
 
+        /// <inheritdoc/>
         public TipoLinguagemImpressao TipoLinguagem { get; private set; }
+
+        /// <inheritdoc/>
         public string MarcadorInicialTexto { get; private set; }
+
+        /// <inheritdoc/>
         public string MarcadorFinalTexto { get; private set; }
-        public ConfiguracaoCampo CodigoMaterial { get; private set; }
-        public ConfiguracaoCampo DescricaoMedicamento { get; private set; }
-        public ConfiguracaoCampo DescricaoMedicamento2 { get; private set; }
-        public ConfiguracaoCampo PrincipioAtivo1 { get; private set; }
-        public ConfiguracaoCampo PrincipioAtivo2 { get; private set; }
-        public ConfiguracaoCampo Embalagem { get; private set; }
-        public ConfiguracaoCampo Lote { get; private set; }
-        public ConfiguracaoCampo Validade { get; private set; }
-        public ConfiguracaoCampo CodigoUsuario { get; private set; }
-        public ConfiguracaoCampo CodigoBarras { get; private set; }
-        public ConfiguracaoCampo Copias { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo CodigoMaterial { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo DescricaoMedicamento { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo DescricaoMedicamento2 { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo PrincipioAtivo1 { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo PrincipioAtivo2 { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo Embalagem { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo Lote { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo Validade { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo CodigoUsuario { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo CodigoBarras { get; private set; }
+
+        /// <inheritdoc/>
+        public IConfiguracaoCampo Copias { get; private set; }
 
         /// <summary>
         /// Carrega todas as configurações do arquivo appsettings.xml.

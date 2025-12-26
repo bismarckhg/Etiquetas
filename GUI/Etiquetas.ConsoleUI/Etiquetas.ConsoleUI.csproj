@@ -14,6 +14,9 @@
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="AppSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

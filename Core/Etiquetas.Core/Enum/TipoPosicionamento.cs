@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Etiquetas.Domain.Configuracao
+namespace Etiquetas.Core.Enum
 {
-
     /// <summary>
     /// Enumeração que define o tipo de posicionamento dos campos na etiqueta.
     /// </summary>
@@ -19,5 +18,4 @@ namespace Etiquetas.Domain.Configuracao
         /// <summary>Posição dividida em dois comandos: Vertical primeiro, Horizontal depois</summary>
         VerticalHorizontal
     }
-
 }
