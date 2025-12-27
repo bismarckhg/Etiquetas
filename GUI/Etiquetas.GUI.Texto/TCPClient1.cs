@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -9,21 +9,24 @@ namespace Etiquetas.GUI.Texto
 {
     public class TCPClient1
     {
-
         public TCPClient1()
         {
-
         }
 
-        protected Task<bool> ConnectHostPortTimeout(
+        protected async Task<bool> ConnectHostPortTimeout(
             string host,
             int port,
             int timeoutMs)
         {
             var tcpTask = Task.Run(async () =>
             {
-                var tcpClient = new TcpClient(host, port);
+                var tcpClient = new TcpClient();
+                var connectTask = tcpClient.ConnectAsync(host, port);
+                await connectTask.ConfigureAwait(false);
+                return true;
             });
+
+            return await tcpTask.ConfigureAwait(false);
         }
     }
 }
