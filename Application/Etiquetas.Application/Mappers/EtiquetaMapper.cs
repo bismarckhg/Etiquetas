@@ -65,295 +65,62 @@ namespace Etiqueta.Application.Mappers
             return dto;
         }
 
-        public static IEtiquetaImpressaoDto SpolerToDto(this string impressao, IPosicaoCamposEtiqueta posicaoCamposEtiqueta)
+        /// <summary>
+        /// Extrai os dados da etiqueta baseado na configuração fornecida.
+        /// O método é inteligente e detecta automaticamente se o posicionamento
+        /// usa comando único ou comandos duplos (H/V ou V/H).
+        /// </summary>
+        /// <param name="conteudoEtiqueta">Conteúdo completo da etiqueta a ser processada</param>
+        /// <param name="configuracao">Configuração dos campos e marcadores</param>
+        /// <returns>Objeto com os dados extraídos ou null se houver erro</returns>
+        /// <exception cref="ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
+        /// <exception cref="CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
+        public static IEtiquetaImpressaoDto SpolerToDto(this string conteudoEtiqueta, IPosicaoCamposEtiqueta configuracao)
         {
-            if (impressao == null)
+            if (string.IsNullOrWhiteSpace(conteudoEtiqueta))
             {
-                return null;
+                throw new ArgumentNullException(nameof(conteudoEtiqueta), "O conteúdo da etiqueta não pode ser nulo ou vazio");
             }
 
-            return ExtrairDadosEtiqueta(impressao, posicaoCamposEtiqueta);
-        }
-
-        /// <summary>
-        /// Extrai o código da primeira linha (texto entre aspas)
-        /// </summary>
-        /// <param name="message">Mensagem completa</param>
-        /// <returns>Código extraído ou null se não encontrado</returns>
-        private static IEtiquetaImpressaoDto ExtrairDadosEtiqueta(string message, IPosicaoCamposEtiqueta posicaoCamposEtiqueta)
-        {
-
-            if (string.IsNullOrEmpty(message))
-                return null;
-
-            var dados = new EtiquetaImpressaoDto();
+            if (configuracao == null)
+            {
+                throw new ArgumentNullException(nameof(configuracao), "A configuração não pode ser nula");
+            }
 
             try
             {
-                var linhas = QuebraComandosZPLEmLinhasIndividuais.Execute(message);
+                // Prepara o conteúdo baseado no tipo de linguagem
+                var conteudoProcessado = PreprocessarConteudo(conteudoEtiqueta, configuracao.TipoLinguagem);
 
-                // Alias locais para evitar acessos repetidos a campos
-                //var posCodigoMaterial1 = posicaoCamposEtiqueta.PosicaoCodigo;
-                //var posDesc1 = posicaoCamposEtiqueta.PosicaoDescricao1;
-                //var posDesc2 = posicaoCamposEtiqueta.PosicaoDescricao2;
-                //var posEmbalagem = posicaoCamposEtiqueta.PosicaoEmbalagem;
-                //var posLote = posicaoCamposEtiqueta.PosicaoLote;
-                //var posValidade = posicaoCamposEtiqueta.PosicaoDataValidade;
-                //var posUsuario = posicaoCamposEtiqueta.PosicaoUsuario;
-                //var posCodigoBarras = posicaoCamposEtiqueta.PosicaoCodigoBarras;
-                //var cmdCopias = posicaoCamposEtiqueta.ComandoNumeroCopias;
+                // Quebra em linhas/comandos individuais
+                var comandos = QuebrarEmComandos(conteudoProcessado, configuracao.TipoLinguagem);
 
-                var marcadorInicioTexto = posicaoCamposEtiqueta.MarcadorInicialTexto; // ex.: "^FD"
-                var marcadorFimTexto = posicaoCamposEtiqueta.MarcadorFinalTexto;   // ex.: "^FS"
+                // Extrai os dados
+                var dados = new EtiquetaImpressaoDto();
+                var estado = new EstadoCampo();
 
-                // Detecta qual campo é esta linha (prefix match)
-                Campo campo = Campo.Nenhum;
-
-                var posicaoCmd1 = string.Empty;
-                var posicaoCmd2 = string.Empty;
-
-                foreach (var cmd in linhas)
+                foreach (var comando in comandos)
                 {
-                    // Remove apenas espaços à esquerda para preservar posições depois de ^FD
-                    var line = cmd?.TrimStart();
-                    if (EhStringNuloVazioComEspacosBranco.Execute(line)) continue;
-
-                    // Verifica Posicao dos Campos (alguns modelos usam dois comandos diferentes para o mesmo campo, um de linha e outro de coluna).
-                    if (line.StartsWith(posicaoCamposEtiqueta.CodigoMaterialCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.CodigoMaterialCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamentoCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.DescricaoMedicamentoCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo1Cmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.PrincipioAtivo1Cmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo2Cmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.PrincipioAtivo2Cmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.EmbalagemCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.EmbalagemCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoUsuarioCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.CodigoUsuarioCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.LoteCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.LoteCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.ValidadeCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.ValidadeCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoBarrasCmd1, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.CodigoBarrasCmd1;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.CopiasCmd, StringComparison.Ordinal))
-                    {
-                        posicaoCmd1 = posicaoCamposEtiqueta.CopiasCmd;
-                    }
-
-                    // Verifica segunda posição (alguns modelos usam dois comandos diferentes para o mesmo campo, um de linha e outro de coluna).
-                    if (line.StartsWith(posicaoCamposEtiqueta.CodigoMaterialCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.CodigoMaterialCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamentoCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.DescricaoMedicamentoCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo1Cmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.PrincipioAtivo1Cmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.PrincipioAtivo2Cmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.PrincipioAtivo2Cmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.EmbalagemCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.EmbalagemCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoUsuarioCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.CodigoUsuarioCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.LoteCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.LoteCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.ValidadeCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.ValidadeCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.CodigoBarrasCmd2, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = posicaoCamposEtiqueta.CodigoBarrasCmd2;
-                    }
-                    else if (line.StartsWith(posicaoCamposEtiqueta.CopiasCmd, StringComparison.Ordinal))
-                    {
-                        posicaoCmd2 = String.Empty;
-                    }
-
-                    // Define qual campo esta sendo processado
-                    if (posicaoCmd1 == posicaoCamposEtiqueta.CodigoMaterialCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.CodigoMaterialCmd2)
-                    {
-                        campo = Campo.CodigoMaterial;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.DescricaoMedicamentoCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.DescricaoMedicamentoCmd2)
-                    {
-                        campo = Campo.DescricaoMedicamento;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.DescricaoMedicamento2Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.DescricaoMedicamento2Cmd2)
-                    {
-                        campo = Campo.DescricaoMedicamento2;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.PrincipioAtivoCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.PrincipioAtivoCmd2)
-                    {
-                        campo = Campo.PrincipioAtivo;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.PrincipioAtivo2Cmd1 && posicaoCmd2 == posicaoCamposEtiqueta.PrincipioAtivo2Cmd2)
-                    {
-                        campo = Campo.PrincipioAtivo2;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.EmbalagemCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.EmbalagemCmd2)
-                    {
-                        campo = Campo.Embalagem;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.CodigoUsuarioCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.CodigoUsuarioCmd2)
-                    {
-                        campo = Campo.CodigoUsuario;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.LoteCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.LoteCmd2)
-                    {
-                        campo = Campo.Lote;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.ValidadeCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.ValidadeCmd2)
-                    {
-                        campo = Campo.Validade;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.CodigoBarrasCmd1 && posicaoCmd2 == posicaoCamposEtiqueta.CodigoBarrasCmd2)
-                    {
-                        campo = Campo.CodigoBarras;
-                    }
-                    else if (posicaoCmd1 == posicaoCamposEtiqueta.CopiasCmd && posicaoCmd2 == string.Empty)
-                    {
-                        campo = Campo.Copias;
-                    }
-
-                    // Extrai o texto alvo da linha (entre ^FD ... ^FS) ou após ^PQ
-                    var texto = ExtrairTextoDaLinhaEntreMarcadoresDeTextos.Execute(line, marcadorInicioTexto, marcadorFimTexto, posicaoCamposEtiqueta.CopiasCmd);
-                    if (string.IsNullOrEmpty(texto))
-                    {
+                    if (string.IsNullOrWhiteSpace(comando))
                         continue;
-                    }
 
-                    switch (campo)
-                    {
-                        case Campo.CodigoMaterial:
-                            // Somente dígitos (rápido, ASCII 0-9); troque por sua rotina se necessário
-                            dados.CodigoMaterial = Etiquetas.Bibliotecas.Comum.Numericos.StringExtrairSomenteDigitosNumericos.Execute(texto);
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.DescricaoMedicamento:
-                            dados.DescricaoMedicamento = texto;
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.DescricaoMedicamento2:
-                            dados.DescricaoMedicamento2 = texto;
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.Embalagem:
-                            dados.Embalagem = texto;
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.CodigoUsuario:
-                            dados.CodigoUsuario = texto;
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.Lote:
-                            dados.Lote = texto;
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.Validade:
-                            dados.Validade = texto;
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.CodigoBarras:
-                            //var digito = Pictogramas.Bibliotecas.EAN13.CalcularDigitoVerificador(texto);
-                            var ean13 = texto;
-
-                            if (ean13.Length == 12)
-                            {
-                                var digito = EAN13.CalcularDigitoVerificador(ean13);
-                                ean13 = $"{texto}{digito}";
-                            }
-
-                            if (ean13.Length != 13)
-                            {
-                                // Código inválido, ignora
-                                campo = Campo.Nenhum;
-                                break;
-                            }
-
-                            dados.CodigoBarras = ean13; // mantém como texto original
-                            campo = Campo.Nenhum;
-                            break;
-
-                        case Campo.Copias:
-                            dados.QuantidadeSolicitada = texto; // se quiser validar numérico, faça aqui
-                            campo = Campo.Nenhum;
-                            break;
-                    }
+                    // Processa o comando atual
+                    ProcessarComando(comando, configuracao, dados, estado);
                 }
 
+                // Valida campos obrigatórios
+                ValidarCamposObrigatorios(dados, configuracao);
+
+                return dados;
+            }
+            catch (CampoObrigatorioException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                //OnErrorOccurred(ex);
-                //return null;
+                throw new Exception($"Erro ao extrair dados da etiqueta: {ex.Message}", ex);
             }
-
-            return dados;
-        }
-
-        // --- Tipos/Helpers locais ---
-        private enum Campo
-        {
-            Nenhum = 0,
-            CodigoMaterial,
-            DescricaoMedicamento,
-            DescricaoMedicamento2,
-            PrincipioAtivo,
-            PrincipioAtivo2,
-            Embalagem,
-            Lote,
-            Validade,
-            CodigoUsuario,
-            CodigoBarras,
-            Copias
         }
 
         /// <summary>

@@ -9,10 +9,59 @@ using System.Threading.Tasks;
 namespace Etiquetas.Bibliotecas.SATO
 {
     /// <summary>
+    /// Quebra comandos impressora em linhas individuais.
+    /// </summary>
+    public static class QuebraComandosEmLinhasIndividuais
+    {
+        /// <summary>
+        /// Quebra comandos impressora em linhas individuais.
+        /// </summary>
+        /// <param name="comandosSpooler">Comandos recebidos do spooler.</param>
+        /// <param name="tipoLinguagem">ZPL, EPL ou SBPL.</param>
+        /// <returns>Array string com linhas de comandos individuais.</returns>
+        public static string[] Execute(string comandosSpooler, string tipoLinguagem)
+        {
+            /// var comandos = new List<string>();
+            var arrayLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(comandosSpooler, new[] { "\r\n", "\n", "\r" }, true);
+            var arrayLinhasPorComandos = new ConcurrentQueue<IReadOnlyList<string>>();
+
+            switch (tipoLinguagem)
+            {
+                case "ZPL":
+                    // ZPL: quebra por ^ (comandos começam com ^)
+                    foreach (var linha in arrayLinhas)
+                    {
+                        // comandos.Add("^" + parte.Trim());
+                        var arrayZPL = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
+                        arrayLinhasPorComandos.EnqueueBatch(arrayZPL);
+                    }
+                    break;
+                case "EPL":
+                    // EPL: quebra por linha
+                    arrayLinhasPorComandos.EnqueueBatch(arrayLinhas.Select(l => l.Trim()));
+                    break;
+                case "SBPL":
+                    // SBPL: quebra por ESC (cada comando começa com ESC)
+                    var esc = Convert.ToChar(27);
+                    foreach (var linha in arrayLinhas)
+                    {
+                        // comandos.Add(esc + parte.Trim());
+                        var arraySBPL = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, $"{esc}", true);
+                        arrayLinhasPorComandos.EnqueueBatch(arraySBPL);
+                    }
+                    break;
+            }
+
+            return arrayLinhasPorComandos.ToFlattenedArraySnapshot();
+        }
+    }
+
+    /// <summary>
     /// Quebra comandos ZPL em linhas individuais.
     /// </summary>
     public static class QuebraComandosZPLEmLinhasIndividuais
     {
+
         /// <summary>
         /// Quebra comandos ZPL em linhas individuais.
         /// </summary>
@@ -22,7 +71,7 @@ namespace Etiquetas.Bibliotecas.SATO
         {
 
             // Separa comandos por quebra de linhas, removendo linhas vazias
-            //var quebraLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
+            //var arrayLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
             var quebraLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
 
             var quebraComandosEmLinhas = new ConcurrentQueue<IReadOnlyList<string>>();
