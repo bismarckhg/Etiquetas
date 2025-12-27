@@ -1,5 +1,5 @@
-using Etiquetas.Core.Enum;
 using System.Net;
+using Etiquetas.Bibliotecas.SATO;
 
 namespace Etiquetas.Core.Interfaces
 {
@@ -8,7 +8,6 @@ namespace Etiquetas.Core.Interfaces
     /// </summary>
     public interface IPosicaoCamposEtiqueta
     {
-
         /// <summary>Obtém o tipo de linguagem de impressão utilizada</summary>
         TipoLinguagemImpressao TipoLinguagem { get; }
 

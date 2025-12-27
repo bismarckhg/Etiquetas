@@ -1,4 +1,5 @@
 using Etiquetas.Bibliotecas.ControleFilaDados;
+using Etiquetas.Core.Enum;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Etiquetas.Bibliotecas.SATO
         /// <param name="comandosSpooler">Comandos recebidos do spooler.</param>
         /// <param name="tipoLinguagem">ZPL, EPL ou SBPL.</param>
         /// <returns>Array string com linhas de comandos individuais.</returns>
-        public static string[] Execute(string comandosSpooler, string tipoLinguagem)
+        public static string[] Execute(string comandosSpooler, TipoLinguagemImpressao tipoLinguagem)
         {
             /// var comandos = new List<string>();
             var arrayLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(comandosSpooler, new[] { "\r\n", "\n", "\r" }, true);
@@ -27,7 +28,7 @@ namespace Etiquetas.Bibliotecas.SATO
 
             switch (tipoLinguagem)
             {
-                case "ZPL":
+                case TipoLinguagemImpressao.ZPL:
                     // ZPL: quebra por ^ (comandos começam com ^)
                     foreach (var linha in arrayLinhas)
                     {
@@ -36,11 +37,11 @@ namespace Etiquetas.Bibliotecas.SATO
                         arrayLinhasPorComandos.EnqueueBatch(arrayZPL);
                     }
                     break;
-                case "EPL":
+                case TipoLinguagemImpressao.EPL:
                     // EPL: quebra por linha
                     arrayLinhasPorComandos.EnqueueBatch(arrayLinhas.Select(l => l.Trim()));
                     break;
-                case "SBPL":
+                case TipoLinguagemImpressao.SBPL:
                     // SBPL: quebra por ESC (cada comando começa com ESC)
                     var esc = Convert.ToChar(27);
                     foreach (var linha in arrayLinhas)

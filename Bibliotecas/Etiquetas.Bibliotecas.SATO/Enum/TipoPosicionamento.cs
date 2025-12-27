@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Etiquetas.Core.Enum
+namespace Etiquetas.Bibliotecas.SATO
 {
     /// <summary>
     /// Enumeração que define o tipo de posicionamento dos campos na etiqueta.

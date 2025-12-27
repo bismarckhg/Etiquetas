@@ -54,6 +54,4 @@ namespace Etiquetas.Bibliotecas.SATO
             return null;
         }
     }
-
-}
 }
