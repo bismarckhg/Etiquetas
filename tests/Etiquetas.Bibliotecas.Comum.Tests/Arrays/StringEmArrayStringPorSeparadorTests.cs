@@ -5,7 +5,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
 {
     public class StringEmArrayStringPorSeparadorTests
     {
-        // Testes para Execute(string texto, string separador, ...)
+        // Testes para CriaDicionario(string texto, string separador, ...)
         [Fact]
         public void Execute_ComSeparadorStringSimples_DeveSepararCorretamente()
         {
@@ -33,7 +33,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             Assert.Equal(expected, result);
         }
 
-        // Testes para Execute(string texto, string[] separadores, ...)
+        // Testes para CriaDicionario(string texto, string[] separadores, ...)
         [Fact]
         public void Execute_ComSeparadorArray_DeveSepararCorretamente()
         {

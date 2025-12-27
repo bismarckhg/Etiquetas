@@ -1,39 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Etiquetas.GUI.Texto
+namespace Etiquetas.GUI.Texto2
 {
-    /// <summary>
-    /// Classe principal do programa.
-    /// </summary>
-    public class Program
+    internal class Program
     {
-        /// <summary>
-        /// Ponto de entrada principal do programa.
-        /// </summary>
-        /// <param name="args">via prompt comando.</param>
-        /// <returns>async Task.</returns>
         static async Task Main(string[] args)
         {
-            // Exemplos Streams e TCPClient
-
-            //var examples = new ExemploStreamTxt();
-            //await examples.Executar();
-            //var exemplos = new ExemploGenericXmlService();
-            //await exemplos.ExecutarTodosExemplos();
-            //var exemplos = new ExemploStreamXml();
-            //await exemplos.ExecutarTodosExemplos();
-
-            //var exemplos = new ExemploStreamTCPClient();
-            //await exemplos.ExecutarTodosExemplos().ConfigureAwait(false);
-
-            // await TCPClientSimuladorConnect.ExecutaTodosExemplos().ConfigureAwait(false);
-
-
+            await Task.Delay(2000);
             //var cancel = new CancellationTokenSource().Token;
             //CancellationToken cancel2 = default;
 
@@ -55,8 +33,8 @@ namespace Etiquetas.GUI.Texto
             //    Console.WriteLine("cancel2 não é default");
             //}
 
-            //await TCPListernerSimulador.CriaDicionario();
-            //await ExemploTASK.ExecutaTodosExemplos();
+            //await TCPListernerSimulador.Execute();
+            await ExemploTASK.ExecutaTodosExemplos();
 
             //var cancel1 = new CancellationTokenSource();
             //var cancel2 = new CancellationTokenSource();
@@ -82,7 +60,6 @@ namespace Etiquetas.GUI.Texto
             //Console.WriteLine($"Cancel1 {cancel1.Token.IsCancellationRequested}");
             //Console.WriteLine($"Cancel2 {cancel2.Token.IsCancellationRequested}");
             //Console.WriteLine($"ctsGrupo {ctsGrupo.Token.IsCancellationRequested}");
-
 
             Console.WriteLine("\nPressione qualquer tecla para sair...");
             Console.ReadKey();

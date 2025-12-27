@@ -10,7 +10,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
         public void Execute_RetornaDicionarioNaoVazio()
         {
             // Arrange & Act
-            var result = ControlCharList.Execute();
+            var result = ControlCharListSATO.CriaDicionario();
 
             // Assert
             Assert.NotNull(result);
@@ -25,7 +25,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
             var expectedKey = "[SOH]";
 
             // Act
-            var result = ControlCharList.Execute();
+            var result = ControlCharListSATO.CriaDicionario();
 
             // Assert
             Assert.True(result.ContainsKey(expectedKey));
@@ -36,7 +36,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
         public void ObtemArrayControlChar_RetornaArrayNaoVazio()
         {
             // Arrange & Act
-            var result = ControlCharList.ObtemArrayControlChar();
+            var result = ControlCharListSATO.ObtemArrayControlChar();
 
             // Assert
             Assert.NotNull(result);
@@ -47,8 +47,8 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
         public void ObtemArrayControlChar_TamanhoCorrespondeAoDicionario()
         {
             // Arrange
-            var dictionary = ControlCharList.Execute();
-            var array = ControlCharList.ObtemArrayControlChar();
+            var dictionary = ControlCharListSATO.CriaDicionario();
+            var array = ControlCharListSATO.ObtemArrayControlChar();
 
             // Act & Assert
             Assert.Equal(dictionary.Count, array.Length);
@@ -61,7 +61,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
             var expectedChar = '\u001B'; // ESC
 
             // Act
-            var result = ControlCharList.ObtemArrayControlChar();
+            var result = ControlCharListSATO.ObtemArrayControlChar();
 
             // Assert
             Assert.Contains(expectedChar, result);

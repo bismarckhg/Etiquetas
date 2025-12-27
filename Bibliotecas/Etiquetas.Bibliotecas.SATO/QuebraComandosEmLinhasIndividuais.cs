@@ -1,11 +1,10 @@
-using Etiquetas.Bibliotecas.ControleFilaDados;
-using Etiquetas.Core.Enum;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etiquetas.Bibliotecas.ControleFilaDados;
 
 namespace Etiquetas.Bibliotecas.SATO
 {
@@ -36,6 +35,7 @@ namespace Etiquetas.Bibliotecas.SATO
                         var arrayZPL = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
                         arrayLinhasPorComandos.EnqueueBatch(arrayZPL);
                     }
+
                     break;
                 case TipoLinguagemImpressao.EPL:
                     // EPL: quebra por linha
@@ -50,6 +50,7 @@ namespace Etiquetas.Bibliotecas.SATO
                         var arraySBPL = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, $"{esc}", true);
                         arrayLinhasPorComandos.EnqueueBatch(arraySBPL);
                     }
+
                     break;
             }
 
@@ -62,7 +63,6 @@ namespace Etiquetas.Bibliotecas.SATO
     /// </summary>
     public static class QuebraComandosZPLEmLinhasIndividuais
     {
-
         /// <summary>
         /// Quebra comandos ZPL em linhas individuais.
         /// </summary>
@@ -72,7 +72,7 @@ namespace Etiquetas.Bibliotecas.SATO
         {
 
             // Separa comandos por quebra de linhas, removendo linhas vazias
-            //var arrayLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
+            //var arrayLinhas = Etiquetas.Bibliotecas.Comum.StringEmArrayStringPorSeparador.CriaDicionario(texto, new[] { "\r\n", "\n", "\r" }, true);
             var quebraLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(texto, new[] { "\r\n", "\n", "\r" }, true);
 
             var quebraComandosEmLinhas = new ConcurrentQueue<IReadOnlyList<string>>();
@@ -80,7 +80,7 @@ namespace Etiquetas.Bibliotecas.SATO
             {
                 // Processa cada linha individualmente
                 // Separa varios comandos que estão em uma mesma linhas, em comandos com linhas individuais, mantendo o inicio de comando "^"
-                //var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
+                //var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.StringEmArrayStringComSeparadorEmCadaItem.CriaDicionario(linha, "^", true);
                 var quebralinhaComandoEmLinhas = Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(linha, "^", true);
 
                 quebraComandosEmLinhas.EnqueueBatch(quebralinhaComandoEmLinhas);

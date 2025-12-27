@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Classe responsavel por verificar se char[] (Array string) esta Nulo, Vazio ou com espaços em branco.
+    /// </summary>
     public static class EhArrayCharNuloVazioComEspacosBranco
     {
         /// <summary>
@@ -20,8 +23,8 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             {
                 return true;
             }
+
             return arrayChar.All(c => char.IsWhiteSpace(c));
         }
-
     }
 }

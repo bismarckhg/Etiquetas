@@ -1,7 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Verifica em string se possui algum caractere de char[] (array char).
+    /// </summary>
     public static class ArrayCharPossuiAlgumCaractereEmString
     {
         /// <summary>

@@ -15,6 +15,5 @@
     <ProjectReference Include="..\..\Core\Etiquetas.Core\Etiquetas.Core.csproj" />
     <ProjectReference Include="..\..\DAL\Etiquetas.DAL\Etiquetas.DAL.csproj" />
     <ProjectReference Include="..\..\Domain\Etiquetas.Domain\Etiquetas.Domain.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Etiquetas.Infrastructure\Etiquetas.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

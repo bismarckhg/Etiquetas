@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <!--
     Define os frameworks-alvo para todos os projetos que importarem este arquivo.
     Usamos 'TargetFrameworks' (no plural) para habilitar o multi-targeting.

@@ -1,17 +1,27 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Etiquetas.Bibliotecas.Comum.Caracteres
+namespace Etiquetas.Bibliotecas.SATO
 {
+    /// <summary>
+    /// Converte caracteres de controle para suas representações em string.
+    /// </summary>
     public static class ControlCharConvert
     {
+        /// <summary>
+        /// Converte caracteres de controle para suas representações em string.
+        /// </summary>
+        /// <param name="data">string de dados a serem convertidos.</param>
+        /// <param name="chrList">dicionario string de caracteres especiais a serem trocados no string.</param>
+        /// <returns>string com caracteres de controles inclusos.</returns>
         public static string Execute(string data, Dictionary<string, char> chrList)
         {
             if (data == null)
             {
                 return null;
             }
+
             if (chrList == null)
             {
                 return data;
@@ -41,9 +51,9 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
             return result.ToString();
         }
 
-        //public static string Execute(string data, Dictionary<string, char> chrList)
+        //public static string CriaDicionario(string data, Dictionary<string, char> chrList)
         //{
-        //    // Dictionary<char, string> chrList = ControlCharList().ToDictionary(x => x.Value, x => x.Key);
+        //    // Dictionary<char, string> chrList = ControlCharListSATO().ToDictionary(x => x.Value, x => x.Key);
         //    var codeList = chrList.ToDictionary(x => x.Value, x => x.Key);
         //    char[] keys = codeList.Keys.ToArray();
 

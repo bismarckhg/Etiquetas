@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Verifica se string[] (Array string) informada esta com Nula, ou em branco(ou vazio) ou com caractere de espaço ou DBNull.
+    /// </summary>
     public static class EhArrayStringNuloVazioComEspacosBrancoDBNull
     {
         /// <summary>
@@ -23,6 +26,11 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             return vazio;
         }
 
+        /// <summary>
+        /// Verifica se o valor é DBNull ou nulo.
+        /// </summary>
+        /// <param name="texto">Parametro contendo DBNulo</param>
+        /// <returns>true ou false para DBNulo.</returns>
         public static bool Execute(this System.DBNull texto)
         {
             return (texto == System.DBNull.Value) || (texto is null);

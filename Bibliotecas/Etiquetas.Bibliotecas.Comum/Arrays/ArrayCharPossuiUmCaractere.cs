@@ -1,8 +1,11 @@
-using Etiquetas.Bibliotecas.Comum.Caracteres;
 using System.Linq;
+using Etiquetas.Bibliotecas.Comum.Caracteres;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Verifica se um array char[] possui um caractere informado.
+    /// </summary>
     public static class ArrayCharPossuiUmCaractere
     {
         /// <summary>
@@ -23,6 +26,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             {
                 return false;
             }
+
             return arrayChar.Contains(caractere);
         }
     }

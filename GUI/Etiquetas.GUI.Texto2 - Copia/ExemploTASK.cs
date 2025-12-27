@@ -1,11 +1,11 @@
+﻿using Etiquetas.Bibliotecas.TaskCore;
+using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Etiquetas.Bibliotecas.TaskCore;
-using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 
 namespace Etiquetas.GUI.Texto2
 {

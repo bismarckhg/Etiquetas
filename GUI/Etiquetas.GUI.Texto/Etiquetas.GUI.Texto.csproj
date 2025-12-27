@@ -74,12 +74,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TCPClient1.cs" />
-    <None Include="TCPClientSimuladorConnect.cs" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.TaskCore\Etiquetas.Bibliotecas.TaskCore.csproj" />
   </ItemGroup>
 </Project>

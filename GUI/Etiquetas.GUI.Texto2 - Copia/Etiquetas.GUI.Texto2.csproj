@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net472</TargetFrameworks>
+        <LangVersion>7.3</LangVersion>
+        <OutputType>Exe</OutputType>
+        <LangVersion>latest</LangVersion>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Platforms>AnyCPU;x64</Platforms>
+
+        <!-- Metadata do Assembly -->
+        <AssemblyTitle>Etiqueta GUI Console Texto2</AssemblyTitle>
+        <AssemblyDescription>Etiqueta GUI Console Texto2</AssemblyDescription>
+        <AssemblyCompany>Etiquetas</AssemblyCompany>
+        <AssemblyProduct>Console Texto 2</AssemblyProduct>
+        <Copyright>Copyright © Etiqueta 2025</Copyright>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+
+        <!-- Configurações do projeto -->
+        <RootNamespace>Etiquetas.GUI.Texto2</RootNamespace>
+        <AssemblyName>Etiquetas.GUI.Texto2</AssemblyName>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Deterministic>true</Deterministic>
+    </PropertyGroup>
+
+    <!-- Configurações de Debug -->
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <!-- Configurações de Release -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <DefineConstants>TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <!-- Referências somente para net472 (net6.0 já tem tudo embutido) -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Xml" />
+    </ItemGroup>
+
+    <!-- App.config apenas para net472 -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+        <None Include="App.config" />
+    </ItemGroup>
+
+    <!-- Referências de projeto -->
+
+</Project>

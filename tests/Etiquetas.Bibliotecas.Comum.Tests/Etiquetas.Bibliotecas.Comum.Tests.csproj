@@ -23,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Bibliotecas\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
+    <Folder Include="Geral\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Geral\" />
+    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
   </ItemGroup>
 
 </Project>

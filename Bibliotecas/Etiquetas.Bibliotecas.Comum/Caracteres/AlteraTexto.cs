@@ -1,8 +1,10 @@
 namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
+    /// <summary>
+    /// Altera parte do texto informado por um novo conteudo informado.
+    /// </summary>
     public static class AlteraTexto
     {
-
         /// <summary>
         /// Substitui no Texto informado, parte do texto informado pelo novo conteudo também informado.
         /// </summary>
@@ -24,10 +26,12 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
             {
                 return null;
             }
+
             if (parteTexto == null)
             {
                 return texto;
             }
+
             return texto.Replace(parteTexto, novoConteudo);
         }
     }

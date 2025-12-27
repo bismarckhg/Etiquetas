@@ -1,5 +1,8 @@
 namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
+    /// <summary>
+    /// Altera um caractere por outro em um texto informado.
+    /// </summary>
     public static class AlteraCaractere
     {
         /// <summary>
@@ -23,6 +26,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
             {
                 return null;
             }
+
             return texto.Replace(caractere, novoCaractere);
         }
     }

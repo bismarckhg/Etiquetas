@@ -1,14 +1,25 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Etiquetas.Bibliotecas.Comum.Caracteres
+namespace Etiquetas.Bibliotecas.SATO
 {
+    /// <summary>
+    /// Substitui sequências de controle na forma [KEY] por seus caracteres correspondentes.
+    /// </summary>
     public static class ControlCharReplace
     {
+        /// <summary>
+        /// Substitui sequências de controle na forma [KEY] por seus caracteres correspondentes.
+        /// </summary>
+        /// <param name="data">string de dados.</param>
+        /// <param name="chrList">converte caracteres list Sato.</param>
+        /// <returns>string de retorno dos caracteres sato convertidos.</returns>
         public static string Execute(string data, Dictionary<string, char> chrList)
         {
             if (string.IsNullOrEmpty(data) || chrList == null || chrList.Count == 0)
+            {
                 return data;
+            }
 
             StringBuilder result = new StringBuilder();
             int startIndex = 0;
@@ -48,8 +59,7 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
             return result.ToString();
         }
 
-
-        //public static string Execute(string data, Dictionary<string, char> chrList)
+        //public static string CriaDicionario(string data, Dictionary<string, char> chrList)
         //{
         //    StringBuilder result = new StringBuilder(data.Length); // pré-aloque com tamanho aproximado
         //    int startIndex = 0;
@@ -89,9 +99,9 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
         //    return result.ToString();
         //}
 
-        //public static string Execute(string data, Dictionary<string, char> chrList)
+        //public static string CriaDicionario(string data, Dictionary<string, char> chrList)
         //{
-        //    //// Dictionary<string, char> chrList = ControlCharList();
+        //    //// Dictionary<string, char> chrList = ControlCharListSATO();
         //    var dados = data;
         //    var result = new StringBuilder(dados.Length);  // pré-aloque com tamanho aproximado
         //    int startIndex = 0;

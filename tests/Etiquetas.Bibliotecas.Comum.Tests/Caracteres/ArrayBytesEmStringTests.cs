@@ -7,7 +7,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
 {
     public class ArrayBytesEmStringTests
     {
-        // Testes para Execute(byte[], int, Encoding)
+        // Testes para CriaDicionario(byte[], int, Encoding)
         [Fact]
         public void ExecuteComBytesLidos_ComArrayValido_RetornaString()
         {
@@ -35,7 +35,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
             Assert.Null(result);
         }
 
-        // Testes para Execute(byte[], Encoding)
+        // Testes para CriaDicionario(byte[], Encoding)
         [Fact]
         public void ExecuteCompleto_ComArrayValido_RetornaStringCompleta()
         {
@@ -64,7 +64,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Caracteres
             Assert.NotEqual(expected, result);
         }
 
-        // Testes para Execute(byte[], int, int, Encoding)
+        // Testes para CriaDicionario(byte[], int, int, Encoding)
         [Fact]
         public void ExecuteComRange_ComRangeValido_RetornaSubstring()
         {

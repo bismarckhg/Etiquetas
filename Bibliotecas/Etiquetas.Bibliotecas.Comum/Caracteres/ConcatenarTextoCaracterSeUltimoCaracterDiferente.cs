@@ -1,7 +1,16 @@
 namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
+    /// <summary>
+    /// Classe responsável por concatenar um caractere a um texto, se o último caractere for diferente.
+    /// </summary>
     public static class ConcatenarTextoCaracterSeUltimoCaracterDiferente
     {
+        /// <summary>
+        /// Concatena um caractere a um texto, se o último caractere for diferente.
+        /// </summary>
+        /// <param name="texto">string texto.</param>
+        /// <param name="caractere">caractere</param>
+        /// <returns>retorno string concatenado.</returns>
         public static string Execute(string texto, char caractere)
         {
             if (string.IsNullOrEmpty(texto))
@@ -12,8 +21,8 @@ namespace Etiquetas.Bibliotecas.Comum.Caracteres
             {
                 return texto + caractere;
             }
+
             return texto;
         }
-
     }
 }

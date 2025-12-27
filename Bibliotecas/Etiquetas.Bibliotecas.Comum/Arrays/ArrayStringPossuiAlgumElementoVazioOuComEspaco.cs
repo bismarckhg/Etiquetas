@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Classe responsavel por verificar se string[] (Array string) informada possui elementos com Nulo, ou em branco(ou vazio) ou com caractere de espaço.
+    /// </summary>
     public static class ArrayStringPossuiAlgumElementoVazioOuComEspaco
     {
         /// <summary>
@@ -20,6 +23,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             {
                 return false;
             }
+
             return array.Any(x => EhStringNuloVazioComEspacosBranco.Execute(x));
         }
     }

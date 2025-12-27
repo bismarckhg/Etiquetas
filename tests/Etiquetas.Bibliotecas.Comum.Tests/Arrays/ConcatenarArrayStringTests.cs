@@ -5,7 +5,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
 {
     public class ConcatenarArrayStringTests
     {
-        // Testes para a sobrecarga Execute(string[], string[])
+        // Testes para a sobrecarga CriaDicionario(string[], string[])
 
         [Fact]
         public void Execute_DoisArrays_RetornaConcatenacao()
@@ -82,7 +82,7 @@ namespace Etiquetas.Bibliotecas.Comum.Tests.Arrays
             Assert.Equal(expected, result);
         }
 
-        // Testes para a sobrecarga Execute(params string[][])
+        // Testes para a sobrecarga CriaDicionario(params string[][])
 
         [Fact]
         public void ExecuteParams_VariosArrays_RetornaConcatenacaoSemVazios()

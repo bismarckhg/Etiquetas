@@ -3,6 +3,9 @@ using Etiquetas.Bibliotecas.Comum.Caracteres;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Verifica se string[] (Array string) informada esta Nula, ou em branco(ou vazio) ou com caracteres de espaços.
+    /// </summary>
     public static class EhArrayStringNuloVazioComEspacosBranco
     {
         /// <summary>

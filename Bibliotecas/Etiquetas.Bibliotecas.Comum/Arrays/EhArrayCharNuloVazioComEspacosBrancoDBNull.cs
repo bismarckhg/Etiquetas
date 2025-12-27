@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Verifica se char[] (Array string) informada esta com Nula, ou em branco(ou vazio) ou com caractere de espaço, ou DBNull.
+    /// </summary>
     public static class EhArrayCharNuloVazioComEspacosBrancoDBNull
     {
         /// <summary>
@@ -20,6 +23,5 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             var vazio = EhArrayCharNuloVazioComEspacosBranco.Execute(arrayChar);
             return vazio;
         }
-
     }
 }

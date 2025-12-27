@@ -50,7 +50,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
     <ProjectReference Include="..\Etiquetas.Bibliotecas.Streams\Etiquetas.Bibliotecas.Streams.csproj" />
-    <ProjectReference Include="..\EtiquetasBibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
   </ItemGroup>
 
 </Project>

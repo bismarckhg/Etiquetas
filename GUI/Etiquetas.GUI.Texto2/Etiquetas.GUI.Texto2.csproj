@@ -7,23 +7,12 @@
     <AssemblyTitle>Etiqueta GUI Console Texto2</AssemblyTitle>
     <AssemblyDescription>Etiqueta GUI Console Texto2</AssemblyDescription>
     <AssemblyCompany>Etiquetas</AssemblyCompany>
-    <AssemblyProduct>Console Texto 2</AssemblyProduct>
+    <AssemblyProduct>Console Texto</AssemblyProduct>
     <Copyright>Copyright © Etiqueta 2025</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{754B3A82-ACF4-4362-8DCE-FEE402A94F32}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Etiquetas.GUI.Texto2</RootNamespace>
-    <AssemblyName>Etiquetas.GUI.Texto2</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -74,16 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExemploTASK.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TCPListernerSimulador.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.TaskCore\Etiquetas.Bibliotecas.TaskCore.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,6 +4,11 @@
         <name>Etiquetas.Bibliotecas.Comum</name>
     </assembly>
     <members>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ArrayCharPossuiAlgumCaractereEmString">
+            <summary>
+            Verifica em string se possui algum caractere de char[] (array char).
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayCharPossuiAlgumCaractereEmString.Execute(System.Char[],System.String)">
             <summary>
             Verifica em string se possui algum caractere de char[] (array char).
@@ -17,6 +22,11 @@
             <returns>
             True se a string tiver algum dos caracteres em char[] (array char). Caso contrario false.
             </returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ArrayCharPossuiUmCaractere">
+            <summary>
+            Verifica se um array char[] possui um caractere informado.
+            </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayCharPossuiUmCaractere.Execute(System.Char[],System.Char)">
             <summary>
@@ -32,6 +42,36 @@
             True se a array char[] possuir o caractere informado. Caso contrario false.
             </returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ArrayEmpty">
+            <summary>
+            Fornece uma instância de array vazio para qualquer tipo especificado.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayEmpty.Executa``1">
+            <summary>
+            Retorna uma instância de array vazio do tipo especificado T.
+            </summary>
+            <typeparam name="T">Tipo Variavel.</typeparam>
+            <returns>retorna o tipo variavel.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ArrayStringComparaSequencia">
+            <summary>
+            Compara dois arrays de string verificando se possuem a mesma sequência de elementos.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayStringComparaSequencia.Execute(System.String[],System.String[])">
+            <summary>
+            Compara dois arrays de string verificando se possuem a mesma sequência de elementos.
+            </summary>
+            <param name="array1">Array 1 de comparação.</param>
+            <param name="array2">Array 2 de comparação.</param>
+            <returns>retorna true</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ArrayStringPossuiAlgumElementoVazioOuComEspaco">
+            <summary>
+            Classe responsavel por verificar se string[] (Array string) informada possui elementos com Nulo, ou em branco(ou vazio) ou com caractere de espaço.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ArrayStringPossuiAlgumElementoVazioOuComEspaco.Execute(System.String[])">
             <summary>
             Verifica se string[] (Array string) informada possui elementos com Nulo, ou em branco(ou vazio) ou com caractere de espaço.
@@ -42,6 +82,164 @@
             <returns>
             True se a array string[] estiver com um ou todos os elementos com nulo, em branco ou com espaço. Caso contrario false.
             </returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ByteArrayEmIPAddress">
+            <summary>
+            Converte um array de bytes em um objeto IPAddress.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ByteArrayEmIPAddress.Execute(System.Byte[])">
+            <summary>
+            Converte um array de bytes em um objeto IPAddress.
+            </summary>
+            <param name="arrayByte">array de Bytes.</param>
+            <returns>retorna IpAddress.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.CharArrayEmStringArray">
+            <summary>
+            Converte um array de char em um array de string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.CharArrayEmStringArray.Execute(System.Char[])">
+            <summary>
+            Converte um array de char em um array de string.
+            </summary>
+            <param name="arrayChar">Array de char a serr convertido em array string</param>
+            <returns>retorna array de string.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.CompareStringArray">
+            <summary>
+            Compara dois arrays do tipo string
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.CompareStringArray.Execute(System.Object,System.Object)">
+            <summary>
+            Compara dois arrays do tipo string
+            </summary>
+            <param name="array1">Array 1 de comparação.</param>
+            <param name="array2">Array 2 de Comparação.</param>
+            <returns>retorna true se array são iguais e false se não são.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenaArrayByte">
+            <summary>
+            Concatena dois arrays do tipo byte.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenaArrayByte.Execute(System.Byte[],System.Byte[])">
+            <summary>
+            Concatena dois arrays do tipo byte.
+            </summary>
+            <param name="array1">Array 1 de byte a ser concatenado.</param>
+            <param name="array2">Array 2 de byte a ser concatenado.</param>
+            <returns>retorna array de byte concatenado.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayCaractersEmString">
+            <summary>
+            Classe responsável por concatenar um array de caracteres em uma string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayCaractersEmString.Execute(System.Char[])">
+            <summary>
+            Concatena um array de caracteres em uma string.
+            </summary>
+            <param name="array">Array de caracteres.</param>
+            <returns>retorna string de array de caractere concatenado.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayComNovoElementoString">
+            <summary>
+            Concatena um array de strings com um novo elemento string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayComNovoElementoString.Execute(System.String[],System.String)">
+            <summary>
+            Concatena um array de strings com um novo elemento string.
+            </summary>
+            <param name="array">Array de String.</param>
+            <param name="elemento">Elemeto String</param>
+            <returns>Novo array com elemento adicionado string.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayString">
+            <summary>
+            Classe responsável por concatenar arrays de strings.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayString.Execute(System.String[],System.String[])">
+            <summary>
+            Concatena dois arrays de strings em um único array.
+            </summary>
+            <param name="array1">Array string 1 a ser concatenado.</param>
+            <param name="array2">Array string 2 a ser concatenado.</param>
+            <returns>Array concatenado com Array string 1 e Array string 2.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayString.Execute(System.String[][])">
+            <summary>
+            Concatena múltiplos arrays de strings em um único array.
+            </summary>
+            <param name="arrays">Multiplos array string.</param>
+            <returns>Unico array string concatenado, com os multiplos array string.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayStringEmString">
+            <summary>
+            Concatena um array de strings em uma única string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcatenarArrayStringEmString.Execute(System.String[])">
+            <summary>
+            Concatena um array de strings em uma única string.
+            </summary>
+            <param name="array">Array de string a ser concatenada.</param>
+            <returns>retorna string concatenada.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConcaternarCharArraysEmCharArray">
+            <summary>
+            Concatena dois arrays de char em um único array de char.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConcaternarCharArraysEmCharArray.Execute(System.Char[],System.Char[])">
+            <summary>
+            Concatena dois arrays de char em um único array de char.
+            </summary>
+            <param name="charArray1">char array 1 para concatenar.</param>
+            <param name="charArray2">char array 2 para concatenar.</param>
+            <returns>char array concatenado.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConverteCharOUEArrayCharEmArrayByte">
+            <summary>
+            Converte um char ou um array de char em um array de byte.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConverteCharOUEArrayCharEmArrayByte.Execute(System.Object[])">
+            <summary>
+            Converte um char, um array de char ou uma string em um array de byte.
+            </summary>
+            <param name="objetos">um char, um array de char ou uma string.</param>
+            <returns>retorna um Array de Bytes.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConverteCharOUEArrayCharEmArrayByte.Execute(System.Char[][])">
+            <summary>
+            Converte um array de char em um array de byte.
+            </summary>
+            <param name="objetos">arrays de chars.</param>
+            <returns>array de byte.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConverteCharOUEArrayCharEmArrayByte.Execute(System.Char[])">
+            <summary>
+            Converte um array de char em um array de byte.
+            </summary>
+            <param name="objetos">array de char.</param>
+            <returns>array de bytes.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConverteCharOUEArrayCharEmArrayByte.Execute(System.String)">
+            <summary>
+            Converte uma string em um array de byte.
+            </summary>
+            <param name="objetos">string.</param>
+            <returns>array de bytes.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ConverteStringParaArrayChar">
+            <summary>
+            Converte uma string em um Array do tipo Char
+            </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ConverteStringParaArrayChar.Execute(System.String)">
             <summary>
@@ -54,6 +252,11 @@
             retorna null se string nula. Caso contrário converte para Array do tipo Char.
             </returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayCharNuloVazioComEspacosBranco">
+            <summary>
+            Classe responsavel por verificar se char[] (Array string) esta Nulo, Vazio ou com espaços em branco.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayCharNuloVazioComEspacosBranco.Execute(System.Char[])">
             <summary>
             Verifica se char[] (Array string) informada esta Nula, ou em branco(ou vazio) ou com caractere de espaço.
@@ -64,6 +267,11 @@
             <returns>
             True se a array char[] estiver nula, ou com todos os elementos em branco ou com espaço. Caso contrario false.
             </returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayCharNuloVazioComEspacosBrancoDBNull">
+            <summary>
+            Verifica se char[] (Array string) informada esta com Nula, ou em branco(ou vazio) ou com caractere de espaço, ou DBNull.
+            </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayCharNuloVazioComEspacosBrancoDBNull.Execute(System.Char[])">
             <summary>
@@ -78,6 +286,11 @@
             possui declaração com var.
             </returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBranco">
+            <summary>
+            Verifica se string[] (Array string) informada esta Nula, ou em branco(ou vazio) ou com caracteres de espaços.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBranco.Execute(System.String[])">
             <summary>
             Verifica se string[] (Array string) informada esta Nula, ou em branco(ou vazio) ou com caracteres de espaços.
@@ -88,6 +301,11 @@
             <returns>
             True se a array string[] estiver nula, ou com todos os elementos em branco ou com espaços. Caso contrario false.
             </returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBrancoDBNull">
+            <summary>
+            Verifica se string[] (Array string) informada esta com Nula, ou em branco(ou vazio) ou com caractere de espaço ou DBNull.
+            </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(System.String[])">
             <summary>
@@ -102,6 +320,192 @@
             possui declaração com var.
             </returns>
         </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.EhArrayStringNuloVazioComEspacosBrancoDBNull.Execute(System.DBNull)">
+            <summary>
+            Verifica se o valor é DBNull ou nulo.
+            </summary>
+            <param name="texto">Parametro contendo DBNulo</param>
+            <returns>true ou false para DBNulo.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.ExcluirElementosVaziosArrayString">
+            <summary>
+            Classe de extensão para excluir elementos vazios de um array de strings.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.ExcluirElementosVaziosArrayString.Execute(System.String[])">
+            <summary>
+            Exclui elementos nulos, vazios ou compostos apenas por espaços em branco de um array de strings.
+            </summary>
+            <param name="array">string array.</param>
+            <returns>string array alterado.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.SeparaStringEmArrayStringComQuebraDeLinha">
+            <summary>
+            Separa uma string em um array de strings com base em quebras de linha (Unix e Windows).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.SeparaStringEmArrayStringComQuebraDeLinha.SemMarcadorFinalLinhaUnixWindows(System.String,System.Boolean)">
+            <summary>
+            Separa a string em um array de strings, removendo os marcadores de final de linha (Unix e Windows).
+            </summary>
+            <param name="dados">string de dados.</param>
+            <param name="filtrarLinhasVazias">true se for filtrar linhas vazias.</param>
+            <returns>array de string.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.SeparaStringEmArrayStringComQuebraDeLinha.ComMarcadorFinalLinhaUnixWindows(System.String,System.Boolean)">
+            <summary>
+            Separa a string em um array de strings, mantendo os marcadores de final de linha (Unix e Windows).
+            </summary>
+            <param name="dados">string de dados.</param>
+            <param name="filtrarLinhasVazias">true se filtrar linhas vazias.</param>
+            <returns>array de string filtrado.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.SeparaStringEmArrayStringComQuebraDeLinha.ComMarcadorFinalLinhaWindows(System.String,System.Boolean)">
+            <summary>
+            Separa a string em um array de strings, mantendo os marcadores de final de linha no formato Windows (\r\n).
+            </summary>
+            <param name="dados">string de dados.</param>
+            <param name="filtrarLinhasVazias">true se filtrar linhas vazias.</param>
+            <returns>array de string filtrado.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.SeparaStringEmArrayStringComQuebraDeLinha.ComMarcadorFinalLinhaUnix(System.String,System.Boolean)">
+            <summary>
+            Separa a string em um array de strings, mantendo os marcadores de final de linha no formato Unix (\n).
+            </summary>
+            <param name="dados">string de dados.</param>
+            <param name="filtrarLinhasVazias">true se filtrar linhas vazias.</param>
+            <returns>array de string filtrado.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.SeparaStringEmArrayStringComQuebraDeLinha.FiltraLinhasVazias(System.String[])">
+            <summary>
+            Filtra linhas vazias ou contendo apenas quebras de linha.
+            </summary>
+            <param name="linhas">array de string com linhas.</param>
+            <returns>array de string em linhas.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayContemElementoString">
+            <summary>
+            Classe responsavel por verificar se string[] (Array string) contem determinado elemento string. 
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayContemElementoString.Execute(System.String[],System.String)">
+            <summary>
+            Verifica se string[] (Array string) informada contem determinado elemento string.
+            </summary>
+            <param name="array">array de string a ser verificado.</param>
+            <param name="contem">string a ser verificado no array.</param>
+            <returns>retorna true ou false se string contem existir ou nao no array string.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayContemElementoStringInsensitiveAcentoInsensitiveCase">
+            <summary>
+            Verifica se um array de strings contém um elemento string, ignorando acentos e diferenças de maiúsculas/minúsculas.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayContemElementoStringInsensitiveAcentoInsensitiveCase.Execute(System.String[],System.String)">
+            <summary>
+            Verifica se o array de strings contém o elemento string especificado, ignorando acentos e diferenças de maiúsculas/minúsculas.
+            </summary>
+            <param name="array">array de string.</param>
+            <param name="contem">string a ser verificado</param>
+            <returns>true ou false para verificar se string esta no array.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayPossuiElementoVazioOuComEspaco">
+            <summary>
+            Verifica se o array de strings possui algum elemento nulo, vazio ou composto apenas por espaços em branco.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayPossuiElementoVazioOuComEspaco.Execute(System.String[])">
+            <summary>
+            Verifica se o array de strings possui algum elemento nulo, vazio ou composto apenas por espaços em branco.
+            </summary>
+            <param name="array">array de string.</param>
+            <returns>true ou false se possui algum elemento nulo, vazio ou  composto apenas por espaços em branco.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayRemoveElementosVazios">
+            <summary>
+            Remove elementos vazios de um array de strings.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringArrayRemoveElementosVazios.Execute(System.String[])">
+            <summary>
+            Remove elementos vazios de um array de strings.
+            </summary>
+            <param name="array">array de string.</param>
+            <returns>retorna array de string.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringEhNuloVazioComEspacosBranco">
+            <summary>
+            Verifica se a string é nula, vazia ou composta apenas por espaços em branco.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEhNuloVazioComEspacosBranco.Execute(System.String)">
+            <summary>
+            Verifica se a string é nula, vazia ou composta apenas por espaços em branco.
+            </summary>
+            <param name="texto">string com texto</param>
+            <returns>true ou false se a string é nula, vazia ou composta apenas por espaços em branco.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayBytes">
+            <summary>
+            Converte uma string em um array de bytes utilizando a codificação especificada.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayBytes.ExecuteASCII(System.String)">
+            <summary>
+            Converte uma string em um array de bytes utilizando a codificação ASCII.
+            </summary>
+            <param name="texto">string</param>
+            <returns>retorno byte em ASCII.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayBytes.ExecuteUTF8(System.String)">
+            <summary>
+            Converte uma string em um array de bytes utilizando a codificação UTF8.
+            </summary>
+            <param name="texto">string </param>
+            <returns></returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem">
+            <summary>
+            Divide uma string em um array de strings, mantendo o separador no início de cada item
+            (exceto o primeiro, se houver texto antes do primeiro separador).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(System.String,System.Char,System.Boolean)">
+            <summary>
+            Divide uma string em um array de strings, mantendo o separador no início de cada item.
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(System.String,System.String,System.Boolean)">
+            <summary>
+            Divide uma string em um array de strings, mantendo o separador no início de cada item. 
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(System.String,System.Char[],System.Boolean)">
+            <summary>
+            Divide uma string em um array de strings, mantendo o separador no início de cada item.
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Execute(System.String,System.String[],System.Boolean)">
+            <summary>
+            Divide uma string em um array de strings, mantendo o separador no início de cada item.
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.Core(System.String,System.Char[],System.String[],System.Boolean)">
             <summary>
             Realiza a divisão mantendo separadores no INÍCIO, preferindo sempre o separador MAIS LONGO.
@@ -110,6 +514,51 @@
         <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.TentaMatch(System.String,System.Int32,System.Int32,System.Boolean[],System.String[],System.Char[],System.Int32[],System.Int32@)">
             <summary>
             Tenta casar qualquer separador em txt[idx], preferindo multi (mais longos) antes de 1 char.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringComSeparadorEmCadaItem.FiltrarVazios(System.String[],System.Boolean)">
+            <summary>
+            Filtra strings vazias do array, se solicitado.
+            </summary>
+            <param name="partes">array de string a ser filtrado.</param>
+            <param name="removeEmptyEntries">se true remove os elementos vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador">
+            <summary>
+            Converte uma string em um array de strings, utilizando um separador especificado.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(System.String,System.String,System.Boolean)">
+            <summary>
+            Converte uma string em um array de strings, utilizando um separador especificado.
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(System.String,System.String[],System.Boolean)">
+            <summary>
+            Converte uma string em um array de strings, utilizando um array de separadores especificados. 
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Arrays.StringEmArrayStringPorSeparador.Execute(System.String,System.Char[],System.Boolean)">
+            <summary>
+            Converte uma string em um array de strings, utilizando um array de caracteres separadores especificados.
+            </summary>
+            <param name="texto">texto string a ser dividido em array string.</param>
+            <param name="separador">separador(split) de divisão do texto em array string.</param>
+            <param name="removeEmptyEntries">se true remove os arrays string vazios.</param>
+            <returns>retorna o array string dividido.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.AlteraCaractere">
+            <summary>
+            Altera um caractere por outro em um texto informado.
             </summary>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.AlteraCaractere.Execute(System.String,System.Char,System.Char)">
@@ -129,6 +578,11 @@
             Retorna string com o texto já substituido.
             </returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.AlteraTexto">
+            <summary>
+            Altera parte do texto informado por um novo conteudo informado.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.AlteraTexto.Execute(System.String,System.String,System.String)">
             <summary>
             Substitui no Texto informado, parte do texto informado pelo novo conteudo também informado.
@@ -146,6 +600,111 @@
             Retorna string com o texto já substituido.
             </returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ArrayBytesEmString">
+            <summary>
+            Converte um array de bytes em uma string, utilizando a codificação especificada.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ArrayBytesEmString.Execute(System.Byte[],System.Int32,System.Text.Encoding)">
+            <summary>
+            Converte um array de bytes em uma string, utilizando a codificação especificada. 
+            </summary>
+            <param name="bytes">array de bytes.</param>
+            <param name="bytesLidos">quantidade de bytes lidos.</param>
+            <param name="encoding">o encoding aplicado ao array.</param>
+            <returns>retorna string ecoding.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ArrayBytesEmString.Execute(System.Byte[],System.Text.Encoding)">
+            <summary>
+            Converte um array de bytes em uma string, utilizando a codificação especificada.
+            </summary>
+            <param name="bytes">array de bytes.</param>
+            <param name="encoding">o encoding aplicado ao array.</param>
+            <returns>retorna string ecoding.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ArrayBytesEmString.Execute(System.Byte[],System.Int32,System.Int32,System.Text.Encoding)">
+            <summary>
+            Converte um array de bytes em uma string, utilizando a codificação especificada.
+            </summary>
+            <param name="bytes">array de bytes.</param>
+            <param name="posicaoInicial">Posicao inicial no array.</param>
+            <param name="count">contagem do array</param>
+            <param name="encoding">o encoding aplicado ao array.</param>
+            <returns>retorna string ecoding.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.CharSomenteDigito">
+            <summary>
+            Verifica se um caractere é um dígito numérico.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.CharSomenteDigito.Execute(System.Char)">
+            <summary>
+            Verifica se o caractere fornecido é um dígito numérico. 
+            </summary>
+            <param name="caractere">caractere a ser verificado.</param>
+            <returns>true ou falso para digito númerico.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.CharSomenteDigito.Execute(System.Nullable{System.Char})">
+            <summary>
+            Verifica se o caractere fornecido é um dígito numérico.
+            </summary>
+            <param name="caractere">caractere a ser verificado.</param>
+            <returns>true ou falso para digito númerico.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.CharSomenteLetra">
+            <summary>
+            Verifica se um caractere é uma letra.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.CharSomenteLetra.Execute(System.Char)">
+            <summary>
+            Verifica se o caractere fornecido é uma letra.
+            </summary>
+            <param name="caractere">caracteres a ser verificado.</param>
+            <returns>true e false</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarArrayCaracteresEmString">
+            <summary>
+            Concatena um array de caracteres em uma string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarArrayCaracteresEmString.Execute(System.Char[])">
+            <summary>
+            Concatena um array de caracteres em uma string.
+            </summary>
+            <param name="array">array de caracteres.</param>
+            <returns>retorna string de array char.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarCaractereTexto">
+            <summary>
+            Classe responsável por concatenar um caractere a um texto.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarCaractereTexto.Execute(System.Char,System.String)">
+            <summary>
+            Concatena um caractere a um texto.
+            </summary>
+            <param name="caractere">caractere</param>
+            <param name="texto">string texto.</param>
+            <returns>string concatenado</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarCaracters">
+            <summary>
+            Classe responsável por concatenar vários caracteres em uma string.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarCaracters.Execute(System.Char[])">
+            <summary>
+            Concatena vários caracteres em uma string.
+            </summary>
+            <param name="caracteres">array de carcateres</param>
+            <returns>string de caracteres concatenada.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTexto">
+            <summary>
+            Classe responsável por concatenar vários textos em uma unica string.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTexto.Execute(System.String[])">
             <summary>
             Concatena string's em uma unica string.
@@ -156,6 +715,65 @@
             <returns>
             Retorna string concatenada por 1 ou mais parametros.
             </returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTextoCaracter">
+            <summary>
+            Classe responsável por concatenar um texto a um caractere.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTextoCaracter.Execute(System.String,System.Char)">
+            <summary>
+            Concatena um texto a um caractere.
+            </summary>
+            <param name="texto">string texto</param>
+            <param name="caractere">caractere</param>
+            <returns>string texto concatenado com caractere.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTextoCaracterSeUltimoCaracterDiferente">
+            <summary>
+            Classe responsável por concatenar um caractere a um texto, se o último caractere for diferente.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTextoCaracterSeUltimoCaracterDiferente.Execute(System.String,System.Char)">
+            <summary>
+            Concatena um caractere a um texto, se o último caractere for diferente.
+            </summary>
+            <param name="texto">string texto.</param>
+            <param name="caractere">caractere</param>
+            <returns>retorno string concatenado.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTextoCaracterTexto">
+            <summary>
+            Concatena dois textos com um caractere entre eles.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarTextoCaracterTexto.Execute(System.String,System.Char,System.String)">
+            <summary>
+            Concatena dois textos com um caractere entre eles.
+            </summary>
+            <param name="texto1">string texto 1 a ser concatenado</param>
+            <param name="caractere">caractere a ser concatenado.</param>
+            <param name="texto2">string texto2 a ser concatenado.</param>
+            <returns>string concatenada.</returns>
+        </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarVariosArraysStringEmString">
+            <summary>
+            Classe para concatenar vários arrays de strings em uma única string. 
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarVariosArraysStringEmString.ExecuteLinq(System.String[][])">
+            <summary>
+            Concatena vários arrays de strings em uma única string usando LINQ. 
+            </summary>
+            <param name="arrays">arrays strins a ser concatenados.</param>
+            <returns>string concatenada.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConcatenarVariosArraysStringEmString.ExecuteStringBuilder(System.String[][])">
+            <summary>
+            Concatena vários arrays de strings em uma única string usando StringBuilder.
+            </summary>
+            <param name="arrays">arrays strings a ser concatenada.</param>
+            <returns>string concatenada.</returns>
         </member>
         <member name="M:Etiquetas.Bibliotecas.Comum.Caracteres.ConverteArrayCharEmString.Execute(System.Char[])">
             <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,16 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Converte um char ou um array de char em um array de byte.
+    /// </summary>
     public static class ConverteCharOUEArrayCharEmArrayByte
     {
-
+        /// <summary>
+        /// Converte um char, um array de char ou uma string em um array de byte.
+        /// </summary>
+        /// <param name="objetos">um char, um array de char ou uma string.</param>
+        /// <returns>retorna um Array de Bytes.</returns>
         public static byte[] Execute(params object[] objetos)
         {
             //return System.Text.Encoding.UTF8.GetBytes(chararray);
@@ -41,6 +48,11 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             return System.Text.Encoding.UTF8.GetBytes(array);
         }
 
+        /// <summary>
+        /// Converte um array de char em um array de byte.
+        /// </summary>
+        /// <param name="objetos">arrays de chars.</param>
+        /// <returns>array de byte.</returns>
         public static byte[] Execute(params char[][] objetos)
         {
             //return System.Text.Encoding.UTF8.GetBytes(chararray);
@@ -58,6 +70,11 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             return System.Text.Encoding.UTF8.GetBytes(array);
         }
 
+        /// <summary>
+        /// Converte um array de char em um array de byte.
+        /// </summary>
+        /// <param name="objetos">array de char.</param>
+        /// <returns>array de bytes.</returns>
         public static byte[] Execute(params char[] objetos)
         {
             //return System.Text.Encoding.UTF8.GetBytes(chararray);.
@@ -73,6 +90,11 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             return System.Text.Encoding.UTF8.GetBytes(array);
         }
 
+        /// <summary>
+        /// Converte uma string em um array de byte.
+        /// </summary>
+        /// <param name="objetos">string.</param>
+        /// <returns>array de bytes.</returns>
         public static byte[] Execute(string objetos)
         {
             //return System.Text.Encoding.UTF8.GetBytes(chararray);

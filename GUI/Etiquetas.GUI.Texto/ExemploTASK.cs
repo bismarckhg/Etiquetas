@@ -9,8 +9,15 @@ using Etiquetas.Bibliotecas.TaskCore.Interfaces;
 
 namespace Etiquetas.GUI.Texto2
 {
+    /// <summary>
+    /// Exemplos de uso da biblioteca TaskCore
+    /// </summary>
     public class ExemploTASK
     {
+        /// <summary>
+        /// Executar todos os exemplos.
+        /// </summary>
+        /// <returns>async Task.</returns>
         public static async Task ExecutaTodosExemplos()
         {
             ITaskParametros parametros01 = new TaskParametros();
@@ -34,6 +41,11 @@ namespace Etiquetas.GUI.Texto2
             await grupo.AguardaTodasTasksAsync();
         }
 
+        /// <summary>
+        /// Exemplo 01 de contador que pode ser cancelado.
+        /// </summary>
+        /// <param name="parametros">Task parametros.</param>
+        /// <returns>async Task.</returns>
         public static async Task<ITaskReturnValue> Exemplo01Contador(ITaskParametros parametros)
         {
             var cancellationToken = parametros.RetornoCancellationToken;
@@ -166,6 +178,11 @@ namespace Etiquetas.GUI.Texto2
         //    return new TaskReturnValue();
         //}
 
+        /// <summary>
+        /// Exemplo 02 de contador que pode ser cancelado.
+        /// </summary>
+        /// <param name="parametros">TaskParametros.</param>
+        /// <returns>async Task.</returns>
         public static async Task<ITaskReturnValue> Exemplo02Contador(ITaskParametros parametros)
         {
             var cancellationToken = parametros.RetornoCancellationToken;

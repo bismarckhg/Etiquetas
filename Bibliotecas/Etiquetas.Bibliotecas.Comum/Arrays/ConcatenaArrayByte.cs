@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +6,28 @@ using System.Threading.Tasks;
 
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Concatena dois arrays do tipo byte.
+    /// </summary>
     public static class ConcatenaArrayByte
     {
+        /// <summary>
+        /// Concatena dois arrays do tipo byte.
+        /// </summary>
+        /// <param name="array1">Array 1 de byte a ser concatenado.</param>
+        /// <param name="array2">Array 2 de byte a ser concatenado.</param>
+        /// <returns>retorna array de byte concatenado.</returns>
         public static byte[] Execute(byte[] array1, byte[] array2)
         {
             if (array1 == null)
+            {
                 array1 = Array.Empty<byte>();
+            }
+
             if (array2 == null)
+            {
                 array2 = Array.Empty<byte>();
+            }
 
             // Cria um array de bytes para armazenar o resultado
             byte[] resultado = new byte[array1.Length + array2.Length];

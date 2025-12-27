@@ -1,5 +1,8 @@
 namespace Etiquetas.Bibliotecas.Comum.Arrays
 {
+    /// <summary>
+    /// Converte uma string em um Array do tipo Char
+    /// </summary>
     public static class ConverteStringParaArrayChar
     {
         /// <summary>
@@ -17,6 +20,7 @@ namespace Etiquetas.Bibliotecas.Comum.Arrays
             {
                 return null;
             }
+
             return texto.ToCharArray();
         }
 

@@ -2,6 +2,9 @@ using Etiquetas.Bibliotecas.Comum.Arrays;
 
 namespace Etiquetas.Bibliotecas.Comum.Caracteres
 {
+    /// <summary>
+    /// Classe responsável por concatenar vários textos em uma unica string.
+    /// </summary>
     public static class ConcatenarTexto
     {
         /// <summary>
