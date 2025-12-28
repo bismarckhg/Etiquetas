@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etiquetas.Core.Interfaces;
+using Etiquetas.Bibliotecas.SATO;
 
 namespace Etiquetas.Domain.Configuracao
 {

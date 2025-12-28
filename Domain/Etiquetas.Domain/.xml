@@ -4,6 +4,121 @@
         <name>Etiquetas.Domain</name>
     </assembly>
     <members>
+        <member name="T:Etiquetas.Domain.Configuracao.ConfigHelper">
+            <summary>
+            Helper para obter valores de configuração do arquivo appsettings.xml.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.ConfigHelper.ObterValor(System.String)">
+            <summary>
+            Recupera o valor associado à chave de configurações do aplicativo especificada no arquivo de configuração.
+            </summary>
+            <remarks>Este método lê a seção AppSettings do aplicativo no arquivo de configuração.
+            A pesquisa diferencia maiúsculas de minúsculas. Se a chave não for encontrada, o método retorna nulo.</remarks>
+            <param name="chave">A chave da configuração do aplicativo a ser recuperada. Não pode ser nula.</param>
+            <returns>O valor associado à chave especificada ou nulo se a chave não existir.</returns>
+        </member>
+        <member name="T:Etiquetas.Domain.Configuracao.ConfiguracaoCampo">
+            <summary>
+            Representa a configuração completa de um campo específico na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.Comando1">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.Comando2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.Obrigatorio">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.TipoPosicionamento">
+            <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta">
+            <summary>
+            Implementação concreta da configuração de posições de campos em etiquetas,
+            carregando os valores do arquivo de configuração (appsettings.xml).
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.#ctor(Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta"/>,
+            carregando todas as configurações do appsettings.xml.
+            </summary>
+            <param name="tipoLinguagem">Tipo de linguagem de impressão a ser utilizada</param>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.TipoLinguagem">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.MarcadorInicialTexto">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.MarcadorFinalTexto">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CodigoMaterial">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.DescricaoMedicamento">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.DescricaoMedicamento2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.PrincipioAtivo">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.PrincipioAtivo2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Embalagem">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Lote">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Validade">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CodigoUsuario">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CodigoBarras">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Copias">
+            <inheritdoc/>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CarregarConfiguracoes">
+            <summary>
+            Carrega todas as configurações do arquivo appsettings.xml.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CarregarCampo(System.String)">
+            <summary>
+            Carrega a configuração de um campo específico do appsettings.xml.
+            </summary>
+            <param name="nomeCampo">Nome do campo a ser carregado</param>
+            <returns>Objeto ConfiguracaoCampo com os dados carregados</returns>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ObterConfiguracao(System.String,System.String)">
+            <summary>
+            Obtém uma configuração string do appsettings.xml.
+            </summary>
+            <param name="chave">Chave da configuração</param>
+            <param name="valorPadrao">Valor padrão se a chave não existir</param>
+            <returns>Valor da configuração ou valor padrão</returns>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ObterConfiguracaoBoolean(System.String,System.Boolean)">
+            <summary>
+            Obtém uma configuração booleana do appsettings.xml.
+            </summary>
+            <param name="chave">Chave da configuração</param>
+            <param name="valorPadrao">Valor padrão se a chave não existir.</param>
+            <returns>Valor da configuração ou valor padrão</returns>
+        </member>
         <member name="T:Etiquetas.Domain.Entities.EtiquetaImpressao">
             <summary>
             Entidade que representa uma Etiqueta de Impressão.
@@ -15,7 +130,10 @@
         <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.DescricaoMedicamento">
             <inheritdoc/>
         </member>
-        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.PrincipioAtivo1">
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.DescricaoMedicamento2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.PrincipioAtivo">
             <inheritdoc/>
         </member>
         <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.PrincipioAtivo2">
@@ -30,7 +148,10 @@
         <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.Lote">
             <inheritdoc/>
         </member>
-        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.MatriculaFuncionario">
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.Embalagem">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.CodigoUsuario">
             <inheritdoc/>
         </member>
         <member name="P:Etiquetas.Domain.Entities.EtiquetaImpressao.CodigoBarras">

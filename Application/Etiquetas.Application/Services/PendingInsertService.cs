@@ -9,7 +9,6 @@ using Etiquetas.Core.Interfaces;
 using Etiquetas.DAL;
 using Etiquetas.DAL.Data.Repositories;
 using Etiquetas.Domain.Entities;
-using Etiquetas.Infrastructure;
 
 namespace Etiquetas.Application.Services
 {

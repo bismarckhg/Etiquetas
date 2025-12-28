@@ -4,6 +4,16 @@
         <name>Etiquetas.Bibliotecas.Xml</name>
     </assembly>
     <members>
+        <member name="T:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService">
+            <summary>
+            Classe de exemplo demonstrando o uso do GenericXmlService.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.#ctor">
+            <summary>
+            Construtor padrão.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Bibliotecas.Xml.Exemplo.ExemploGenericXmlService.Exemplo1_SerializarEDesserializarRoot">
             <summary>
             Exemplo 1: Serializar e desserializar uma loja completa (Root).

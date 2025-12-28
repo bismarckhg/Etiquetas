@@ -29,6 +29,36 @@
             Representa o tamanho do protocolo de comunicação da Impressora Sato.
             </summary>
         </member>
+        <member name="T:Etiquetas.Core.Interfaces.IConfiguracaoCampo">
+            <summary>
+            Interface que define a configuração de um campo específico na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IConfiguracaoCampo.Comando1">
+            <summary>
+            Obtém ou define o primeiro comando de posicionamento do campo.
+            Pode conter a posição completa (comando único) ou apenas uma coordenada (H ou V).
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IConfiguracaoCampo.Comando2">
+            <summary>
+            Obtém ou define o segundo comando de posicionamento do campo.
+            Usado quando o posicionamento é dividido em dois comandos (H/V ou V/H).
+            Deixe vazio para comando único.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IConfiguracaoCampo.Obrigatorio">
+            <summary>
+            Obtém ou define se o campo é obrigatório.
+            Se true, gerará erro de validação quando o campo estiver vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IConfiguracaoCampo.TipoPosicionamento">
+            <summary>
+            Obtém ou define o tipo de posicionamento utilizado por este campo.
+            Calculado automaticamente baseado em Comando1 e Comando2.
+            </summary>
+        </member>
         <member name="T:Etiquetas.Core.Interfaces.IContratoEntidade">
             <summary>
             Define o contrato para o repositório de contratos.
@@ -58,11 +88,17 @@
         </member>
         <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.DescricaoMedicamento">
             <summary>
-            Gets or sets - obtém ou define a descrição completa do medicamento para o qual a etiqueta será impressa.
+            Gets or sets - obtém ou define a primeira parte da descrição completa do medicamento para o qual a etiqueta será impressa.
             Não pode ser nulo ou vazio.
             </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.PrincipioAtivo1">
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.DescricaoMedicamento2">
+            <summary>
+            Gets or sets - obtém ou define segunda parte da descrição completa do medicamento para o qual a etiqueta será impressa.
+            Não pode ser nulo ou vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.PrincipioAtivo">
             <summary>
             Gets or sets - obtém ou define o primeira parte do texto do princípio ativo do medicamento.
             Pode ser nulo ou vazio se não aplicável.
@@ -90,7 +126,13 @@
             Não pode ser nulo ou vazio.
             </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.MatriculaFuncionario">
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.Embalagem">
+            <summary>
+            Gets or sets - obtém ou define a descrição da embalagem do medicamento.
+            Não pode ser nulo ou vazio.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressao.CodigoUsuario">
             <summary>
             Gets or sets - obtém ou define a matrícula do funcionário que solicitou ou iniciou a impressão.
             Não pode ser nulo ou vazio.
@@ -163,7 +205,12 @@
             Gets or sets - obtém ou define a descrição do medicamento.
             </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.PrincipioAtivo1">
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.DescricaoMedicamento2">
+            <summary>
+            Gets or sets - obtém ou define a descrição do medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.PrincipioAtivo">
             <summary>
             Gets or sets - obtém ou define o primeiro princípio ativo.
             </summary>
@@ -188,7 +235,12 @@
             Gets or sets - obtém ou define o lote do medicamento.
             </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.MatriculaFuncionario">
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.Embalagem">
+            <summary>
+            Gets or sets - obtém ou define a Embalagem do medicamento.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto.CodigoUsuario">
             <summary>
             Gets or sets - obtém ou define a matrícula do funcionário responsável.
             </summary>
@@ -343,6 +395,53 @@
             <summary>
             Gets or sets - obtém ou define o estado atual da impressão.
             </summary>
+        </member>
+        <member name="T:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta">
+            <summary>
+            Interface que define o posicionamento dos campos na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.TipoLinguagem">
+            <summary>Obtém o tipo de linguagem de impressão utilizada</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.MarcadorInicialTexto">
+            <summary>Obtém o marcador que indica o início do texto (ex: "^FD" no ZPL)</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.MarcadorFinalTexto">
+            <summary>Obtém o marcador que indica o fim do texto (ex: "^FS" no ZPL)</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CodigoMaterial">
+            <summary>Obtém a configuração do campo Código do Material</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.DescricaoMedicamento">
+            <summary>Obtém a configuração do campo Descrição do Medicamento</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.DescricaoMedicamento2">
+            <summary>Obtém a configuração do campo Descrição do Medicamento 2</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.PrincipioAtivo">
+            <summary>Obtém a configuração do campo Princípio Ativo 1</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.PrincipioAtivo2">
+            <summary>Obtém a configuração do campo Princípio Ativo 2</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Embalagem">
+            <summary>Obtém a configuração do campo Embalagem</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Lote">
+            <summary>Obtém a configuração do campo Lote</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Validade">
+            <summary>Obtém a configuração do campo Validade</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CodigoUsuario">
+            <summary>Obtém a configuração do campo Código do Usuário</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CodigoBarras">
+            <summary>Obtém a configuração do campo Código de Barras</summary>
+        </member>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Copias">
+            <summary>Obtém a configuração do campo Número de Cópias</summary>
         </member>
         <member name="T:Etiquetas.Core.IEtiquetaImpressaoRepository">
             <summary>

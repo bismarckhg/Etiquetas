@@ -1,4 +1,4 @@
-using Etiquetas.Core.Enum;
+using Etiquetas.Bibliotecas.SATO;
 
 namespace Etiquetas.Core.Interfaces
 {

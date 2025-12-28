@@ -9,6 +9,9 @@
     <None Include="Mappers\EtiquetaMapper - Cópia.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="10.0.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Comum\Etiquetas.Bibliotecas.Comum.csproj" />
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.ControleFilaDados\Etiquetas.Bibliotecas.ControleFilaDados.csproj" />
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.SATO\Etiquetas.Bibliotecas.SATO.csproj" />

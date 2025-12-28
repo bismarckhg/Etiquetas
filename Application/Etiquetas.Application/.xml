@@ -13,7 +13,10 @@
         <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.DescricaoMedicamento">
             <inheritdoc/>
         </member>
-        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.PrincipioAtivo1">
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.DescricaoMedicamento2">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.PrincipioAtivo">
             <inheritdoc/>
         </member>
         <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.PrincipioAtivo2">
@@ -28,7 +31,10 @@
         <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.Lote">
             <inheritdoc/>
         </member>
-        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.MatriculaFuncionario">
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.Embalagem">
+            <inheritdoc/>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.CodigoUsuario">
             <inheritdoc/>
         </member>
         <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.CodigoBarras">
@@ -54,6 +60,37 @@
         </member>
         <member name="P:Etiquetas.Application.DTOs.EtiquetaImpressaoDto.JobName">
             <inheritdoc/>
+        </member>
+        <member name="T:Etiquetas.Application.DTOs.EtiquetaSpoolerDto">
+            <summary>
+            DTO para representar uma etiqueta pronta para impressão no spooler.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaSpoolerDto.Encoding">
+            <summary>
+            Codificação utilizada para interpretar o conteúdo da etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaSpoolerDto.ImpressaoBytes">
+            <summary>
+            Conteúdo da impressão da etiqueta em formato binário.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaSpoolerDto.ImpressaoString">
+            <summary>
+            Conteúdo da impressão da etiqueta em formato string.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.DTOs.EtiquetaSpoolerDto.NomeImpressora">
+            <summary>
+            Nome da impressora onde a etiqueta será enviada para impressão.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.DTOs.EtiquetaSpoolerDto.GetImpressaoString">
+            <summary>
+            Obtém o conteúdo da impressão da etiqueta como uma string, utilizando a codificação especificada.
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Etiquetas.Application.DTOs.FaltaImprimirDto">
             <inheritdoc/>
@@ -361,6 +398,62 @@
             Gets or sets - Origem do pacote (porta TCP, etc).
             </summary>
         </member>
+        <member name="T:Etiquetas.Application.Services.BufferPool">
+            <summary>
+            A pool for renting and returning byte buffers.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.BufferPool.privPool">
+            <summary>
+            O conjunto de arrays subjacente usado para alugar buffers.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.BufferPool.privSize">
+            <summary>
+            O tamanho padrão dos buffers alugados do pool.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.BufferPool.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.BufferPool"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Application.Services.BufferPool"/>.
+            </summary>
+            <param name="defaultSize">parameto com o tamanho default do buffer.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.BufferPool.Rent(System.Int32)">
+            <summary>
+            Recupera um buffer do pool compartilhado com pelo menos o comprimento mínimo especificado.
+            </summary>
+            <remarks>O buffer retornado é obtido de um pool compartilhado e deve ser devolvido ou descartado
+            adequadamente quando não for mais necessário para evitar vazamentos de recursos.</remarks>
+            <param name="minimumLength">O comprimento mínimo necessário, em bytes, do buffer a ser alugado. Deve ser não negativo.</param>
+            <returns>Uma instância de <see cref="T:Etiquetas.Application.Services.PooledBuffer"/> contendo um buffer cujo comprimento é de pelo menos <paramref
+            name="minimumLength"/> bytes.</returns>
+        </member>
+        <member name="T:Etiquetas.Application.Services.ConsoleLogger">
+            <summary>
+            Logger simples para console.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.ConsoleLogger.Info(System.String)">
+            <summary>
+            Informa uma mensagem de informação.
+            </summary>
+            <param name="message">string com mensage de informação.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.ConsoleLogger.Warn(System.String)">
+            <summary>
+            Informa uma mensagem de aviso.
+            </summary>
+            <param name="message">string com mensagem de Aviso.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.ConsoleLogger.Error(System.String,System.Exception)">
+            <summary>
+            Informa uma mensagem de erro.
+            </summary>
+            <param name="message">string com mensagem de erro.</param>
+            <param name="ex">exception do erro.</param>
+        </member>
         <member name="T:Etiquetas.Application.Services.PacoteSatoBufferService">
             <summary>
             Serviço responsável por armazenar pacotes incompletos e montá-los quando completos.
@@ -425,7 +518,7 @@
             Logger de registro.
             </summary>
         </member>
-        <member name="M:Etiquetas.Application.Services.PendingInsertService.#ctor(System.String,Etiquetas.Infrastructure.PendingOperationQueue,Etiquetas.Infrastructure.ConsoleLogger,Etiquetas.Core.Interfaces.IEtiquetaIdResolver)">
+        <member name="M:Etiquetas.Application.Services.PendingInsertService.#ctor(System.String,Etiquetas.Application.Services.PendingOperationQueue,Etiquetas.Application.Services.ConsoleLogger,Etiquetas.Core.Interfaces.IEtiquetaIdResolver)">
             <summary>
             Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.PendingInsertService"/> class for managing pending insert
             operations.
@@ -435,7 +528,7 @@
             fila de operações pendentes e mecanismo de registro. O parâmetro <paramref name="resolver"/> é opcional e
             deve ser fornecido se a resolução do ID da impressora for necessária para operações pendentes.</remarks>        /// <param name="connectionString">A Conneção String usada para conectar no LiteDB database. Não pode ser nulo ou vazio.</param>
             <param name="pendingQueue">A fila que armazena as operações pendentes a serem processadas.Cannot be null.</param>
-            <param name="logger">O registrador usado para registrar eventos operacionais. Se nulo, um valor padrão.<see cref="T:Etiquetas.Infrastructure.ConsoleLogger"/> is used.</param>
+            <param name="logger">O registrador usado para registrar eventos operacionais. Se nulo, um valor padrão.<see cref="T:Etiquetas.Application.Services.ConsoleLogger"/> is used.</param>
             <param name="resolver">Um opcional que resolve o ID do DTO de retorno da impressora Sato. Se não for especificado, a resolvido o ID da impressora
             não estará disponível.</param>
         </member>
@@ -454,6 +547,180 @@
             <param name="ct">Um token de cancelamento que pode ser usado para cancelar a operação assíncrona.</param>
             <returns><see langword="true"/> se o rótulo foi inserido diretamente; caso contrário, <see langword="false"/> se o rótulo
             foi enfileirado para processamento posterior.</returns>
+        </member>
+        <member name="T:Etiquetas.Application.Services.PendingOperation">
+            <summary>
+            Representa uma operação pendente para processamento.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperation.#ctor(System.String,System.String,Etiquetas.Core.Interfaces.IEtiquetaImpressao)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.PendingOperation"/> class.
+            Inicializa uma nova instancia da classe <see cref="T:Etiquetas.Application.Services.PendingOperation"/>.
+            </summary>
+            <param name="key">Chave EtiquetaImpressao.</param>
+            <param name="key2">Segunda Chave EtiquetaImpressao.</param>
+            <param name="etiqueta">Entidade de EtiquetaImpressão.</param>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PendingOperation.TableName">
+            <summary>
+            Gets the name of the table.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PendingOperation.KeyValue">
+            <summary>
+            Gets the key value.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PendingOperation.Registro">
+            <summary>
+            Gets the record.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PendingOperation.Attempt">
+            <summary>
+            Gets or sets the attempt count.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PendingOperation.EnqueuedAt">
+            <summary>
+            Gets the time the operation was enqueued.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Application.Services.PendingOperationQueue">
+            <summary>
+            Gerencia uma fila de operações pendentes e as processa de forma assíncrona com paralelismo configurável.
+            </summary>
+            <remarks> <see cref="T:Etiquetas.Application.Services.PendingOperationQueue"/> permite que operações enfileiradas sejam processadas em
+            segundo plano por um conjunto de tarefas de trabalho. As operações são processadas na ordem em que são recebidas, com suporte para
+            capacidade de fila limitada e repetição automática com recuo exponencial em caso de falha.
+            Chame <see cref="M:Etiquetas.Application.Services.PendingOperationQueue.StartAsync(System.Threading.CancellationToken)"/> para iniciar o processamento das operações enfileiradas.
+            Use <see cref="M:Etiquetas.Application.Services.PendingOperationQueue.EnqueueAsync(Etiquetas.Application.Services.PendingOperation,System.Threading.CancellationToken)"/> para adicionar novas operações à fila.
+            Esta classe é thread-safe e destinada ao uso em cenários onde o processamento em segundo plano e o tratamento confiável de operações
+            são necessários. Descarte a instância para interromper o processamento e liberar recursos.</remarks>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperationQueue.#ctor(System.String,Etiquetas.Application.Services.ConsoleLogger,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.PendingOperationQueue"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Application.Services.PendingOperationQueue"/> com a conexão especificada
+            string, logger, capacidade da fila e grau de paralelismo.
+            </summary>
+            <remarks>Use este construtor para configurar a capacidade da fila e o nível de concorrência
+            para processar operações pendentes. Se <paramref name="degreeOfParallelism"/> for menor que 1, ele será
+            automaticamente definido como 1.</remarks>
+            <param name="connectionString">A string de conexão usada para conectar ao recurso de destino para operações pendentes. Não pode ser <see
+            langword="null"/> ou vazia.</param>
+            <param name="logger">O logger usado para registrar mensagens de diagnóstico e operacionais. Não pode ser <see langword="null"/>.</param>
+            <param name="boundedCapacity">O número máximo de operações pendentes que podem ser enfileiradas simultaneamente. Deve ser maior que zero. O
+            padrão é 2048.</param>
+            <param name="degreeOfParallelism">O número máximo de operações que podem ser processadas simultaneamente. Deve ser pelo menos 1. O padrão é 2.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperationQueue.EnqueueAsync(Etiquetas.Application.Services.PendingOperation,System.Threading.CancellationToken)">
+            <summary>
+            Enfileira uma operação pendente para ser processada de forma assíncrona.
+            </summary>
+            <param name="op">A <see cref="T:Etiquetas.Application.Services.PendingOperation"/> a ser enfileirada. Não pode ser <c>null</c>.</param>
+            <param name="ct">Um <see cref="T:System.Threading.CancellationToken"/> que pode ser usado para cancelar a operação de enfileiramento.</param>
+            <returns>Uma tarefa que representa a operação de enfileiramento assíncrona.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperationQueue.StartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Inicia as tarefas de trabalho em segundo plano com o token de cancelamento especificado.
+            </summary>
+            <remarks>Este método inicia várias tarefas de trabalho em segundo plano de acordo com o grau de paralelismo configurado.
+            As tarefas continuarão em execução até que o token de cancelamento fornecido seja sinalizado
+            ou a instância seja descartada.</remarks>
+            <param name="ct">Um <see cref="T:System.Threading.CancellationToken"/> que pode ser usado para solicitar o cancelamento das tarefas de trabalho em segundo plano.</param>
+            <returns>Uma <see cref="T:System.Threading.Tasks.Task"/> concluída que representa o início das tarefas de trabalho em segundo plano.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperationQueue.Dispose">
+            <summary>
+            Libera todos os recursos usados ​​pela instância atual e tenta encerrar corretamente quaisquer tarefas em segundo plano em execução.
+            </summary>
+            <remarks>Chame este método quando a instância não for mais necessária para garantir que todas as operações em segundo plano sejam canceladas e os recursos sejam liberados. Após chamar <see cref="M:Etiquetas.Application.Services.PendingOperationQueue.Dispose"/>, a instância não deve ser usada.</remarks>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperationQueue.ComputeBackoff(System.TimeSpan,System.TimeSpan,System.Int32)">
+            <summary>
+            Calcula o intervalo de espera para uma nova tentativa usando espera exponencial com jitter.
+            </summary>
+            <remarks>Este método aplica espera exponencial, dobrando o intervalo a cada tentativa, até
+            o máximo especificado. Um fator de jitter aleatório entre 1,0 e 1,5 é aplicado para ajudar a reduzir a contenção
+            e evitar novas tentativas sincronizadas em sistemas distribuídos.</remarks>
+            <param name="initial">O intervalo de espera inicial a ser usado para a primeira tentativa de nova tentativa. Deve ser um <see
+            cref="T:System.TimeSpan"/> não negativo.</param>
+            <param name="max">O intervalo de espera máximo permitido. O intervalo de espera calculado não excederá este valor. Deve ser um <see cref="T:System.TimeSpan"/> não negativo.</param>
+            <param name="attempt">O número da tentativa de nova tentativa atual. Deve ser maior ou igual a 1. Cada incremento aumenta o backoff
+            exponencialmente.</param>
+            <returns>Um <see cref="T:System.TimeSpan"/> representando o intervalo de backoff calculado para a tentativa especificada, incluindo um
+            fator de jitter aleatório. O valor está sempre entre <paramref name="initial"/> e <paramref name="max"/>,
+            inclusive.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PendingOperationQueue.WorkerLoop(System.Threading.CancellationToken)">
+            <summary>
+            Processa continuamente as operações pendentes da fila interna até que o cancelamento seja solicitado.
+            </summary>
+            <remarks>O método recupera operações da fila interna e tenta processar cada uma.
+            Se uma operação não puder ser processada devido a um erro, ela será repetida com recuo exponencial até que
+            seja bem-sucedida ou até que o cancelamento seja solicitado.</remarks>
+            <param name="ct">Um <see cref="T:System.Threading.CancellationToken"/> usado para observar solicitações de cancelamento e encerrar o loop normalmente.</param>
+            <returns>Uma tarefa que representa a execução assíncrona do loop de trabalho.</returns>
+        </member>
+        <member name="T:Etiquetas.Application.Services.PooledBuffer">
+            <summary>
+            Representa um buffer de bytes alugado de um ArrayPool.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.PooledBuffer.privPool">
+            <summary>
+            Referência ao pool de arrays do qual o buffer foi alugado.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Application.Services.PooledBuffer.returned">
+            <summary>
+            Indica se o buffer já foi devolvido ao pool.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PooledBuffer.#ctor(System.Int32,System.Buffers.ArrayPool{System.Byte})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Application.Services.PooledBuffer"/> class.
+            Inicializa uma nova instancia da classe <see cref="T:Etiquetas.Application.Services.PooledBuffer"/>.
+            </summary>
+            <param name="size">tamanho do Pool.</param>
+            <param name="pool">Pool.</param>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PooledBuffer.Buffer">
+            <summary>
+            Gets - O buffer de bytes alugado.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PooledBuffer.Length">
+            <summary>
+            Gets e Sets - O comprimento atual dos dados válidos no buffer.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Application.Services.PooledBuffer.Segment">
+            <summary>
+            Gets - Obtém um segmento do array representando os dados válidos no buffer.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PooledBuffer.SetLength(System.Int32)">
+            <summary>
+            Define o comprimento dos dados válidos no buffer.
+            </summary>
+            <param name="len">Tamanho.</param>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PooledBuffer.Return">
+            <summary>
+            Devolve o buffer ao pool.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Services.PooledBuffer.Dispose">
+            <summary>
+            Libera todos os recursos usados ​​pela instância atual da classe.
+            </summary>
+            <remarks>Chame este método quando terminar de usar o objeto para liberar recursos não gerenciados
+            e realizar outras operações de limpeza. Após chamar <see cref="M:Etiquetas.Application.Services.PooledBuffer.Dispose"/>, o objeto não deve ser
+            usado.</remarks>
         </member>
         <member name="T:Etiquetas.Application.Services.SatoParserService">
             <summary>
@@ -676,7 +943,7 @@
             Classe de mapeamento entre EtiquetaImpressao e EtiquetaImpressaoDto.
             </summary>
         </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.CriaDTO(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int64)">
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.CriaDTO(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
             Creates a new <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> instance.
             Cria uma nova instância de <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> preenchida com o material especificado e
@@ -693,6 +960,99 @@
             <param name="matriculaFuncionario">Matrícula do funcionário que solicitou a impressão. Não pode ser nulo.</param>
             <param name="quantidadeSolicitada">Quantidade de etiquetas solicitadas para impressão. Maior do que zero.</param>
             <returns>An <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> Uma instancia contendo EtiquetaImpressaoDto contendo os detalhes do material para impressão da etiqueta.</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.SpolerToDto(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Extrai os dados da etiqueta baseado na configuração fornecida.
+            O método é inteligente e detecta automaticamente se o posicionamento
+            usa comando único ou comandos duplos (H/V ou V/H).
+            </summary>
+            <param name="conteudoEtiqueta">Conteúdo completo da etiqueta a ser processada</param>
+            <param name="configuracao">Configuração dos campos e marcadores</param>
+            <returns>Objeto com os dados extraídos ou null se houver erro</returns>
+            <exception cref="T:System.ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
+            <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ProcessarComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Application.DTOs.EtiquetaImpressaoDto,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
+            <summary>
+            Processa um comando individual, identificando o campo e extraindo o texto.
+            </summary>
+            <param name="comando">Comando a ser processado</param>
+            <param name="config">Configuração dos campos</param>
+            <param name="dados">Objeto onde os dados serão armazenados</param>
+            <param name="estado">Estado atual do processamento</param>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.IdentificarCampo(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
+            <summary>
+            Identifica qual campo está sendo processado no comando atual.
+            Atualiza o estado conforme encontra Cmd1 e Cmd2.
+            </summary>
+            <param name="comando">Comando normalizado</param>
+            <param name="config">Configuração dos campos</param>
+            <param name="estado">Estado atual</param>
+            <returns>Tipo do campo identificado</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Extrai o texto de um comando baseado nos marcadores de início e fim.
+            </summary>
+            <param name="comando">Comando contendo o texto</param>
+            <param name="config">Configuração com os marcadores</param>
+            <returns>Texto extraído ou string vazia</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ObterConfiguracaoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Obtém a configuração de um campo específico.
+            </summary>
+            <param name="tipo">Tipo do campo</param>
+            <param name="config">Configuração completa</param>
+            <returns>Configuração do campo ou null</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.AtribuirValorAoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,System.String,Etiquetas.Application.DTOs.EtiquetaImpressaoDto)">
+            <summary>
+            Atribui o valor extraído ao campo correspondente no DTO.
+            </summary>
+            <param name="tipo">Tipo do campo</param>
+            <param name="valor">Valor a ser atribuído</param>
+            <param name="dados">Objeto DTO</param>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ExtrairApenasDigitos(System.String)">
+            <summary>
+            Extrai apenas dígitos numéricos de uma string.
+            </summary>
+            <param name="texto">Texto original</param>
+            <returns>String contendo apenas dígitos</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ProcessarCodigoBarras(System.String)">
+            <summary>
+            Processa código de barras, calculando dígito verificador EAN-13 se necessário.
+            </summary>
+            <param name="codigo">Código extraído</param>
+            <returns>Código completo com dígito verificador</returns>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Valida se todos os campos obrigatórios foram preenchidos.
+            </summary>
+            <param name="dados">Dados extraídos</param>
+            <param name="config">Configuração com indicação de obrigatoriedade</param>
+            <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se algum campo obrigatório estiver vazio</exception>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ValidarCampo(Etiquetas.Core.Interfaces.IConfiguracaoCampo,System.String,System.String)">
+            <summary>
+            Valida um campo individual.
+            </summary>
+            <param name="configCampo">Configuração do campo</param>
+            <param name="valor">Valor extraído</param>
+            <param name="nomeCampo">Nome do campo para mensagem de erro</param>
+        </member>
+        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.NormalizarComando(System.String)">
+            <summary>
+            Normaliza o comando removendo zeros à esquerda de posições numéricas.
+            Exemplo: "^FO0010,0005" vira "^FO10,5"
+            </summary>
+            <param name="comando">Comando original</param>
+            <returns>Comando normalizado</returns>
         </member>
         <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ToEntity(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto)">
             <summary>

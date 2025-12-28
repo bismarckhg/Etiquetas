@@ -241,7 +241,7 @@ namespace Etiquetas.Application.Pipeline
                 CodigoMaterial = codigoMaterial,
                 CodigoBarras = msg.CodigoBarras,
                 DescricaoMedicamento = msg.DescricaoMedicamento ?? string.Empty,
-                PrincipioAtivo1 = msg.PrincipioAtivo1 ?? string.Empty,
+                PrincipioAtivo = msg.PrincipioAtivo1 ?? string.Empty,
                 PrincipioAtivo2 = msg.PrincipioAtivo2 ?? string.Empty,
                 Lote = msg.Lote ?? string.Empty,
                 Validade = validade,
