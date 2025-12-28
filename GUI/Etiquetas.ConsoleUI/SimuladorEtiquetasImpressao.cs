@@ -25,7 +25,7 @@ namespace Etiquetas.ConsoleUI
                 Id = 1,
                 DescricaoMedicamento = "Dipirona Sódica",
                 PrincipioAtivo = "Dipirona monoidratada",
-                PrincipioAtivo2 = "",
+                PrincipioAtivo2 = string.Empty,
                 CodigoMaterial = "1534",
                 Validade = DateTime.Now.AddMonths(6).ToString("o"),
                 Lote = "LoteA123",
@@ -34,7 +34,7 @@ namespace Etiquetas.ConsoleUI
                 DataHoraInicio = DateTime.Now.ToString("o"),
                 DataHoraFim = DateTime.Now.AddMinutes(5).ToString("o"),
                 StatusEtiqueta = 'P',
-                QuantidadeSolicitada = 30
+                QuantidadeSolicitada = "30"
             };
 
             lista.Add(etiqueta);
@@ -53,7 +53,7 @@ namespace Etiquetas.ConsoleUI
                 DataHoraInicio = DateTime.Now.ToString("o"),
                 DataHoraFim = DateTime.Now.AddMinutes(10).ToString("o"),
                 StatusEtiqueta = 'P',
-                QuantidadeSolicitada = 20
+                QuantidadeSolicitada = "20"
             };
 
             lista.Add(etiqueta);
@@ -72,7 +72,7 @@ namespace Etiquetas.ConsoleUI
                 DataHoraInicio = DateTime.Now.ToString("o"),
                 DataHoraFim = DateTime.Now.AddMinutes(15).ToString("o"),
                 StatusEtiqueta = 'P',
-                QuantidadeSolicitada = 50
+                QuantidadeSolicitada = "50"
             };
 
             lista.Add(etiqueta);
@@ -91,7 +91,7 @@ namespace Etiquetas.ConsoleUI
                 DataHoraInicio = DateTime.Now.ToString("o"),
                 DataHoraFim = DateTime.Now.AddMinutes(20).ToString("o"),
                 StatusEtiqueta = 'P',
-                QuantidadeSolicitada = 40
+                QuantidadeSolicitada = "40"
             };
 
             lista.Add(etiqueta);
@@ -110,7 +110,7 @@ namespace Etiquetas.ConsoleUI
                 DataHoraInicio = DateTime.Now.ToString("o"),
                 DataHoraFim = DateTime.Now.AddMinutes(25).ToString("o"),
                 StatusEtiqueta = 'P',
-                QuantidadeSolicitada = 25
+                QuantidadeSolicitada = "25"
             };
 
             lista.Add(etiqueta);

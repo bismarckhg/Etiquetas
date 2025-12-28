@@ -125,6 +125,137 @@
         <member name="P:Etiquetas.Application.DTOs.FaltaImprimirDto.State">
             <inheritdoc/>
         </member>
+        <member name="T:Etiquetas.Application.Mappers.EtiquetaMapper">
+            <summary>
+            Classe de mapeamento entre EtiquetaImpressao e EtiquetaImpressaoDto.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.CriaDTO(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates a new <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> instance.
+            Cria uma nova instância de <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> preenchida com o material especificado e
+            informações sobre o medicamento.
+            </summary>
+            <param name="id">O identificador único do material. Maior do que zero.</param>
+            <param name="codigoMaterial">A descrição do medicamento. Não pode ser nula.</param>
+            <param name="codigoBarras">O código de barras associado ao material. Não pode ser nulo.</param>
+            <param name="descricaoMedicamento">Descrição do medicamento. Não pode ser nulo.</param>
+            <param name="principioAtivo1">A primeira parte do Nome do Principio Ativo.</param>
+            <param name="principioAtivo2">A segunda parte do Nome do Principio ativo.</param>
+            <param name="lote">Numero do lote do medicamento. Não pode ser nulo.</param>
+            <param name="validade">Data de validade do material. Não pode ser nulo.</param>
+            <param name="matriculaFuncionario">Matrícula do funcionário que solicitou a impressão. Não pode ser nulo.</param>
+            <param name="quantidadeSolicitada">Quantidade de etiquetas solicitadas para impressão. Maior do que zero.</param>
+            <returns>An <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> Uma instancia contendo EtiquetaImpressaoDto contendo os detalhes do material para impressão da etiqueta.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.SpolerToDto(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Extrai os dados da etiqueta baseado na configuração fornecida.
+            O método é inteligente e detecta automaticamente se o posicionamento
+            usa comando único ou comandos duplos (H/V ou V/H).
+            </summary>
+            <param name="conteudoEtiqueta">Conteúdo completo da etiqueta a ser processada</param>
+            <param name="configuracao">Configuração dos campos e marcadores</param>
+            <returns>Objeto com os dados extraídos ou null se houver erro</returns>
+            <exception cref="T:System.ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
+            <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ProcessarComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Application.DTOs.EtiquetaImpressaoDto,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
+            <summary>
+            Processa um comando individual, identificando o campo e extraindo o texto.
+            </summary>
+            <param name="comando">Comando a ser processado</param>
+            <param name="config">Configuração dos campos</param>
+            <param name="dados">Objeto onde os dados serão armazenados</param>
+            <param name="estado">Estado atual do processamento</param>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.IdentificarCampo(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
+            <summary>
+            Identifica qual campo está sendo processado no comando atual.
+            Atualiza o estado conforme encontra Cmd1 e Cmd2.
+            </summary>
+            <param name="comando">Comando normalizado</param>
+            <param name="config">Configuração dos campos</param>
+            <param name="estado">Estado atual</param>
+            <returns>Tipo do campo identificado</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Extrai o texto de um comando baseado nos marcadores de início e fim.
+            </summary>
+            <param name="comando">Comando contendo o texto</param>
+            <param name="config">Configuração com os marcadores</param>
+            <returns>Texto extraído ou string vazia</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ObterConfiguracaoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Obtém a configuração de um campo específico.
+            </summary>
+            <param name="tipo">Tipo do campo</param>
+            <param name="config">Configuração completa</param>
+            <returns>Configuração do campo ou null</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.AtribuirValorAoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,System.String,Etiquetas.Application.DTOs.EtiquetaImpressaoDto)">
+            <summary>
+            Atribui o valor extraído ao campo correspondente no DTO.
+            </summary>
+            <param name="tipo">Tipo do campo</param>
+            <param name="valor">Valor a ser atribuído</param>
+            <param name="dados">Objeto DTO</param>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairApenasDigitos(System.String)">
+            <summary>
+            Extrai apenas dígitos numéricos de uma string.
+            </summary>
+            <param name="texto">Texto original</param>
+            <returns>String contendo apenas dígitos</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ProcessarCodigoBarras(System.String)">
+            <summary>
+            Processa código de barras, calculando dígito verificador EAN-13 se necessário.
+            </summary>
+            <param name="codigo">Código extraído</param>
+            <returns>Código completo com dígito verificador</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+            <summary>
+            Valida se todos os campos obrigatórios foram preenchidos.
+            </summary>
+            <param name="dados">Dados extraídos</param>
+            <param name="config">Configuração com indicação de obrigatoriedade</param>
+            <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se algum campo obrigatório estiver vazio</exception>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCampo(Etiquetas.Core.Interfaces.IConfiguracaoCampo,System.String,System.String)">
+            <summary>
+            Valida um campo individual.
+            </summary>
+            <param name="configCampo">Configuração do campo</param>
+            <param name="valor">Valor extraído</param>
+            <param name="nomeCampo">Nome do campo para mensagem de erro</param>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.NormalizarComando(System.String)">
+            <summary>
+            Normaliza o comando removendo zeros à esquerda de posições numéricas.
+            Exemplo: "^FO0010,0005" vira "^FO10,5"
+            </summary>
+            <param name="comando">Comando original</param>
+            <returns>Comando normalizado</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ToEntity(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto)">
+            <summary>
+            Converte um DTO de EtiquetaImpressao para a entidade EtiquetaImpressao.
+            </summary>
+            <param name="dto">recebe DTO Etiqueta impressao.</param>
+            <returns>Retorna entidade EtiquetaImpressao.</returns>
+        </member>
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ToDto(Etiquetas.Domain.Entities.EtiquetaImpressao)">
+            <summary>
+            Converte uma entidade <see cref="T:Etiquetas.Domain.Entities.EtiquetaImpressao"/> em seu objeto de transferência de dados <see cref="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto"/> correspondente.
+            </summary>
+            <param name="ent">A instância de <see cref="T:Etiquetas.Domain.Entities.EtiquetaImpressao"/> a ser convertida. Pode ser <see langword="null"/>.</param>
+            <returns>Um <see cref="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto"/> representando os dados de <paramref name="ent"/>, ou <see
+            langword="null"/> se <paramref name="ent"/> for <see langword="null"/>.</returns>
+        </member>
         <member name="T:Etiquetas.Application.Mappers.FaltaImprimirMapper">
             <summary>
             Classe de mapeamento entre FaltaImprimir e FaltaImprimirDto.
@@ -937,137 +1068,6 @@
             Gets - Nome do JOB de impressão.
             </summary>
             <returns>string com o JobName concatenado byte.</returns>
-        </member>
-        <member name="T:Etiqueta.Application.Mappers.EtiquetaMapper">
-            <summary>
-            Classe de mapeamento entre EtiquetaImpressao e EtiquetaImpressaoDto.
-            </summary>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.CriaDTO(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
-            <summary>
-            Creates a new <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> instance.
-            Cria uma nova instância de <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> preenchida com o material especificado e
-            informações sobre o medicamento.
-            </summary>
-            <param name="id">O identificador único do material. Maior do que zero.</param>
-            <param name="codigoMaterial">A descrição do medicamento. Não pode ser nula.</param>
-            <param name="codigoBarras">O código de barras associado ao material. Não pode ser nulo.</param>
-            <param name="descricaoMedicamento">Descrição do medicamento. Não pode ser nulo.</param>
-            <param name="principioAtivo1">A primeira parte do Nome do Principio Ativo.</param>
-            <param name="principioAtivo2">A segunda parte do Nome do Principio ativo.</param>
-            <param name="lote">Numero do lote do medicamento. Não pode ser nulo.</param>
-            <param name="validade">Data de validade do material. Não pode ser nulo.</param>
-            <param name="matriculaFuncionario">Matrícula do funcionário que solicitou a impressão. Não pode ser nulo.</param>
-            <param name="quantidadeSolicitada">Quantidade de etiquetas solicitadas para impressão. Maior do que zero.</param>
-            <returns>An <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> Uma instancia contendo EtiquetaImpressaoDto contendo os detalhes do material para impressão da etiqueta.</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.SpolerToDto(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
-            <summary>
-            Extrai os dados da etiqueta baseado na configuração fornecida.
-            O método é inteligente e detecta automaticamente se o posicionamento
-            usa comando único ou comandos duplos (H/V ou V/H).
-            </summary>
-            <param name="conteudoEtiqueta">Conteúdo completo da etiqueta a ser processada</param>
-            <param name="configuracao">Configuração dos campos e marcadores</param>
-            <returns>Objeto com os dados extraídos ou null se houver erro</returns>
-            <exception cref="T:System.ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
-            <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ProcessarComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Application.DTOs.EtiquetaImpressaoDto,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
-            <summary>
-            Processa um comando individual, identificando o campo e extraindo o texto.
-            </summary>
-            <param name="comando">Comando a ser processado</param>
-            <param name="config">Configuração dos campos</param>
-            <param name="dados">Objeto onde os dados serão armazenados</param>
-            <param name="estado">Estado atual do processamento</param>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.IdentificarCampo(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
-            <summary>
-            Identifica qual campo está sendo processado no comando atual.
-            Atualiza o estado conforme encontra Cmd1 e Cmd2.
-            </summary>
-            <param name="comando">Comando normalizado</param>
-            <param name="config">Configuração dos campos</param>
-            <param name="estado">Estado atual</param>
-            <returns>Tipo do campo identificado</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
-            <summary>
-            Extrai o texto de um comando baseado nos marcadores de início e fim.
-            </summary>
-            <param name="comando">Comando contendo o texto</param>
-            <param name="config">Configuração com os marcadores</param>
-            <returns>Texto extraído ou string vazia</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ObterConfiguracaoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
-            <summary>
-            Obtém a configuração de um campo específico.
-            </summary>
-            <param name="tipo">Tipo do campo</param>
-            <param name="config">Configuração completa</param>
-            <returns>Configuração do campo ou null</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.AtribuirValorAoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,System.String,Etiquetas.Application.DTOs.EtiquetaImpressaoDto)">
-            <summary>
-            Atribui o valor extraído ao campo correspondente no DTO.
-            </summary>
-            <param name="tipo">Tipo do campo</param>
-            <param name="valor">Valor a ser atribuído</param>
-            <param name="dados">Objeto DTO</param>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ExtrairApenasDigitos(System.String)">
-            <summary>
-            Extrai apenas dígitos numéricos de uma string.
-            </summary>
-            <param name="texto">Texto original</param>
-            <returns>String contendo apenas dígitos</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ProcessarCodigoBarras(System.String)">
-            <summary>
-            Processa código de barras, calculando dígito verificador EAN-13 se necessário.
-            </summary>
-            <param name="codigo">Código extraído</param>
-            <returns>Código completo com dígito verificador</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
-            <summary>
-            Valida se todos os campos obrigatórios foram preenchidos.
-            </summary>
-            <param name="dados">Dados extraídos</param>
-            <param name="config">Configuração com indicação de obrigatoriedade</param>
-            <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se algum campo obrigatório estiver vazio</exception>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ValidarCampo(Etiquetas.Core.Interfaces.IConfiguracaoCampo,System.String,System.String)">
-            <summary>
-            Valida um campo individual.
-            </summary>
-            <param name="configCampo">Configuração do campo</param>
-            <param name="valor">Valor extraído</param>
-            <param name="nomeCampo">Nome do campo para mensagem de erro</param>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.NormalizarComando(System.String)">
-            <summary>
-            Normaliza o comando removendo zeros à esquerda de posições numéricas.
-            Exemplo: "^FO0010,0005" vira "^FO10,5"
-            </summary>
-            <param name="comando">Comando original</param>
-            <returns>Comando normalizado</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ToEntity(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto)">
-            <summary>
-            Converte um DTO de EtiquetaImpressao para a entidade EtiquetaImpressao.
-            </summary>
-            <param name="dto">recebe DTO Etiqueta impressao.</param>
-            <returns>Retorna entidade EtiquetaImpressao.</returns>
-        </member>
-        <member name="M:Etiqueta.Application.Mappers.EtiquetaMapper.ToDto(Etiquetas.Domain.Entities.EtiquetaImpressao)">
-            <summary>
-            Converte uma entidade <see cref="T:Etiquetas.Domain.Entities.EtiquetaImpressao"/> em seu objeto de transferência de dados <see cref="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto"/> correspondente.
-            </summary>
-            <param name="ent">A instância de <see cref="T:Etiquetas.Domain.Entities.EtiquetaImpressao"/> a ser convertida. Pode ser <see langword="null"/>.</param>
-            <returns>Um <see cref="T:Etiquetas.Application.DTOs.EtiquetaImpressaoDto"/> representando os dados de <paramref name="ent"/>, ou <see
-            langword="null"/> se <paramref name="ent"/> for <see langword="null"/>.</returns>
         </member>
         <member name="T:Etiqueta.Application.Mappers.SatoToFaltaMapper">
             <summary>

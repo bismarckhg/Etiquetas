@@ -83,6 +83,17 @@
             enviar de forma assíncrona <paramref name="totalMessages"/> mensagens, cada uma com <paramref name="bytesPerMessage"/>
             bytes, no intervalo especificado de <paramref name="intervalMs"/>.</returns>
         </member>
+        <member name="M:Etiquetas.ConsoleUI.TesteEtiqueta.ProcessarEtiquetaZPL">
+            <summary>
+            Processa uma etiqueta no formato ZPL.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.ConsoleUI.TesteEtiqueta.ImprimirDados(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto)">
+            <summary>
+            Imprime os dados extraídos no console.
+            </summary>
+            <param name="dados">Dados a serem impressos</param>
+        </member>
         <member name="T:Etiquetas.ConsoleUI.TesteEtiquetaPipeline">
             <summary>
             Classe de teste para o pipeline de etiquetas.

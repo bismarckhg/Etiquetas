@@ -4,7 +4,6 @@ using Etiqueta.Application.Mappers;
 using Etiquetas.Application.Services;
 using Etiquetas.DAL;
 using Etiquetas.DAL.Data.Repositories;
-using Etiquetas.Infrastructure;
 
 namespace Etiquetas.ConsoleUI
 {
@@ -20,7 +19,10 @@ namespace Etiquetas.ConsoleUI
         /// <returns>Retorna uma tarefa.</returns>
         public static async Task Main(string[] args)
         {
-            await TesteEtiquetaPipeline.Teste();
+            // await TesteEtiquetaPipeline.Teste();
+
+            TesteEtiqueta.ProcessarEtiquetaZPL();
+
             Console.WriteLine("Teste concluído. Pressione qualquer tecla para sair.");
             Console.ReadKey();
         }

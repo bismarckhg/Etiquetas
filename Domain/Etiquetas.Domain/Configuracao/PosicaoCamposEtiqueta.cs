@@ -114,11 +114,16 @@ namespace Etiquetas.Domain.Configuracao
         /// <returns>Objeto ConfiguracaoCampo com os dados carregados</returns>
         private ConfiguracaoCampo CarregarCampo(string nomeCampo)
         {
+            var cmd1 = $"Campo_{nomeCampo}_Cmd1";
+            var cmd2 = $"Campo_{nomeCampo}_Cmd2";
+            var comando1 = ObterConfiguracao(cmd1, null);
+            var comando2 = ObterConfiguracao(cmd2, null);
+            var obrigatorio = ObterConfiguracaoBoolean($"Campo_{nomeCampo}_Obrigatorio", false);
             return new ConfiguracaoCampo
             {
-                Comando1 = ObterConfiguracao($"Campo_{nomeCampo}_Cmd1", string.Empty),
-                Comando2 = ObterConfiguracao($"Campo_{nomeCampo}_Cmd2", string.Empty),
-                Obrigatorio = ObterConfiguracaoBoolean($"Campo_{nomeCampo}_Obrigatorio", false),
+                Comando1 = comando1,
+                Comando2 = comando2,
+                Obrigatorio = obrigatorio,
             };
         }
 

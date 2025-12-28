@@ -32,22 +32,20 @@ namespace Etiquetas.ConsoleUI
                     // ═══════════════════════════════════════════════════════════
                     Console.WriteLine("▶ ABRINDO ETIQUETA\n");
 
-                    await pipeline.AbrirEtiquetaAsync();
+                    //await pipeline.AbrirEtiquetaAsync();
 
-
-
-                    //await pipeline.AbrirEtiquetaAsync(
-                    //    codigoMaterial: "123456",
-                    //    codigoBarras: "7891234567890",
-                    //    descricaoMedicamento: "DIPIRONA SODICA 500MG",
-                    //    principioAtivo1: "DIPIRONA SODICA",
-                    //    principioAtivo2: "",
-                    //    lote: "L2025001",
-                    //    validade: "2026-12-31",
-                    //    matriculaFuncionario: "MAT001",
-                    //    quantidadeSolicitada: 5,
-                    //    jobName: "ETQ_20251215_001"
-                    //);
+                    await pipeline.AbrirEtiquetaAsync(
+                        codigoMaterial: "123456",
+                        codigoBarras: "7891234567890",
+                        descricaoMedicamento: "DIPIRONA SODICA 500MG",
+                        principioAtivo1: "DIPIRONA SODICA",
+                        principioAtivo2: "",
+                        lote: "L2025001",
+                        validade: "2026-12-31",
+                        matriculaFuncionario: "MAT001",
+                        quantidadeSolicitada: 5,
+                        jobName: "ETQ_20251215_001"
+                    );
 
                     await Task.Delay(500);
 

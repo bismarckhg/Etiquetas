@@ -12,7 +12,7 @@ using Etiquetas.Core.Interfaces;
 using Etiquetas.Domain.Configuracao;
 using Etiquetas.Domain.Entities;
 
-namespace Etiqueta.Application.Mappers
+namespace Etiquetas.Application.Mappers
 {
     /// <summary>
     /// Classe de mapeamento entre EtiquetaImpressao e EtiquetaImpressaoDto.

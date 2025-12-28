@@ -1,9 +1,3 @@
-using Etiquetas.Bibliotecas.Comum.Arrays;
-using Etiquetas.Bibliotecas.Comum.Geral;
-using Etiquetas.Bibliotecas.Streams.Core;
-using Etiquetas.Bibliotecas.Streams.Interfaces;
-using Etiquetas.Bibliotecas.TaskCore.Interfaces;
-using Etiquetas.Bibliotecas.Xml.Servicos;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,6 +9,12 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Etiquetas.Bibliotecas.Comum.Arrays;
+using Etiquetas.Bibliotecas.Comum.Geral;
+using Etiquetas.Bibliotecas.Streams.Core;
+using Etiquetas.Bibliotecas.Streams.Interfaces;
+using Etiquetas.Bibliotecas.TaskCore.Interfaces;
+using Etiquetas.Bibliotecas.Xml.Servicos;
 
 namespace Etiquetas.Bibliotecas.Xml
 {
@@ -104,13 +104,17 @@ namespace Etiquetas.Bibliotecas.Xml
             if (!hasPredicate && !hasItemName)
             {
                 if (hasSubRoot)
+                {
                     return await LerAsync<T>(FS, subRootName, EncodingTexto, CancelToken).ConfigureAwait(false);
+                }
 
                 return await LerAsync<T>(FS, EncodingTexto, CancelToken).ConfigureAwait(false);
             }
 
             if (!hasSubRoot)
+            {
                 throw new ArgumentNullException(nameof(subRootName), "SubRootName é obrigatório quando Predicate ou ItemNameSubRoot são fornecidos.");
+            }
 
             return await LerAsync<T>(FS, subRootName, itemNameSubRoot, predicate, EncodingTexto, CancelToken).ConfigureAwait(false);
         }

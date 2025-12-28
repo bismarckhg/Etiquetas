@@ -7,7 +7,6 @@ using Etiqueta.Application.Mappers;
 using Etiquetas.Application.Services;
 using Etiquetas.DAL;
 using Etiquetas.DAL.Data.Repositories;
-using Etiquetas.Infrastructure;
 
 namespace Etiquetas.ConsoleUI
 {
