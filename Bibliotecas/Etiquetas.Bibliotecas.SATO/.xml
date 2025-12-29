@@ -22,7 +22,7 @@
         </member>
         <member name="M:Etiquetas.Bibliotecas.SATO.ControlCharConvert.Execute(System.String,System.Collections.Generic.Dictionary{System.String,System.Char})">
             <summary>
-            Converte caracteres de controle para suas representações em string.
+            Converte caracteres de controle(especiais) para suas representações em string.
             </summary>
             <param name="data">string de dados a serem convertidos.</param>
             <param name="chrList">dicionario string de caracteres especiais a serem trocados no string.</param>
@@ -33,13 +33,13 @@
             string especial characters list SATO.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.SATO.ControlCharListSATO.CriaDicionario">
+        <member name="M:Etiquetas.Bibliotecas.SATO.ControlCharListSATO.CriaDicionarioOpcao">
             <summary>
             Montagem dicionario caracteres de controle SATO.
             </summary>
             <returns>retorno dicionario com caracteres sato para conversões.</returns>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.SATO.ControlCharListSATO.CriaDicionarioOpcao">
+        <member name="M:Etiquetas.Bibliotecas.SATO.ControlCharListSATO.CriaDicionario">
             <summary>
             Montagem dicionario caracteres de controle SATO.
             </summary>
@@ -51,19 +51,8 @@
             </summary>
             <returns>retorno do caractere.</returns>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.SATO.ControlCharReplace">
-            <summary>
-            Substitui sequências de controle na forma [KEY] por seus caracteres correspondentes.
-            </summary>
-        </member>
-        <member name="M:Etiquetas.Bibliotecas.SATO.ControlCharReplace.Execute(System.String,System.Collections.Generic.Dictionary{System.String,System.Char})">
-            <summary>
-            Substitui sequências de controle na forma [KEY] por seus caracteres correspondentes.
-            </summary>
-            <param name="data">string de dados.</param>
-            <param name="chrList">converte caracteres list Sato.</param>
-            <returns>string de retorno dos caracteres sato convertidos.</returns>
-        </member>
+        <!-- Badly formed XML comment ignored for member "T:Etiquetas.Bibliotecas.SATO.ControlCharReplace" -->
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.ControlCharReplace.Execute(System.String,System.Collections.Generic.Dictionary{System.String,System.Char})" -->
         <member name="T:Etiquetas.Bibliotecas.SATO.EAN13">
             <summary>
             Classe responsável por calcular e validar códigos EAN-13 (European Article Number).
@@ -196,6 +185,13 @@
             <param name="comandoCopias"></param>
             <returns></returns>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.SATO.IComandosPadraoImpressora">
+            <summary>
+            Interface para comandos padrão de linguagem Codigo Barras da impressora.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.IComandosPadraoImpressora.MarcadoresComCaracteresEspeciais(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.IComandosPadraoImpressora.RemoverMarcadoresComCaracteresEspeciais(System.String)" -->
         <member name="T:Etiquetas.Bibliotecas.SATO.QuebraComandosEmLinhasIndividuais">
             <summary>
             Quebra comandos impressora em linhas individuais.

@@ -4,6 +4,12 @@
         <name>Etiquetas.ConsoleUI</name>
     </assembly>
     <members>
+        <member name="M:Etiquetas.ConsoleUI.ExemploUsoExtracaoSpooler.Exemplo">
+            <summary>
+            Ponto de entrada principal para o exemplo de uso da classe <see cref="T:Etiquetas.Domain.Modelo.ExtracaoSpooler"/>.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the result of the asynchronous operation.</returns>
+        </member>
         <member name="T:Etiquetas.ConsoleUI.PacoteSatoSimulado">
             <summary>
             Simulador de Pacote Sato para testes.

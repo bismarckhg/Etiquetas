@@ -4,12 +4,12 @@ using System.Text;
 namespace Etiquetas.Bibliotecas.SATO
 {
     /// <summary>
-    /// Substitui sequências de controle na forma [KEY] por seus caracteres correspondentes.
+    /// Substitui sequências de controle na forma <KEY> ou [KEY] por seus caracteres correspondentes.
     /// </summary>
     public static class ControlCharReplace
     {
         /// <summary>
-        /// Substitui sequências de controle na forma [KEY] por seus caracteres correspondentes.
+        /// Substitui sequências de controle na forma <KEY> ou [KEY] por seus caracteres especiais correspondentes.
         /// </summary>
         /// <param name="data">string de dados.</param>
         /// <param name="chrList">converte caracteres list Sato.</param>
@@ -26,18 +26,26 @@ namespace Etiquetas.Bibliotecas.SATO
 
             while (startIndex < data.Length)
             {
-                int openBracketIndex = data.IndexOf('[', startIndex);
+                int openBracketIndex = data.IndexOf('<', startIndex);
                 if (openBracketIndex == -1)
                 {
-                    result.Append(data.Substring(startIndex));
-                    break;
+                    openBracketIndex = data.IndexOf('[', startIndex);
+                    if (openBracketIndex == -1)
+                    {
+                        result.Append(data.Substring(startIndex));
+                        break;
+                    }
                 }
 
-                int closeBracketIndex = data.IndexOf(']', openBracketIndex + 1);
+                int closeBracketIndex = data.IndexOf('>', openBracketIndex + 1);
                 if (closeBracketIndex == -1)
                 {
-                    result.Append(data.Substring(startIndex));
-                    break;
+                    closeBracketIndex = data.IndexOf(']', openBracketIndex + 1);
+                    if (closeBracketIndex == -1)
+                    {
+                        result.Append(data.Substring(startIndex));
+                        break;
+                    }
                 }
 
                 result.Append(data.Substring(startIndex, openBracketIndex - startIndex));

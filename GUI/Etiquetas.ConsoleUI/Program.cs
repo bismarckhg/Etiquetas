@@ -21,7 +21,9 @@ namespace Etiquetas.ConsoleUI
         {
             // await TesteEtiquetaPipeline.Teste();
 
-            TesteEtiqueta.ProcessarEtiquetaZPL();
+            // TesteEtiqueta.ProcessarEtiquetaZPL();
+
+            await ExemploUsoExtracaoSpooler.Exemplo().ConfigureAwait(false);
 
             Console.WriteLine("Teste concluído. Pressione qualquer tecla para sair.");
             Console.ReadKey();

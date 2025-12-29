@@ -3,22 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Etiquetas.Domain.Modelo
 {
+
+    /// <summary>
+    /// Classe principal para extração de dados do spooler de impressão.
+    /// </summary>
     [Serializable]
+    [XmlRoot("ExtracaoSpooler")]
     public class ExtracaoSpooler
     {
-        // Configurações ZPL
+        /// <summary>
+        /// Gets or sets - Configurações de comandos ZPL.
+        /// </summary>
+        [XmlElement("ZPL")]
         public ComandosZPL ZPL { get; set; }
 
-        // Configurações SBPL(ESC= Chr(27)) 
+        /// <summary>
+        /// Gets or sets - Configurações de comandos SBPL (ESC = Chr(27)).
+        /// </summary>
+        [XmlElement("SBPL")]
         public ComandosSBPL SBPL { get; set; }
 
+        /// <summary>
+        /// Gets or sets - Configurações de comandos EPL.
+        /// </summary>
+        [XmlElement("EPL")]
         public ComandosEPL EPL { get; set; }
 
-        // Campos da Etiqueta
-        public ComandosCampos Campos { get; set; }
+        /// <summary>
+        /// Gets or sets - Lista de campos da etiqueta.
+        /// </summary>
+        [XmlElement("Campos")]
+        public ListaComandosCampos Campos { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExtracaoSpooler"/> class.
+        /// Inicializa uma nova instância da classe <see cref="ExtracaoSpooler"/>.
+        /// </summary>
+        public ExtracaoSpooler()
+        {
+            ZPL = new ComandosZPL();
+            SBPL = new ComandosSBPL();
+            EPL = new ComandosEPL();
+            Campos = new ListaComandosCampos();
+        }
     }
 
     //<!-- Configurações ZPL -->
@@ -96,5 +127,4 @@ namespace Etiquetas.Domain.Modelo
     //    <add key = "Campo_Copias_Cmd1" value="^PQ"/>
     //    <add key = "Campo_Copias_Cmd2" value=""/>
     //    <add key = "Campo_Copias_Obrigatorio" value="true"/>
-
 }

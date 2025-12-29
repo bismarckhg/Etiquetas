@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +20,18 @@ namespace Etiquetas.Bibliotecas.ControleFilaDados
         /// </summary>
         public static void EnqueueBatch<T>(this ConcurrentQueue<IReadOnlyList<T>> fila, IEnumerable<T> itens)
         {
-            if (fila == null) throw new ArgumentNullException(nameof(fila));
-            if (itens == null) throw new ArgumentNullException(nameof(itens));
+            if (fila == null)
+            {
+                throw new ArgumentNullException(nameof(fila));
+            }
+
+            if (itens == null)
+            {
+                throw new ArgumentNullException(nameof(itens));
+            }
 
             // Se já for uma coleção indexada/estável, reaproveita; caso contrário, materializa como array.
-            var lote = itens as IReadOnlyList<T>;
-            if (lote == null)
-                lote = (itens as T[]) ?? itens.ToArray();
-
+            var lote = itens as IReadOnlyList<T> ?? (itens as T[]) ?? itens.ToArray();
             fila.Enqueue(lote);
         }
 
@@ -37,7 +41,10 @@ namespace Etiquetas.Bibliotecas.ControleFilaDados
         /// </summary>
         public static T[] ToFlattenedArraySnapshot<T>(this ConcurrentQueue<IReadOnlyList<T>> fila)
         {
-            if (fila == null) throw new ArgumentNullException(nameof(fila));
+            if (fila == null)
+            {
+                throw new ArgumentNullException(nameof(fila));
+            }
 
             // 1) Snapshot de LOTES (cada elemento é um lote completo)
             var lotes = fila.ToArray();
@@ -45,7 +52,9 @@ namespace Etiquetas.Bibliotecas.ControleFilaDados
             // 2) Soma total para alocar uma única vez
             var total = 0;
             for (int i = 0; i < lotes.Length; i++)
+            {
                 total += lotes[i].Count;
+            }
 
             // 3) Flatten preservando ordem
             var final = new T[total];
@@ -64,9 +73,12 @@ namespace Etiquetas.Bibliotecas.ControleFilaDados
                 else
                 {
                     for (int j = 0; j < l.Count; j++)
+                    {
                         final[off++] = l[j];
+                    }
                 }
             }
+
             return final;
         }
     }

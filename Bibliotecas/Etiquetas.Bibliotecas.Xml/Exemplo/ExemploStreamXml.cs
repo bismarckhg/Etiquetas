@@ -14,7 +14,6 @@ namespace Etiquetas.Bibliotecas.Xml.Exemplo
         private readonly StreamXml XmlStream;
         private readonly XmlDataGenerator _dataGenerator;
 
-
         public ExemploStreamXml()
         {
             this.XmlStream = new StreamXml();

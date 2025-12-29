@@ -12,7 +12,7 @@ namespace Etiquetas.Bibliotecas.SATO
         /// Montagem dicionario caracteres de controle SATO.
         /// </summary>
         /// <returns>retorno dicionario com caracteres sato para conversões.</returns>
-        public static Dictionary<string, char> CriaDicionario()
+        public static Dictionary<string, char> CriaDicionarioOpcao()
         {
             var ctr = new Dictionary<string, char>();
             ctr.Add("[NUL]", '\u0000');
@@ -55,7 +55,7 @@ namespace Etiquetas.Bibliotecas.SATO
         /// Montagem dicionario caracteres de controle SATO.
         /// </summary>
         /// <returns>retorno dicionario com caracteres sato para conversões.</returns>
-        public static Dictionary<string, char> CriaDicionarioOpcao()
+        public static Dictionary<string, char> CriaDicionario()
         {
             var ctr = new Dictionary<string, char>();
             ctr.Add("<NUL>", '\u0000');

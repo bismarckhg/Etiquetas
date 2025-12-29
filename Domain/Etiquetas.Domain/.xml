@@ -207,5 +207,180 @@
         <member name="P:Etiquetas.Domain.Entities.FaltaImprimir.State">
             <inheritdoc/>
         </member>
+        <member name="T:Etiquetas.Domain.Modelo.ComandosCampo">
+            <summary>
+            Comandos para campo específico na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.NomeCampo">
+            <summary>
+            Gets or sets - Nome do campo.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ComandoPosicao1">
+            <summary>
+            Gets or sets - Comando para posição 1 ou única.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ComandoPosicao2">
+            <summary>
+            Gets or sets - Comando para posição 2 caso a posição 1 não seja única ou suficiente.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.Obrigatorio">
+            <summary>
+            Gets or sets a value indicating whether gets or sets - Indica se o campo é obrigatório ou não.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.ComandosEPL">
+            <summary>
+            Comandos EPL (Eltron Programming Language).
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosEPL.EPL_ComandoTexto">
+            <summary>
+            Gets or sets - O comando EPL usado para imprimir texto na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosEPL.EPL_ComandoBarras">
+            <summary>
+            Gets or sets - O comando EPL usado para imprimir códigos de barras na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosEPL.EPL_MarcadorInicioTexto">
+            <summary>
+            Gets or sets - O marcador que indica o início de uma seção de texto em um comando EPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosEPL.EPL_MarcadorFimTexto">
+            <summary>
+            Gets or sets - O marcador que indica o fim de uma seção de texto em um comando EPL.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Modelo.ComandosEPL.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ComandosEPL"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ComandosEPL"/>.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.ComandosSBPL">
+            <summary>
+            Comandos SBPL (SATO Barcode Programming Language).
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosSBPL.SBPL_MarcadorESC">
+            <summary>
+            Gets or sets - O marcador ESC (caractere de escape) usado em comandos SBPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosSBPL.SBPL_ComandoHorizontal">
+            <summary>
+            Gets or sets - O comando SBPL usado para definir a posição horizontal de um elemento na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosSBPL.SBPL_ComandoVertical">
+            <summary>
+            Gets or sets - O comando SBPL usado para definir a posição vertical de um elemento na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosSBPL.SBPL_MarcadorInicioTexto">
+            <summary>
+            Gets or sets - O marcador que indica o início de uma seção de texto em um comando SBPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosSBPL.SBPL_MarcadorFimTexto">
+            <summary>
+            Gets or sets - O marcador que indica o fim de uma seção de texto em um comando SBPL.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Modelo.ComandosSBPL.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ComandosSBPL"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ComandosSBPL"/>.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.ComandosZPL">
+            <summary>
+            Comandos ZPL (Zebra Programming Language).
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosZPL.MarcadorInicioTexto">
+            <summary>
+            Gets or sets - O marcador que indica o início de uma seção de texto em um comando ZPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosZPL.MarcadorFimTexto">
+            <summary>
+            Gets or sets - O marcador que indica o fim de uma seção de texto em um comando ZPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosZPL.ComandoPosicao">
+            <summary>
+            Gets or sets - O comando ZPL usado para definir a posição de um elemento na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosZPL.ComandoCopias">
+            <summary>
+            Gets or sets - O comando ZPL usado para especificar o número de cópias a serem impressas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosZPL.ComandoBarras">
+            <summary>
+            Gets or sets - O comando ZPL usado para configurar a impressão de códigos de barras.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Modelo.ComandosZPL.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ComandosZPL"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ComandosZPL"/>.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.ExtracaoSpooler">
+            <summary>
+            Classe principal para extração de dados do spooler de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ExtracaoSpooler.ZPL">
+            <summary>
+            Gets or sets - Configurações de comandos ZPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ExtracaoSpooler.SBPL">
+            <summary>
+            Gets or sets - Configurações de comandos SBPL (ESC = Chr(27)).
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ExtracaoSpooler.EPL">
+            <summary>
+            Gets or sets - Configurações de comandos EPL.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ExtracaoSpooler.Campos">
+            <summary>
+            Gets or sets - Lista de campos da etiqueta.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Modelo.ExtracaoSpooler.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ExtracaoSpooler"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ExtracaoSpooler"/>.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.ListaComandosCampos">
+            <summary>
+            Container para lista de comandos de campos.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ListaComandosCampos.Comandos">
+            <summary>
+            Gets or sets - Lista de comandos de campos.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Domain.Modelo.ListaComandosCampos.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ListaComandosCampos"/> class.
+            Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ListaComandosCampos"/>.
+            </summary>
+        </member>
     </members>
 </doc>

@@ -421,10 +421,14 @@ namespace Etiquetas.Bibliotecas.Xml.Servicos
         public async Task SerializeAsync<T>(T obj, Stream stream, Encoding encoding = null, CancellationToken cancellationToken = default)
         {
             if (obj == null)
+            {
                 throw new ArgumentNullException(nameof(obj));
+            }
 
             if (stream == null)
+            {
                 throw new ArgumentNullException(nameof(stream));
+            }
 
             if (encoding == null)
             {

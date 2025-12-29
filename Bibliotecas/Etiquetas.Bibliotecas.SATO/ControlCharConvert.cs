@@ -10,7 +10,7 @@ namespace Etiquetas.Bibliotecas.SATO
     public static class ControlCharConvert
     {
         /// <summary>
-        /// Converte caracteres de controle para suas representações em string.
+        /// Converte caracteres de controle(especiais) para suas representações em string.
         /// </summary>
         /// <param name="data">string de dados a serem convertidos.</param>
         /// <param name="chrList">dicionario string de caracteres especiais a serem trocados no string.</param>
@@ -50,6 +50,7 @@ namespace Etiquetas.Bibliotecas.SATO
 
             return result.ToString();
         }
+
 
         //public static string CriaDicionario(string data, Dictionary<string, char> chrList)
         //{
