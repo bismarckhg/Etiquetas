@@ -154,11 +154,27 @@ namespace Etiquetas.Domain.Modelo
         private void InicializarComandosSBPL(TipoLinguagemImpressao tipoLinguagem)
         {
             this.TipoLinguagem = tipoLinguagem;
+            this.MarcadorComando = "<ESC>"; // Chr(27)
+            this.ComandoPosicao1 = "H";
+            this.ComandoPosicao2 = "V";
+            this.MarcadorInicioTexto = string.Empty;
+            this.MarcadorFimTexto = string.Empty;
+            this.ComandoTexto = string.Empty;
+            this.ComandoBarras = string.Empty;
+            this.ComandoCopias = string.Empty;
         }
 
         private void InicializarComandosEPL(TipoLinguagemImpressao tipoLinguagem)
         {
             this.TipoLinguagem = tipoLinguagem;
+            this.MarcadorComando = string.Empty;
+            this.MarcadorInicioTexto = "\"";
+            this.MarcadorFimTexto = "\"";
+            this.ComandoPosicao1 = string.Empty;
+            this.ComandoPosicao2 = string.Empty;
+            this.ComandoTexto = "A";
+            this.ComandoBarras = "B";
+            this.ComandoCopias = string.Empty;
         }
     }
 }

@@ -33,17 +33,17 @@ namespace Etiquetas.Domain.Modelo
         /// Gets or sets - O marcador ESC (caractere de escape) usado em comandos SBPL.
         /// </summary>
         [XmlElement("MarcadorESC")]
-        public string SBPL_MarcadorESC
+        public string MarcadorComando
         {
-            get => MarcadoresComCaracteresEspeciais(marcadorESC);
-            set => this.marcadorESC = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(marcadorComando);
+            set => this.marcadorComando = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
         /// Gets or sets - O comando SBPL usado para definir a posição horizontal de um elemento na etiqueta.
         /// </summary>
         [XmlElement("ComandoHorizontal")]
-        public string SBPL_ComandoHorizontal
+        public string ComandoHorizontal
         {
             get => MarcadoresComCaracteresEspeciais(comandoHorizontal);
             set => this.comandoHorizontal = RemoverMarcadoresComCaracteresEspeciais(value);
