@@ -21,10 +21,10 @@ namespace Etiquetas.Domain.Modelo
         private string marcadorFimTexto;
 
         [XmlIgnore]
-        private string comandoPosicao1;
+        private string posicaoComando1;
 
         [XmlIgnore]
-        private string comandoPosicao2;
+        private string posicaoComando2;
 
         [XmlIgnore]
         private string comandoTexto;
@@ -41,7 +41,7 @@ namespace Etiquetas.Domain.Modelo
         public TipoLinguagemImpressao TipoLinguagem { get; set; }
 
         /// <summary>
-        /// Gets or sets - O marcador ESC (caractere de escape) usado em comandos SBPL.
+        /// Gets or sets - O caractere marcador (caractere especial ou não) usado no início do comando.
         /// </summary>
         [XmlElement("MarcadorComando")]
         public string MarcadorComando
@@ -51,7 +51,7 @@ namespace Etiquetas.Domain.Modelo
         }
 
         /// <summary>
-        /// Gets or sets - O marcador que indica o início de uma seção de texto em um comando ZPL.
+        /// Gets or sets - O marcador que indica o início de uma seção de texto em um comando.
         /// </summary>
         [XmlElement("MarcadorInicioTexto")]
         public string MarcadorInicioTexto
@@ -61,7 +61,7 @@ namespace Etiquetas.Domain.Modelo
         }
 
         /// <summary>
-        /// Gets or sets - O marcador que indica o fim de uma seção de texto em um comando ZPL.
+        /// Gets or sets - O marcador que indica o fim de uma seção de texto em um comando.
         /// </summary>
         [XmlElement("MarcadorFimTexto")]
         public string MarcadorFimTexto
@@ -71,27 +71,27 @@ namespace Etiquetas.Domain.Modelo
         }
 
         /// <summary>
-        /// Gets or sets - O comando ZPL usado para definir a posição de um elemento na etiqueta.
+        /// Gets or sets - linha e coluna (separada por virgula), ou linha ou coluna utilizada na posicao do campo.
         /// </summary>
         [XmlElement("ComandoPosicao1")]
         public string ComandoPosicao1
         {
-            get => MarcadoresComCaracteresEspeciais(comandoPosicao1);
-            set => this.comandoPosicao1 = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(posicaoComando1);
+            set => this.posicaoComando1 = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
-        /// Gets or sets - O comando ZPL usado para definir a posição de um elemento na etiqueta.
+        /// Gets or sets - ou linha ou coluna utilizada na posicao do campo.
         /// </summary>
         [XmlElement("ComandoPosicao2")]
         public string ComandoPosicao2
         {
-            get => MarcadoresComCaracteresEspeciais(comandoPosicao2);
-            set => this.comandoPosicao2 = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(posicaoComando2);
+            set => this.posicaoComando2 = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
-        /// Gets or sets - O comando EPL usado para imprimir texto na etiqueta.
+        /// Gets or sets - O comando usado para imprimir texto na etiqueta.
         /// </summary>
         [XmlElement("ComandoTexto")]
         public string ComandoTexto
@@ -101,7 +101,7 @@ namespace Etiquetas.Domain.Modelo
         }
 
         /// <summary>
-        /// Gets or sets - O comando EPL usado para imprimir códigos de barras na etiqueta.
+        /// Gets or sets - O comando usado para imprimir códigos de barras na etiqueta.
         /// </summary>
         [XmlElement("ComandoBarras")]
         public string ComandoBarras
@@ -111,7 +111,7 @@ namespace Etiquetas.Domain.Modelo
         }
 
         /// <summary>
-        /// Gets or sets - O comando ZPL usado para especificar o número de cópias a serem impressas.
+        /// Gets or sets - O comando usado para especificar o número de cópias a serem impressas.
         /// </summary>
         [XmlElement("ComandoCopias")]
         public string ComandoCopias
@@ -120,6 +120,19 @@ namespace Etiquetas.Domain.Modelo
             set => this.comandoCopias = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComandosLinguagem"/> class.
+        /// Inicializa uma nova instância da classe <see cref="ComandosLinguagem"/>.
+        /// </summary>
+        public ComandosLinguagem()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComandosLinguagem"/> class.
+        /// Inicializa uma nova instância da classe <see cref="ComandosLinguagem"/>.
+        /// </summary>
+        /// <param name="tipoLinguagem">Define o tipo de linguagem da impressora.</param>
         public ComandosLinguagem(TipoLinguagemImpressao tipoLinguagem)
         {
             switch (tipoLinguagem)

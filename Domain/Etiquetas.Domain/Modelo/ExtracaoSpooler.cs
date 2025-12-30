@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Etiquetas.Bibliotecas.SATO;
 
 namespace Etiquetas.Domain.Modelo
 {
@@ -16,22 +17,9 @@ namespace Etiquetas.Domain.Modelo
     public class ExtracaoSpooler
     {
         /// <summary>
-        /// Gets or sets - Configurações de comandos ZPL.
+        /// Gets or sets - Configurações de comandos da linguagem de impressão.
         /// </summary>
-        [XmlElement("ZPL")]
-        public ComandosZPL ZPL { get; set; }
-
-        /// <summary>
-        /// Gets or sets - Configurações de comandos SBPL (ESC = Chr(27)).
-        /// </summary>
-        [XmlElement("SBPL")]
-        public ComandosSBPL SBPL { get; set; }
-
-        /// <summary>
-        /// Gets or sets - Configurações de comandos EPL.
-        /// </summary>
-        [XmlElement("EPL")]
-        public ComandosEPL EPL { get; set; }
+        public ComandosLinguagem ComandosImpressao { get; set; }
 
         /// <summary>
         /// Gets or sets - Lista de campos da etiqueta.
@@ -39,16 +27,20 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("Campos")]
         public ListaComandosCampos Campos { get; set; }
 
+        public ExtracaoSpooler()
+        {
+            this.ComandosImpressao = new ComandosLinguagem();
+            this.Campos = new ListaComandosCampos();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtracaoSpooler"/> class.
         /// Inicializa uma nova instância da classe <see cref="ExtracaoSpooler"/>.
         /// </summary>
-        public ExtracaoSpooler()
+        public ExtracaoSpooler(TipoLinguagemImpressao tipoLinguagemImpressao)
         {
-            ZPL = new ComandosZPL();
-            SBPL = new ComandosSBPL();
-            EPL = new ComandosEPL();
-            Campos = new ListaComandosCampos();
+            this.ComandosImpressao = new ComandosLinguagem(tipoLinguagemImpressao);
+            this.Campos = new ListaComandosCampos();
         }
     }
 
