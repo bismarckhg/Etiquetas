@@ -36,15 +36,129 @@ namespace Etiquetas.Domain.Modelo
         private string comandoCopias;
 
         /// <summary>
+        /// Gets or sets - Enum que indica o tipo de linguagem de impressão.
+        /// </summary>
+        public TipoLinguagemImpressao TipoLinguagem { get; set; }
+
+        /// <summary>
         /// Gets or sets - O marcador ESC (caractere de escape) usado em comandos SBPL.
         /// </summary>
-        [XmlElement("MarcadorESC")]
-        public string SBPL_MarcadorESC
+        [XmlElement("MarcadorComando")]
+        public string MarcadorComando
         {
             get => MarcadoresComCaracteresEspeciais(marcadorComando);
             set => this.marcadorComando = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
-        public TipoLinguagemImpressao TipoLinguagem { get; set; }
+        /// <summary>
+        /// Gets or sets - O marcador que indica o início de uma seção de texto em um comando ZPL.
+        /// </summary>
+        [XmlElement("MarcadorInicioTexto")]
+        public string MarcadorInicioTexto
+        {
+            get => MarcadoresComCaracteresEspeciais(marcadorInicioTexto);
+            set => this.marcadorInicioTexto = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        /// <summary>
+        /// Gets or sets - O marcador que indica o fim de uma seção de texto em um comando ZPL.
+        /// </summary>
+        [XmlElement("MarcadorFimTexto")]
+        public string MarcadorFimTexto
+        {
+            get => MarcadoresComCaracteresEspeciais(marcadorFimTexto);
+            set => this.marcadorFimTexto = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        /// <summary>
+        /// Gets or sets - O comando ZPL usado para definir a posição de um elemento na etiqueta.
+        /// </summary>
+        [XmlElement("ComandoPosicao1")]
+        public string ComandoPosicao1
+        {
+            get => MarcadoresComCaracteresEspeciais(comandoPosicao1);
+            set => this.comandoPosicao1 = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        /// <summary>
+        /// Gets or sets - O comando ZPL usado para definir a posição de um elemento na etiqueta.
+        /// </summary>
+        [XmlElement("ComandoPosicao2")]
+        public string ComandoPosicao2
+        {
+            get => MarcadoresComCaracteresEspeciais(comandoPosicao2);
+            set => this.comandoPosicao2 = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        /// <summary>
+        /// Gets or sets - O comando EPL usado para imprimir texto na etiqueta.
+        /// </summary>
+        [XmlElement("ComandoTexto")]
+        public string ComandoTexto
+        {
+            get => MarcadoresComCaracteresEspeciais(comandoTexto);
+            set => this.comandoTexto = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        /// <summary>
+        /// Gets or sets - O comando EPL usado para imprimir códigos de barras na etiqueta.
+        /// </summary>
+        [XmlElement("ComandoBarras")]
+        public string ComandoBarras
+        {
+            get => MarcadoresComCaracteresEspeciais(comandoBarras);
+            set => this.comandoBarras = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        /// <summary>
+        /// Gets or sets - O comando ZPL usado para especificar o número de cópias a serem impressas.
+        /// </summary>
+        [XmlElement("ComandoCopias")]
+        public string ComandoCopias
+        {
+            get => MarcadoresComCaracteresEspeciais(comandoCopias);
+            set => this.comandoCopias = RemoverMarcadoresComCaracteresEspeciais(value);
+        }
+
+        public ComandosLinguagem(TipoLinguagemImpressao tipoLinguagem)
+        {
+            switch (tipoLinguagem)
+            {
+                case TipoLinguagemImpressao.ZPL:
+                    InicializarComandosZPL(tipoLinguagem);
+                    break;
+                case TipoLinguagemImpressao.SBPL:
+                    InicializarComandosSBPL(tipoLinguagem);
+                    break;
+                case TipoLinguagemImpressao.EPL:
+                    InicializarComandosEPL(tipoLinguagem);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void InicializarComandosZPL(TipoLinguagemImpressao tipoLinguagem)
+        {
+            this.TipoLinguagem = tipoLinguagem;
+            this.MarcadorComando = "^";
+            this.MarcadorInicioTexto = "FD";
+            this.MarcadorFimTexto = "FS";
+            this.ComandoPosicao1 = "FO"; // Field Origin
+            this.ComandoPosicao2 = string.Empty; // Field Data
+            this.ComandoTexto = "A";
+            this.ComandoBarras = "B";
+            this.ComandoCopias = "PQ";
+        }
+
+        private void InicializarComandosSBPL(TipoLinguagemImpressao tipoLinguagem)
+        {
+            this.TipoLinguagem = tipoLinguagem;
+        }
+
+        private void InicializarComandosEPL(TipoLinguagemImpressao tipoLinguagem)
+        {
+            this.TipoLinguagem = tipoLinguagem;
+        }
     }
 }
