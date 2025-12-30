@@ -15,7 +15,7 @@ namespace Etiquetas.Domain.Modelo
     public class ComandosSBPL : IComandosPadraoImpressora
     {
         [XmlIgnore]
-        private string marcadorESC;
+        private string marcadorComando;
 
         [XmlIgnore]
         private string comandoHorizontal;

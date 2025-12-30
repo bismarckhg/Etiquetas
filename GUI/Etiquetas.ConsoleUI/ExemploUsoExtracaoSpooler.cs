@@ -46,25 +46,81 @@ namespace Etiquetas.ConsoleUI
             // Adicionar campos
             config.Campos.Comandos.Add(new ComandosCampo
             {
+                NomeCampo = "CodigoMaterial",
+                ComandoPosicao1 = "^FO12,68",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = true
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "DescricaoMedicamento",
+                ComandoPosicao1 = "^FO12,23",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = true
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "DescricaoMedicamento2",
+                ComandoPosicao1 = "^FO12,36",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "Campo_PrincipioAtivo",
+                ComandoPosicao1 = "^FO12,39",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "Campo_PrincipioAtivo2",
+                ComandoPosicao1 = "^FO12,52",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "Lote",
+                ComandoPosicao1 = "^FO12,85",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "Validade",
+                ComandoPosicao1 = "^FO135,68",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
+                NomeCampo = "CodigoUsuario",
+                ComandoPosicao1 = "^FO170,85",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
+            });
+
+            config.Campos.Comandos.Add(new ComandosCampo
+            {
                 NomeCampo = "CodigoBarras",
-                ComandoPosicao1 = "^FO50,50^BY2^BCN,100,Y,N,N^FD{valor}^FS",
-                ComandoPosicao2 = null,
-                Obrigatorio = true
+                ComandoPosicao1 = "^FO025,100",
+                ComandoPosicao2 = string.Empty,
+                Obrigatorio = false
             });
 
             config.Campos.Comandos.Add(new ComandosCampo
             {
-                NomeCampo = "Destinatario",
-                ComandoPosicao1 = "^FO50,200^A0N,30,30^FD{valor}^FS",
-                ComandoPosicao2 = "^FO50,250^A0N,25,25^FD{valor2}^FS",
-                Obrigatorio = true
-            });
-
-            config.Campos.Comandos.Add(new ComandosCampo
-            {
-                NomeCampo = "Observacao",
-                ComandoPosicao1 = "^FO50,400^A0N,20,20^FD{valor}^FS",
-                ComandoPosicao2 = null,
+                NomeCampo = "Copias",
+                ComandoPosicao1 = "^PQ",
+                ComandoPosicao2 = string.Empty,
                 Obrigatorio = false
             });
 
