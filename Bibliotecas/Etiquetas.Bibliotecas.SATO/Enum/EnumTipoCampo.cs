@@ -9,7 +9,7 @@ namespace Etiquetas.Bibliotecas.SATO
     /// <summary>
     /// Enumeração interna que identifica o campo sendo processado na etiqueta.
     /// </summary>
-    public enum TipoCampo
+    public enum EnumTipoCampo
     {
         Nenhum = 0,
         CodigoMaterial,

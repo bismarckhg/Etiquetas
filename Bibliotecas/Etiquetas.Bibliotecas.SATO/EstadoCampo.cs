@@ -12,7 +12,7 @@ namespace Etiquetas.Bibliotecas.SATO
     public class EstadoCampo
     {
         /// <summary>Tipo do campo identificado</summary>
-        public TipoCampo Tipo { get; set; }
+        public EnumTipoCampo Tipo { get; set; }
 
         /// <summary>Indica se o primeiro comando de posicionamento foi encontrado</summary>
         public bool Cmd1Encontrado { get; set; }
@@ -34,7 +34,7 @@ namespace Etiquetas.Bibliotecas.SATO
         /// <summary>Reseta o estado do campo</summary>
         public void Reset()
         {
-            Tipo = TipoCampo.Nenhum;
+            Tipo = EnumTipoCampo.Nenhum;
             Cmd1Encontrado = false;
             Cmd2Encontrado = false;
         }

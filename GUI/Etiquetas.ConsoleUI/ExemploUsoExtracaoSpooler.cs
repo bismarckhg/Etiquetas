@@ -22,7 +22,7 @@ namespace Etiquetas.ConsoleUI
             XmlStream = new StreamXml();
 
             // Criar configuração completa
-            var config = new ExtracaoSpooler(TipoLinguagemImpressao.ZPL);
+            var config = new ExtracaoSpooler(EnumTipoLinguagemImpressao.ZPL);
 
             // Configurar ZPL
             config.ComandosImpressao.MarcadorComando = "^";

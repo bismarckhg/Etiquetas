@@ -30,6 +30,6 @@ namespace Etiquetas.Core.Interfaces
         /// Obtém ou define o tipo de posicionamento utilizado por este campo.
         /// Calculado automaticamente baseado em Comando1 e Comando2.
         /// </summary>
-        TipoPosicionamento TipoPosicionamento { get; }
+        EnumTipoPosicionamento TipoPosicionamento { get; }
     }
 }

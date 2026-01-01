@@ -23,21 +23,27 @@ namespace Etiquetas.Domain.Configuracao
         public bool Obrigatorio { get; set; }
 
         /// <inheritdoc/>
-        public TipoPosicionamento TipoPosicionamento
+        public EnumTipoPosicionamento TipoPosicionamento
         {
             get
             {
                 if (string.IsNullOrWhiteSpace(Comando2))
-                    return TipoPosicionamento.ComandoUnico;
+                {
+                    return EnumTipoPosicionamento.ComandoUnico;
+                }
 
                 // Detecta se é H/V ou V/H baseado nos comandos
                 if (Comando1.Contains("H") || Comando1.Contains("h"))
-                    return TipoPosicionamento.HorizontalVertical;
+                {
+                    return EnumTipoPosicionamento.HorizontalVertical;
+                }
 
                 if (Comando1.Contains("V") || Comando1.Contains("v"))
-                    return TipoPosicionamento.VerticalHorizontal;
+                {
+                    return EnumTipoPosicionamento.VerticalHorizontal;
+                }
 
-                return TipoPosicionamento.ComandoUnico;
+                return EnumTipoPosicionamento.ComandoUnico;
             }
         }
     }

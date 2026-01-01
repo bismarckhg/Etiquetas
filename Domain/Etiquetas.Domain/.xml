@@ -217,12 +217,17 @@
             Gets or sets - Nome do campo.
             </summary>
         </member>
-        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ComandoPosicao1">
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ComandoEspecifico">
+            <summary>
+            Gets or sets - O comando usado para definir a posição de um elemento na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.PosicaoComando1">
             <summary>
             Gets or sets - Comando para posição 1 ou única.
             </summary>
         </member>
-        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ComandoPosicao2">
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.PosicaoComando2">
             <summary>
             Gets or sets - Comando para posição 2 caso a posição 1 não seja única ou suficiente.
             </summary>
@@ -230,6 +235,11 @@
         <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.Obrigatorio">
             <summary>
             Gets or sets a value indicating whether gets or sets - Indica se o campo é obrigatório ou não.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.ComandosLinguagem">
+            <summary>
+            Comandos padrão para uma linguagem de impressão.
             </summary>
         </member>
         <member name="P:Etiquetas.Domain.Modelo.ComandosLinguagem.TipoLinguagem">
@@ -250,11 +260,6 @@
         <member name="P:Etiquetas.Domain.Modelo.ComandosLinguagem.MarcadorFimTexto">
             <summary>
             Gets or sets - O marcador que indica o fim de uma seção de texto em um comando.
-            </summary>
-        </member>
-        <member name="P:Etiquetas.Domain.Modelo.ComandosLinguagem.ComandoEspecifico">
-            <summary>
-            Gets or sets - O comando usado para definir a posição de um elemento na etiqueta.
             </summary>
         </member>
         <member name="P:Etiquetas.Domain.Modelo.ComandosLinguagem.ComandoPosicao1">

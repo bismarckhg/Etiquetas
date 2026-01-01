@@ -1,3 +1,4 @@
+using Etiquetas.Bibliotecas.SATO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,14 @@ namespace Etiquetas.Domain.Modelo
     /// </summary>
     [Serializable]
     [XmlRoot("ListaComandosCampos")]
-    public class ListaComandosCampos
+    public class ListaComandosCampos : IListaComandosCampos
     {
         /// <summary>
         /// Gets or sets - Lista de comandos de campos.
         /// </summary>
         [XmlArray("Comandos")]
         [XmlArrayItem("Comando")]
-        public List<ComandosCampo> Comandos { get; set; }
+        public List<IComandosPadraoImpressora> Comandos { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListaComandosCampos"/> class.

@@ -139,7 +139,7 @@ namespace Etiquetas.Application.Mappers
             // Tenta identificar qual campo é este comando
             var campoIdentificado = IdentificarCampo(comandoNormalizado, config, estado);
 
-            if (campoIdentificado != TipoCampo.Nenhum)
+            if (campoIdentificado != EnumTipoCampo.Nenhum)
             {
                 // Verifica se já temos todos os comandos de posição necessários
                 var configCampo = ObterConfiguracaoCampo(campoIdentificado, config);
@@ -171,25 +171,25 @@ namespace Etiquetas.Application.Mappers
         /// <param name="config">Configuração dos campos</param>
         /// <param name="estado">Estado atual</param>
         /// <returns>Tipo do campo identificado</returns>
-        private static TipoCampo IdentificarCampo(
+        private static EnumTipoCampo IdentificarCampo(
             string comando,
             IPosicaoCamposEtiqueta config,
             EstadoCampo estado)
         {
             // Lista de todos os campos possíveis
-            var campos = new Dictionary<TipoCampo, IConfiguracaoCampo>
+            var campos = new Dictionary<EnumTipoCampo, IConfiguracaoCampo>
             {
-                { TipoCampo.CodigoMaterial, config.CodigoMaterial },
-                { TipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
-                { TipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
-                { TipoCampo.PrincipioAtivo, config.PrincipioAtivo },
-                { TipoCampo.PrincipioAtivo2, config.PrincipioAtivo2 },
-                { TipoCampo.Embalagem, config.Embalagem },
-                { TipoCampo.Lote, config.Lote },
-                { TipoCampo.Validade, config.Validade },
-                { TipoCampo.CodigoUsuario, config.CodigoUsuario },
-                { TipoCampo.CodigoBarras, config.CodigoBarras },
-                { TipoCampo.Copias, config.Copias }
+                { EnumTipoCampo.CodigoMaterial, config.CodigoMaterial },
+                { EnumTipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
+                { EnumTipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
+                { EnumTipoCampo.PrincipioAtivo, config.PrincipioAtivo },
+                { EnumTipoCampo.PrincipioAtivo2, config.PrincipioAtivo2 },
+                { EnumTipoCampo.Embalagem, config.Embalagem },
+                { EnumTipoCampo.Lote, config.Lote },
+                { EnumTipoCampo.Validade, config.Validade },
+                { EnumTipoCampo.CodigoUsuario, config.CodigoUsuario },
+                { EnumTipoCampo.CodigoBarras, config.CodigoBarras },
+                { EnumTipoCampo.Copias, config.Copias }
             };
 
             foreach (var kvp in campos)
@@ -240,7 +240,7 @@ namespace Etiquetas.Application.Mappers
                 }
             }
 
-            return TipoCampo.Nenhum;
+            return EnumTipoCampo.Nenhum;
         }
 
         /// <summary>
@@ -305,21 +305,21 @@ namespace Etiquetas.Application.Mappers
         /// <param name="tipo">Tipo do campo</param>
         /// <param name="config">Configuração completa</param>
         /// <returns>Configuração do campo ou null</returns>
-        private static IConfiguracaoCampo ObterConfiguracaoCampo(TipoCampo tipo, IPosicaoCamposEtiqueta config)
+        private static IConfiguracaoCampo ObterConfiguracaoCampo(EnumTipoCampo tipo, IPosicaoCamposEtiqueta config)
         {
             switch (tipo)
             {
-                case TipoCampo.CodigoMaterial: return config.CodigoMaterial;
-                case TipoCampo.DescricaoMedicamento: return config.DescricaoMedicamento;
-                case TipoCampo.DescricaoMedicamento2: return config.DescricaoMedicamento2;
-                case TipoCampo.PrincipioAtivo: return config.PrincipioAtivo;
-                case TipoCampo.PrincipioAtivo2: return config.PrincipioAtivo2;
-                case TipoCampo.Embalagem: return config.Embalagem;
-                case TipoCampo.Lote: return config.Lote;
-                case TipoCampo.Validade: return config.Validade;
-                case TipoCampo.CodigoUsuario: return config.CodigoUsuario;
-                case TipoCampo.CodigoBarras: return config.CodigoBarras;
-                case TipoCampo.Copias: return config.Copias;
+                case EnumTipoCampo.CodigoMaterial: return config.CodigoMaterial;
+                case EnumTipoCampo.DescricaoMedicamento: return config.DescricaoMedicamento;
+                case EnumTipoCampo.DescricaoMedicamento2: return config.DescricaoMedicamento2;
+                case EnumTipoCampo.PrincipioAtivo: return config.PrincipioAtivo;
+                case EnumTipoCampo.PrincipioAtivo2: return config.PrincipioAtivo2;
+                case EnumTipoCampo.Embalagem: return config.Embalagem;
+                case EnumTipoCampo.Lote: return config.Lote;
+                case EnumTipoCampo.Validade: return config.Validade;
+                case EnumTipoCampo.CodigoUsuario: return config.CodigoUsuario;
+                case EnumTipoCampo.CodigoBarras: return config.CodigoBarras;
+                case EnumTipoCampo.Copias: return config.Copias;
                 default: return null;
             }
         }
@@ -330,41 +330,41 @@ namespace Etiquetas.Application.Mappers
         /// <param name="tipo">Tipo do campo</param>
         /// <param name="valor">Valor a ser atribuído</param>
         /// <param name="dados">Objeto DTO</param>
-        private static void AtribuirValorAoCampo(TipoCampo tipo, string valor, EtiquetaImpressaoDto dados)
+        private static void AtribuirValorAoCampo(EnumTipoCampo tipo, string valor, EtiquetaImpressaoDto dados)
         {
             switch (tipo)
             {
-                case TipoCampo.CodigoMaterial:
+                case EnumTipoCampo.CodigoMaterial:
                     dados.CodigoMaterial = ExtrairApenasDigitos(valor);
                     break;
-                case TipoCampo.DescricaoMedicamento:
+                case EnumTipoCampo.DescricaoMedicamento:
                     dados.DescricaoMedicamento = valor;
                     break;
-                case TipoCampo.DescricaoMedicamento2:
+                case EnumTipoCampo.DescricaoMedicamento2:
                     dados.DescricaoMedicamento2 = valor;
                     break;
-                case TipoCampo.PrincipioAtivo:
+                case EnumTipoCampo.PrincipioAtivo:
                     dados.PrincipioAtivo = valor;
                     break;
-                case TipoCampo.PrincipioAtivo2:
+                case EnumTipoCampo.PrincipioAtivo2:
                     dados.PrincipioAtivo2 = valor;
                     break;
-                case TipoCampo.Embalagem:
+                case EnumTipoCampo.Embalagem:
                     dados.Embalagem = valor;
                     break;
-                case TipoCampo.Lote:
+                case EnumTipoCampo.Lote:
                     dados.Lote = valor;
                     break;
-                case TipoCampo.Validade:
+                case EnumTipoCampo.Validade:
                     dados.Validade = valor;
                     break;
-                case TipoCampo.CodigoUsuario:
+                case EnumTipoCampo.CodigoUsuario:
                     dados.CodigoUsuario = valor;
                     break;
-                case TipoCampo.CodigoBarras:
+                case EnumTipoCampo.CodigoBarras:
                     dados.CodigoBarras = ProcessarCodigoBarras(valor);
                     break;
-                case TipoCampo.Copias:
+                case EnumTipoCampo.Copias:
                     dados.QuantidadeSolicitada = valor;
                     break;
             }

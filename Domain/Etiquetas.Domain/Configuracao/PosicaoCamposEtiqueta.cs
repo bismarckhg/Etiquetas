@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Etiquetas.Core.Interfaces;
 using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Domain.Modelo;
 
 namespace Etiquetas.Domain.Configuracao
 {
@@ -15,79 +16,41 @@ namespace Etiquetas.Domain.Configuracao
     /// </summary>
     public class PosicaoCamposEtiqueta : IPosicaoCamposEtiqueta
     {
+        /// <inehritdoc/>
+        public IExtracaoSpooler ConfiguracaoSpooler { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PosicaoCamposEtiqueta"/> class.
         /// Inicializa uma nova instância da classe <see cref="PosicaoCamposEtiqueta"/>,
         /// carregando todas as configurações do appsettings.xml.
         /// </summary>
         /// <param name="tipoLinguagem">Tipo de linguagem de impressão a ser utilizada</param>
-        public PosicaoCamposEtiqueta(TipoLinguagemImpressao tipoLinguagem)
+        public PosicaoCamposEtiqueta(EnumTipoLinguagemImpressao tipoLinguagem)
         {
-            TipoLinguagem = tipoLinguagem;
+            this.ConfiguracaoSpooler = new ExtracaoSpooler(tipoLinguagem);
             CarregarConfiguracoes();
         }
-
-        /// <inheritdoc/>
-        public TipoLinguagemImpressao TipoLinguagem { get; private set; }
-
-        /// <inheritdoc/>
-        public string MarcadorInicialTexto { get; private set; }
-
-        /// <inheritdoc/>
-        public string MarcadorFinalTexto { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo CodigoMaterial { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo DescricaoMedicamento { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo DescricaoMedicamento2 { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo PrincipioAtivo { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo PrincipioAtivo2 { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo Embalagem { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo Lote { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo Validade { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo CodigoUsuario { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo CodigoBarras { get; private set; }
-
-        /// <inheritdoc/>
-        public IConfiguracaoCampo Copias { get; private set; }
 
         /// <summary>
         /// Carrega todas as configurações do arquivo appsettings.xml.
         /// </summary>
         private void CarregarConfiguracoes()
         {
+
             // Carrega marcadores de texto baseado na linguagem
-            switch (TipoLinguagem)
+            switch (this.ConfiguracaoSpooler.ComandosImpressao.)
             {
-                case TipoLinguagemImpressao.ZPL:
+                case EnumTipoLinguagemImpressao.ZPL:
                     MarcadorInicialTexto = ObterConfiguracao("ZPL_MarcadorInicioTexto", "^FD");
                     MarcadorFinalTexto = ObterConfiguracao("ZPL_MarcadorFimTexto", "^FS");
                     break;
 
-                case TipoLinguagemImpressao.SBPL:
+                case EnumTipoLinguagemImpressao.SBPL:
                     MarcadorInicialTexto = ObterConfiguracao("SBPL_MarcadorInicioTexto", "");
                     MarcadorFinalTexto = ObterConfiguracao("SBPL_MarcadorFimTexto", "");
                     break;
 
-                case TipoLinguagemImpressao.EPL:
+                case EnumTipoLinguagemImpressao.EPL:
                     MarcadorInicialTexto = ObterConfiguracao("EPL_MarcadorInicioTexto", "\"");
                     MarcadorFinalTexto = ObterConfiguracao("EPL_MarcadorFimTexto", "\"");
                     break;

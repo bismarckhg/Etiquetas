@@ -14,7 +14,7 @@ namespace Etiquetas.ConsoleUI
         /// <summary>
         /// Processa uma etiqueta no formato ZPL.
         /// </summary>
-        public static void ProcessarEtiquetaZPL()
+        public static void ProcessarEtiqueta()
         {
             Console.WriteLine("=== Processando Etiqueta ZPL ===\n");
 
@@ -48,7 +48,7 @@ namespace Etiquetas.ConsoleUI
 ^FO025,100^BEN,20,Y,N,Y^FD200004231912^FS 
 ^XZ
 ";
-            var config = new PosicaoCamposEtiqueta(TipoLinguagemImpressao.ZPL);
+            var config = new PosicaoCamposEtiqueta(EnumTipoLinguagemImpressao.ZPL);
             //var dados = ExtratorInteligenteDadosEtiqueta.Extrair(etiquetaZPL, config);
             var dados = Etiquetas.Application.Mappers.EtiquetaMapper.SpolerToDto(etiquetaZPL, config);
             ImprimirDados(dados);

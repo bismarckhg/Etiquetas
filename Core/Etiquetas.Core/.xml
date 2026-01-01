@@ -590,6 +590,21 @@
             <param name="package">Pacoye de leitura da Impressora Sato.</param>
             <returns>Lista de Pacotes formatados da impressora sato.</returns>
         </member>
+        <member name="T:Etiquetas.Domain.Modelo.IExtracaoSpooler">
+            <summary>
+            Classe principal para extração de dados do spooler de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IExtracaoSpooler.ComandosImpressao">
+            <summary>
+            Comandos padrão para uma linguagem de impressão.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IExtracaoSpooler.Campos">
+            <summary>
+            Get e set - Container para lista de comandos de campos.
+            </summary>
+        </member>
         <member name="T:Etiqueta.Application.DTOs.ISatoDto">
             <summary>
             

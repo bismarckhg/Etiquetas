@@ -5,27 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Core.Interfaces;
 
 namespace Etiquetas.Domain.Modelo
 {
-
     /// <summary>
     /// Classe principal para extração de dados do spooler de impressão.
     /// </summary>
     [Serializable]
     [XmlRoot("ExtracaoSpooler")]
-    public class ExtracaoSpooler
+    public class ExtracaoSpooler : IExtracaoSpooler
     {
         /// <summary>
         /// Gets or sets - Configurações de comandos da linguagem de impressão.
         /// </summary>
-        public ComandosLinguagem ComandosImpressao { get; set; }
+        public IComandosPadraoImpressora ComandosImpressao { get; set; }
 
         /// <summary>
         /// Gets or sets - Lista de campos da etiqueta.
         /// </summary>
         [XmlElement("Campos")]
-        public ListaComandosCampos Campos { get; set; }
+        public IListaComandosCampos Campos { get; set; }
 
         public ExtracaoSpooler()
         {
@@ -37,7 +37,7 @@ namespace Etiquetas.Domain.Modelo
         /// Initializes a new instance of the <see cref="ExtracaoSpooler"/> class.
         /// Inicializa uma nova instância da classe <see cref="ExtracaoSpooler"/>.
         /// </summary>
-        public ExtracaoSpooler(TipoLinguagemImpressao tipoLinguagemImpressao)
+        public ExtracaoSpooler(EnumTipoLinguagemImpressao tipoLinguagemImpressao)
         {
             this.ComandosImpressao = new ComandosLinguagem(tipoLinguagemImpressao);
             this.Campos = new ListaComandosCampos();

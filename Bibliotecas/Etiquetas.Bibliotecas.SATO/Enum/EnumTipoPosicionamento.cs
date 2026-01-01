@@ -9,7 +9,7 @@ namespace Etiquetas.Bibliotecas.SATO
     /// <summary>
     /// Enumeração que define o tipo de posicionamento dos campos na etiqueta.
     /// </summary>
-    public enum TipoPosicionamento
+    public enum EnumTipoPosicionamento
     {
         /// <summary>Posição definida em um único comando (ex: ZPL ^FO10,20)</summary>
         ComandoUnico,

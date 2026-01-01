@@ -1,28 +1,18 @@
-using Etiquetas.Bibliotecas.SATO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Etiquetas.Bibliotecas.SATO;
 
 namespace Etiquetas.Domain.Modelo
 {
     /// <summary>
     /// Comandos para campo específico na etiqueta.
     /// </summary>
-    public class ComandosCampo : IComandosPadraoImpressora
+    public class ComandosCampo : IComandosPadraoImpressora, IComandosCampo
     {
-
-        [XmlIgnore]
-        private string comandoEspecifico;
-
-        [XmlIgnore]
-        private string posicaoComando1;
-
-        [XmlIgnore]
-        private string posicaoComando2;
-
         /// <summary>
         /// Gets or sets - Nome do campo.
         /// </summary>
@@ -35,8 +25,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("ComandoEspecifico")]
         public string ComandoEspecifico
         {
-            get => MarcadoresComCaracteresEspeciais(comandoEspecifico);
-            set => this.comandoEspecifico = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(ProtectedComandoEspecifico);
+            set => this.ProtectedComandoEspecifico = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -45,8 +35,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("PosicaoComando1")]
         public string PosicaoComando1
         {
-            get => MarcadoresComCaracteresEspeciais(posicaoComando1);
-            set => this.posicaoComando1 = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(ProtectedPosicaoComando1);
+            set => this.ProtectedPosicaoComando1 = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -55,8 +45,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("PosicaoComando2")]
         public string PosicaoComando2
         {
-            get => MarcadoresComCaracteresEspeciais(posicaoComando2);
-            set => this.posicaoComando2 = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(ProtectedPosicaoComando2);
+            set => this.ProtectedPosicaoComando2 = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -64,5 +54,23 @@ namespace Etiquetas.Domain.Modelo
         /// </summary>
         [XmlElement("Obrigatorio")]
         public bool Obrigatorio { get; set; }
+
+        /// <summary>
+        /// Gets or sets - Comando usado para definir o campo específico na etiqueta.
+        /// </summary>
+        [XmlIgnore]
+        protected string ProtectedComandoEspecifico { get; set; }
+
+        /// <summary>
+        /// Gets or sets - Comando para posição 1 ou única.
+        /// </summary>
+        [XmlIgnore]
+        protected string ProtectedPosicaoComando1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets - Comando para posição 2 caso a posição 1 não seja única ou suficiente.
+        /// </summary>
+        [XmlIgnore]
+        protected string ProtectedPosicaoComando2 { get; set; }
     }
 }

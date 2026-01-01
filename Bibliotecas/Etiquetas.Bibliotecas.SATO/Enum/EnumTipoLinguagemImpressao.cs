@@ -9,7 +9,7 @@ namespace Etiquetas.Bibliotecas.SATO
     /// <summary>
     /// Enumeração que define os tipos de linguagem de impressão suportados.
     /// </summary>
-    public enum TipoLinguagemImpressao
+    public enum EnumTipoLinguagemImpressao
     {
         /// <summary>Zebra Programming Language (ZPL)</summary>
         ZPL,

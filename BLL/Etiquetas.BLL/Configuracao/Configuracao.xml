@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtracaoSpooler xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ComandosImpressao>
+    <TipoLinguagem>ZPL</TipoLinguagem>
+    <MarcadorComando>^</MarcadorComando>
+    <MarcadorInicioTexto>FD</MarcadorInicioTexto>
+    <MarcadorFimTexto>FS</MarcadorFimTexto>
+    <ComandoPosicao1>FO</ComandoPosicao1>
+    <ComandoPosicao2 />
+    <ComandoTexto>A</ComandoTexto>
+    <ComandoBarras>B</ComandoBarras>
+    <ComandoCopias>PQ</ComandoCopias>
+  </ComandosImpressao>
+  <Campos>
+    <Comandos>
+      <Comando>
+        <NomeCampo>CodigoMaterial</NomeCampo>
+        <PosicaoComando1>12,68</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>true</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>DescricaoMedicamento</NomeCampo>
+        <PosicaoComando1>12,23</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>true</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>DescricaoMedicamento2</NomeCampo>
+        <PosicaoComando1>12,36</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>PrincipioAtivo</NomeCampo>
+        <PosicaoComando1>12,39</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>PrincipioAtivo2</NomeCampo>
+        <PosicaoComando1>12,52</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>Lote</NomeCampo>
+        <PosicaoComando1>12,85</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>Validade</NomeCampo>
+        <PosicaoComando1>135,68</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>CodigoUsuario</NomeCampo>
+        <PosicaoComando1>170,85</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>CodigoBarras</NomeCampo>
+        <ComandoEspecifico>B</ComandoEspecifico>
+        <PosicaoComando1>25,100</PosicaoComando1>
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+      <Comando>
+        <NomeCampo>Copias</NomeCampo>
+        <ComandoEspecifico>PQ</ComandoEspecifico>
+        <PosicaoComando1 />
+        <PosicaoComando2 />
+        <Obrigatorio>false</Obrigatorio>
+      </Comando>
+    </Comandos>
+  </Campos>
+</ExtracaoSpooler>

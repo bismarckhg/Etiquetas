@@ -89,7 +89,7 @@
             enviar de forma assíncrona <paramref name="totalMessages"/> mensagens, cada uma com <paramref name="bytesPerMessage"/>
             bytes, no intervalo especificado de <paramref name="intervalMs"/>.</returns>
         </member>
-        <member name="M:Etiquetas.ConsoleUI.TesteEtiqueta.ProcessarEtiquetaZPL">
+        <member name="M:Etiquetas.ConsoleUI.TesteEtiqueta.ProcessarEtiqueta">
             <summary>
             Processa uma etiqueta no formato ZPL.
             </summary>
