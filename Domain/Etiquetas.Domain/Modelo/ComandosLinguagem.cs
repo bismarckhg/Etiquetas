@@ -11,7 +11,7 @@ namespace Etiquetas.Domain.Modelo
     /// <summary>
     /// Comandos padrão para uma linguagem de impressão.
     /// </summary>
-    public class ComandosLinguagem : IComandosPadraoImpressora, IComandosLinguagem
+    public class ComandosLinguagem : ComandosPadraoImpressora, IComandosLinguagem
     {
         /// <summary>
         /// Campo privado para armazenar o valor do marcador de comando.

@@ -11,7 +11,7 @@ namespace Etiquetas.Domain.Modelo
     /// <summary>
     /// Comandos para campo específico na etiqueta.
     /// </summary>
-    public class ComandosCampo : IComandosPadraoImpressora, IComandosCampo
+    public class ComandosCampo : ComandosPadraoImpressora, IComandosCampo
     {
         /// <summary>
         /// Gets or sets - Nome do campo.

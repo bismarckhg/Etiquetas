@@ -1,12 +1,13 @@
+using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Core.Interfaces;
+using Etiquetas.Domain.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
-using Etiquetas.Core.Interfaces;
-using Etiquetas.Bibliotecas.SATO;
-using Etiquetas.Domain.Modelo;
 
 namespace Etiquetas.Domain.Configuracao
 {
@@ -37,26 +38,32 @@ namespace Etiquetas.Domain.Configuracao
         private void CarregarConfiguracoes()
         {
 
+            // Deserializar de arquivo
+            var configCarregada = await XmlStream.LerAsync<ExtracaoSpooler>(parametrosLeitura).ConfigureAwait(false);
+            await XmlStream.FecharAsync().ConfigureAwait(false);
+            Console.WriteLine($"\nCarregados {configCarregada.Campos.Comandos.Count} campos do arquivo.");
+
             // Carrega marcadores de texto baseado na linguagem
-            switch (this.ConfiguracaoSpooler.ComandosImpressao.)
+            switch (this.ConfiguracaoSpooler.ComandosImpressao.TipoLinguagem)
             {
                 case EnumTipoLinguagemImpressao.ZPL:
-                    MarcadorInicialTexto = ObterConfiguracao("ZPL_MarcadorInicioTexto", "^FD");
-                    MarcadorFinalTexto = ObterConfiguracao("ZPL_MarcadorFimTexto", "^FS");
+                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorInicioTexto = ObterConfiguracao("ZPL_MarcadorInicioTexto", "^FD");
+                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorFimTexto = ObterConfiguracao("ZPL_MarcadorFimTexto", "^FS");
                     break;
 
                 case EnumTipoLinguagemImpressao.SBPL:
-                    MarcadorInicialTexto = ObterConfiguracao("SBPL_MarcadorInicioTexto", "");
-                    MarcadorFinalTexto = ObterConfiguracao("SBPL_MarcadorFimTexto", "");
+                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorInicioTexto = ObterConfiguracao("SBPL_MarcadorInicioTexto", "");
+                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorFimTexto = ObterConfiguracao("SBPL_MarcadorFimTexto", "");
                     break;
 
                 case EnumTipoLinguagemImpressao.EPL:
-                    MarcadorInicialTexto = ObterConfiguracao("EPL_MarcadorInicioTexto", "\"");
-                    MarcadorFinalTexto = ObterConfiguracao("EPL_MarcadorFimTexto", "\"");
+                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorInicioTexto = ObterConfiguracao("EPL_MarcadorInicioTexto", "\"");
+                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorFimTexto = ObterConfiguracao("EPL_MarcadorFimTexto", "\"");
                     break;
             }
 
             // Carrega configurações de cada campo
+
             CodigoMaterial = CarregarCampo("CodigoMaterial");
             DescricaoMedicamento = CarregarCampo("DescricaoMedicamento");
             DescricaoMedicamento2 = CarregarCampo("DescricaoMedicamento2");

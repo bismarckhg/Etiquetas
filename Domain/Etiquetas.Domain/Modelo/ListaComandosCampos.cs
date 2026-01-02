@@ -20,7 +20,7 @@ namespace Etiquetas.Domain.Modelo
         /// </summary>
         [XmlArray("Comandos")]
         [XmlArrayItem("Comando")]
-        public List<IComandosPadraoImpressora> Comandos { get; set; }
+        public List<ComandosPadraoImpressora> Comandos { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListaComandosCampos"/> class.

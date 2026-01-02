@@ -19,7 +19,7 @@ namespace Etiquetas.Domain.Modelo
         /// <summary>
         /// Gets or sets - Configurações de comandos da linguagem de impressão.
         /// </summary>
-        public IComandosPadraoImpressora ComandosImpressao { get; set; }
+        public IComandosLinguagem ComandosImpressao { get; set; }
 
         /// <summary>
         /// Gets or sets - Lista de campos da etiqueta.

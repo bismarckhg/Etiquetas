@@ -1,8 +1,9 @@
 using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Bibliotecas.SATO.Interfaces;
 
 namespace Etiquetas.Domain.Modelo
 {
-    public interface IComandosLinguagem
+    public interface IComandosLinguagem : IComandosPadraoImpressora
     {
         /// <summary>
         /// Gets or sets - O comando usado para imprimir códigos de barras.

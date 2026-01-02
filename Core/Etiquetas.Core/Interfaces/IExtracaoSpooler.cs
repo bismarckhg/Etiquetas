@@ -7,14 +7,13 @@ namespace Etiquetas.Domain.Modelo
     /// </summary>
     public interface IExtracaoSpooler
     {
-
         /// <summary>
-        /// Comandos padrão para uma linguagem de impressão.
+        /// Gets or Sets - Comandos padrão para uma linguagem de impressão.
         /// </summary>
-        IComandosPadraoImpressora ComandosImpressao { get; set; }
+        IComandosLinguagem ComandosImpressao { get; set; }
 
         /// <summary>
-        /// Get e set - Container para lista de comandos de campos.
+        /// Gets or Sets - Container para lista de comandos de campos.
         /// </summary>
         IListaComandosCampos Campos { get; set; }
     }

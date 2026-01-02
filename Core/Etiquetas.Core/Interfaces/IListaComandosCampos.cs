@@ -5,6 +5,6 @@ namespace Etiquetas.Domain.Modelo
 {
     public interface IListaComandosCampos
     {
-        List<IComandosPadraoImpressora> Comandos { get; set; }
+        List<ComandosPadraoImpressora> Comandos { get; set; }
     }
 }

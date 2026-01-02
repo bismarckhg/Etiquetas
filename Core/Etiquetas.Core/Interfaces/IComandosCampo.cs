@@ -1,6 +1,11 @@
+using Etiquetas.Bibliotecas.SATO.Interfaces;
+
 namespace Etiquetas.Domain.Modelo
 {
-    public interface IComandosCampo
+    /// <summary>
+    /// Interface que define os comandos específicos para cada campo na etiqueta.
+    /// </summary>
+    public interface IComandosCampo : IComandosPadraoImpressora
     {
         /// <summary>
         /// Gets or sets - Comando usado para definir o campo específico na etiqueta.
