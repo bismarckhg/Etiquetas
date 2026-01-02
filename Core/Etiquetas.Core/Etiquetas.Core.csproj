@@ -7,5 +7,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.SATO\Etiquetas.Bibliotecas.SATO.csproj" />
+    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Xml\Etiquetas.Bibliotecas.Xml.csproj" />
   </ItemGroup>
 </Project>

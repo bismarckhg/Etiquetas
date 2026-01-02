@@ -1,4 +1,6 @@
 using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Bibliotecas.TaskCore;
+using Etiquetas.Bibliotecas.Xml;
 using Etiquetas.Core.Interfaces;
 using Etiquetas.Domain.Modelo;
 using System;
@@ -7,6 +9,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Etiquetas.Domain.Configuracao
@@ -20,6 +23,9 @@ namespace Etiquetas.Domain.Configuracao
         /// <inehritdoc/>
         public IExtracaoSpooler ConfiguracaoSpooler { get; set; }
 
+        /// <inehritdoc/>
+        public StreamXml XmlStream { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PosicaoCamposEtiqueta"/> class.
         /// Inicializa uma nova instância da classe <see cref="PosicaoCamposEtiqueta"/>,
@@ -29,38 +35,21 @@ namespace Etiquetas.Domain.Configuracao
         public PosicaoCamposEtiqueta(EnumTipoLinguagemImpressao tipoLinguagem)
         {
             this.ConfiguracaoSpooler = new ExtracaoSpooler(tipoLinguagem);
-            CarregarConfiguracoes();
         }
 
         /// <summary>
         /// Carrega todas as configurações do arquivo appsettings.xml.
         /// </summary>
-        private void CarregarConfiguracoes()
+        public async Task CarregarConfiguracoes()
         {
 
+            var parametrosLeitura = new TaskParametros();
+            parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
+
             // Deserializar de arquivo
-            var configCarregada = await XmlStream.LerAsync<ExtracaoSpooler>(parametrosLeitura).ConfigureAwait(false);
+            this.ConfiguracaoSpooler = await XmlStream.LerAsync<ExtracaoSpooler>(parametrosLeitura).ConfigureAwait(false);
             await XmlStream.FecharAsync().ConfigureAwait(false);
-            Console.WriteLine($"\nCarregados {configCarregada.Campos.Comandos.Count} campos do arquivo.");
-
-            // Carrega marcadores de texto baseado na linguagem
-            switch (this.ConfiguracaoSpooler.ComandosImpressao.TipoLinguagem)
-            {
-                case EnumTipoLinguagemImpressao.ZPL:
-                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorInicioTexto = ObterConfiguracao("ZPL_MarcadorInicioTexto", "^FD");
-                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorFimTexto = ObterConfiguracao("ZPL_MarcadorFimTexto", "^FS");
-                    break;
-
-                case EnumTipoLinguagemImpressao.SBPL:
-                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorInicioTexto = ObterConfiguracao("SBPL_MarcadorInicioTexto", "");
-                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorFimTexto = ObterConfiguracao("SBPL_MarcadorFimTexto", "");
-                    break;
-
-                case EnumTipoLinguagemImpressao.EPL:
-                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorInicioTexto = ObterConfiguracao("EPL_MarcadorInicioTexto", "\"");
-                    this.ConfiguracaoSpooler.ComandosImpressao.MarcadorFimTexto = ObterConfiguracao("EPL_MarcadorFimTexto", "\"");
-                    break;
-            }
+            Console.WriteLine($"\nCarregados {this.ConfiguracaoSpooler.Campos.Comandos.Count} campos do arquivo.");
 
             // Carrega configurações de cada campo
 

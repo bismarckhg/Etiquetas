@@ -3,6 +3,7 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Bibliotecas\Etiquetas.Bibliotecas.Xml\Etiquetas.Bibliotecas.Xml.csproj" />
     <ProjectReference Include="..\..\Core\Etiquetas.Core\Etiquetas.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
