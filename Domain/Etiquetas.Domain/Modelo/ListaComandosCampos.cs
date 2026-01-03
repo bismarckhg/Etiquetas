@@ -1,5 +1,6 @@
 using Etiquetas.Bibliotecas.SATO;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,11 +17,17 @@ namespace Etiquetas.Domain.Modelo
     public class ListaComandosCampos : IListaComandosCampos
     {
         /// <summary>
+        /// Gets or sets - Índice de comandos para acesso rápido.
+        /// </summary>
+        [XmlIgnore]
+        public ConcurrentDictionary<string, int> IndiceComandos { get; set; }
+
+        /// <summary>
         /// Gets or sets - Lista de comandos de campos.
         /// </summary>
         [XmlArray("Comandos")]
         [XmlArrayItem("Comando")]
-        public List<ComandosPadraoImpressora> Comandos { get; set; }
+        public List<IComandosCampo> Comandos { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListaComandosCampos"/> class.
@@ -28,7 +35,8 @@ namespace Etiquetas.Domain.Modelo
         /// </summary>
         public ListaComandosCampos()
         {
-            Comandos = new List<ComandosCampo>();
+            this.Comandos = new List<IComandosCampo>();
+            this.IndiceComandos = new ConcurrentDictionary<string, int>();
         }
     }
 

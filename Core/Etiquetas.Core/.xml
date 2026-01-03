@@ -401,47 +401,22 @@
             Interface que define o posicionamento dos campos na etiqueta.
             </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.TipoLinguagem">
-            <summary>Obtém o tipo de linguagem de impressão utilizada</summary>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.ConfiguracaoSpooler">
+            <summary>
+            Gets or Sets - the spooler configuration used for extraction operations.
+            Gets ou sets - A configuração da etiqueta e do spooler usada para extração de dados.
+            </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.MarcadorInicialTexto">
-            <summary>Obtém o marcador que indica o início do texto (ex: "^FD" no ZPL)</summary>
+        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.XmlStream">
+            <summary>
+            Gets or sets - Stream XML do arquivo de configuração dos campos da etiqueta.
+            </summary>
         </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.MarcadorFinalTexto">
-            <summary>Obtém o marcador que indica o fim do texto (ex: "^FS" no ZPL)</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CodigoMaterial">
-            <summary>Obtém a configuração do campo Código do Material</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.DescricaoMedicamento">
-            <summary>Obtém a configuração do campo Descrição do Medicamento</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.DescricaoMedicamento2">
-            <summary>Obtém a configuração do campo Descrição do Medicamento 2</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.PrincipioAtivo">
-            <summary>Obtém a configuração do campo Princípio Ativo 1</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.PrincipioAtivo2">
-            <summary>Obtém a configuração do campo Princípio Ativo 2</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Embalagem">
-            <summary>Obtém a configuração do campo Embalagem</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Lote">
-            <summary>Obtém a configuração do campo Lote</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Validade">
-            <summary>Obtém a configuração do campo Validade</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CodigoUsuario">
-            <summary>Obtém a configuração do campo Código do Usuário</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CodigoBarras">
-            <summary>Obtém a configuração do campo Código de Barras</summary>
-        </member>
-        <member name="P:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.Copias">
-            <summary>Obtém a configuração do campo Número de Cópias</summary>
+        <member name="M:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.CarregarConfiguracoes">
+            <summary>
+            Carrega todas as configurações do arquivo appsettings.xml.
+            </summary>
+            <returns>Task.</returns>
         </member>
         <member name="T:Etiquetas.Core.IEtiquetaImpressaoRepository">
             <summary>
@@ -590,6 +565,81 @@
             <param name="package">Pacoye de leitura da Impressora Sato.</param>
             <returns>Lista de Pacotes formatados da impressora sato.</returns>
         </member>
+        <member name="T:Etiquetas.Domain.Modelo.IComandosCampo">
+            <summary>
+            Interface que define os comandos específicos para cada campo na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosCampo.ComandoEspecifico">
+            <summary>
+            Gets or sets - Comando usado para definir o campo específico na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosCampo.NomeCampo">
+            <summary>
+            Gets or sets - Nome do campo.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosCampo.Obrigatorio">
+            <summary>
+            Gets or sets a value indicating whether gets or sets - Indica se o campo é obrigatório ou não.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosCampo.PosicaoComando1">
+            <summary>
+            Gets or sets - Comando para posição 1 ou única.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosCampo.PosicaoComando2">
+            <summary>
+            Gets or sets - Comando para posição 2 caso a posição 1 não seja única ou suficiente.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.ComandoBarras">
+            <summary>
+            Gets or sets - O comando usado para imprimir códigos de barras.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.ComandoCopias">
+            <summary>
+            Gets or sets - O comando usado para definir o número de cópias a serem impressas.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.ComandoPosicao1">
+            <summary>
+            Gets or sets - Comando para posição 1 ou única.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.ComandoPosicao2">
+            <summary>
+            Gets or sets - Comando para posição 2 caso a posição 1 não seja única ou suficiente.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.ComandoTexto">
+            <summary>
+            Gets or sets - O comando usado para imprimir texto na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.MarcadorComando">
+            <summary>
+            Gets or sets - O marcador que indica o início de uma seção de texto em um comando.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.MarcadorFimTexto">
+            <summary>
+            Gets or sets - O marcador que indica o fim de uma seção de texto em um comando.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.MarcadorInicioTexto">
+            <summary>
+            Gets or sets - O marcador que indica o início de uma seção de texto em um comando.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IComandosLinguagem.TipoLinguagem">
+            <summary>
+            Gets or sets - Tipo de linguagem de impressão.
+            </summary>
+        </member>
         <member name="T:Etiquetas.Domain.Modelo.IExtracaoSpooler">
             <summary>
             Classe principal para extração de dados do spooler de impressão.
@@ -597,12 +647,27 @@
         </member>
         <member name="P:Etiquetas.Domain.Modelo.IExtracaoSpooler.ComandosImpressao">
             <summary>
-            Comandos padrão para uma linguagem de impressão.
+            Gets or Sets - Comandos padrão para uma linguagem de impressão.
             </summary>
         </member>
         <member name="P:Etiquetas.Domain.Modelo.IExtracaoSpooler.Campos">
             <summary>
-            Get e set - Container para lista de comandos de campos.
+            Gets or Sets - Container para lista de comandos de campos.
+            </summary>
+        </member>
+        <member name="T:Etiquetas.Domain.Modelo.IListaComandosCampos">
+            <summary>
+            Container para lista de comandos de campos.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IListaComandosCampos.IndiceComandos">
+            <summary>
+            Gets or sets - Índice de comandos para acesso rápido.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.IListaComandosCampos.Comandos">
+            <summary>
+            Gets or sets - Lista de comandos de campos.
             </summary>
         </member>
         <member name="T:Etiqueta.Application.DTOs.ISatoDto">

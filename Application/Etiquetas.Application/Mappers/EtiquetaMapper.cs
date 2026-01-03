@@ -93,7 +93,7 @@ namespace Etiquetas.Application.Mappers
             try
             {
                 // Quebra em linhas/comandos individuais
-                var comandos = QuebraComandosEmLinhasIndividuais.Execute(conteudoEtiqueta, configuracao.TipoLinguagem);
+                var comandos = QuebraComandosEmLinhasIndividuais.Execute(conteudoEtiqueta, configuracao.ConfiguracaoSpooler.ComandosImpressao.TipoLinguagem);
 
                 // Extrai os dados
                 var dados = new EtiquetaImpressaoDto();
@@ -102,7 +102,9 @@ namespace Etiquetas.Application.Mappers
                 foreach (var comando in comandos)
                 {
                     if (string.IsNullOrWhiteSpace(comando))
+                    {
                         continue;
+                    }
 
                     // Processa o comando atual
                     ProcessarComando(comando, configuracao, dados, estado);
@@ -130,8 +132,11 @@ namespace Etiquetas.Application.Mappers
         /// <param name="config">Configuração dos campos</param>
         /// <param name="dados">Objeto onde os dados serão armazenados</param>
         /// <param name="estado">Estado atual do processamento</param>
-        private static void ProcessarComando(string comando, IPosicaoCamposEtiqueta config,
-            EtiquetaImpressaoDto dados, EstadoCampo estado)
+        private static void ProcessarComando(
+            string comando,
+            IPosicaoCamposEtiqueta config,
+            EtiquetaImpressaoDto dados,
+            EstadoCampo estado)
         {
             // Normaliza o comando (remove zeros à esquerda em posições)
             var comandoNormalizado = NormalizarComando(comando);
@@ -177,9 +182,10 @@ namespace Etiquetas.Application.Mappers
             EstadoCampo estado)
         {
             // Lista de todos os campos possíveis
+            
             var campos = new Dictionary<EnumTipoCampo, IConfiguracaoCampo>
             {
-                { EnumTipoCampo.CodigoMaterial, config.CodigoMaterial },
+                { EnumTipoCampo.CodigoMaterial, arrayCampos["CodigoMaterial"] },
                 { EnumTipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
                 { EnumTipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
                 { EnumTipoCampo.PrincipioAtivo, config.PrincipioAtivo },
@@ -219,6 +225,7 @@ namespace Etiquetas.Application.Mappers
                         estado.Tipo = tipo;
                         estado.Cmd1Encontrado = true;
                     }
+
                     return tipo;
                 }
 
@@ -236,6 +243,7 @@ namespace Etiquetas.Application.Mappers
                         estado.Tipo = tipo;
                         estado.Cmd2Encontrado = true;
                     }
+
                     return tipo;
                 }
             }
@@ -378,14 +386,19 @@ namespace Etiquetas.Application.Mappers
         private static string ExtrairApenasDigitos(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
-                return "";
+            {
+                return string.Empty;
+            }
 
             var sb = new StringBuilder();
             foreach (var c in texto)
             {
                 if (char.IsDigit(c))
+                {
                     sb.Append(c);
+                }
             }
+
             return sb.ToString();
         }
 
@@ -398,7 +411,7 @@ namespace Etiquetas.Application.Mappers
         {
             if (string.IsNullOrWhiteSpace(codigo))
             {
-                return "";
+                return string.Empty;
             }
 
             var apenasDigitos = StringExtrairSomenteDigitosNumericos.Execute(codigo);
@@ -456,7 +469,9 @@ namespace Etiquetas.Application.Mappers
         private static string NormalizarComando(string comando)
         {
             if (string.IsNullOrWhiteSpace(comando))
+            {
                 return comando;
+            }
 
             // Detecta padrões numéricos e remove zeros à esquerda
             var sb = new StringBuilder();
@@ -490,6 +505,7 @@ namespace Etiquetas.Application.Mappers
                                 sb.Append('0');
                             }
                         }
+
                         zerosAcumulados = -1; // Desativa contagem
                         sb.Append(c);
                     }
@@ -501,6 +517,7 @@ namespace Etiquetas.Application.Mappers
                         // Terminou número só com zeros, mantém um
                         sb.Append('0');
                     }
+
                     dentroDeNumero = false;
                     zerosAcumulados = 0;
                     sb.Append(c);

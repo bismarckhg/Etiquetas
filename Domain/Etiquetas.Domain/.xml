@@ -41,7 +41,13 @@
             carregando os valores do arquivo de configuração (appsettings.xml).
             </summary>
         </member>
-        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.#ctor(Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao)">
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ConfiguracaoSpooler">
+            <inehritdoc/>
+        </member>
+        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.XmlStream">
+            <inehritdoc/>
+        </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.#ctor(Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao)">
             <summary>
             Initializes a new instance of the <see cref="T:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta"/> class.
             Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta"/>,
@@ -49,75 +55,31 @@
             </summary>
             <param name="tipoLinguagem">Tipo de linguagem de impressão a ser utilizada</param>
         </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.TipoLinguagem">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.MarcadorInicialTexto">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.MarcadorFinalTexto">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CodigoMaterial">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.DescricaoMedicamento">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.DescricaoMedicamento2">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.PrincipioAtivo">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.PrincipioAtivo2">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Embalagem">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Lote">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Validade">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CodigoUsuario">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CodigoBarras">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.Copias">
-            <inheritdoc/>
-        </member>
         <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CarregarConfiguracoes">
             <summary>
             Carrega todas as configurações do arquivo appsettings.xml.
             </summary>
         </member>
-        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.CarregarCampo(System.String)">
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ObterComandoCampoPeloNome(System.String)">
             <summary>
-            Carrega a configuração de um campo específico do appsettings.xml.
+            Obtém o comando do campo com base no nome do campo.
             </summary>
-            <param name="nomeCampo">Nome do campo a ser carregado</param>
-            <returns>Objeto ConfiguracaoCampo com os dados carregados</returns>
+            <param name="nome">Nome do campo a procurar a posicao.</param>
+            <returns>Retorna a posicao na Coleção de Comandos.</returns>
         </member>
-        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ObterConfiguracao(System.String,System.String)">
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.PosicaoNomeDicionario(System.String)">
             <summary>
-            Obtém uma configuração string do appsettings.xml.
+            Obtém a posição do campo no dicionário de comandos com base no nome do campo.
             </summary>
-            <param name="chave">Chave da configuração</param>
-            <param name="valorPadrao">Valor padrão se a chave não existir</param>
-            <returns>Valor da configuração ou valor padrão</returns>
+            <param name="nome">Nome do campo a procurar a posicao.</param>
+            <returns>Retorna a posicao na Coleção de Comandos.</returns>
         </member>
-        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ObterConfiguracaoBoolean(System.String,System.Boolean)">
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ObterComandoCampoPorPosicao(System.Int32)">
             <summary>
-            Obtém uma configuração booleana do appsettings.xml.
+            Obtém o comando do campo com base na posição fornecida.
             </summary>
-            <param name="chave">Chave da configuração</param>
-            <param name="valorPadrao">Valor padrão se a chave não existir.</param>
-            <returns>Valor da configuração ou valor padrão</returns>
+            <param name="posicao">Posicao na Coleção de Campos.</param>
+            <returns>Retorna o Campo selecionado pela posição.</returns>
         </member>
         <member name="T:Etiquetas.Domain.Entities.EtiquetaImpressao">
             <summary>
@@ -237,9 +199,64 @@
             Gets or sets a value indicating whether gets or sets - Indica se o campo é obrigatório ou não.
             </summary>
         </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ProtectedComandoEspecifico">
+            <summary>
+            Gets or sets - Comando usado para definir o campo específico na etiqueta.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ProtectedPosicaoComando1">
+            <summary>
+            Gets or sets - Comando para posição 1 ou única.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ComandosCampo.ProtectedPosicaoComando2">
+            <summary>
+            Gets or sets - Comando para posição 2 caso a posição 1 não seja única ou suficiente.
+            </summary>
+        </member>
         <member name="T:Etiquetas.Domain.Modelo.ComandosLinguagem">
             <summary>
             Comandos padrão para uma linguagem de impressão.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedMarcadorComando">
+            <summary>
+            Campo privado para armazenar o valor do marcador de comando.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedMarcadorInicioTexto">
+            <summary>
+            Campo privado para armazenar o valor do marcador de início de texto.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedMarcadorFimTexto">
+            <summary>
+            Campo privado para armazenar o valor do marcador de fim de texto.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedPosicaoComando1">
+            <summary>
+            Campo privado para armazenar o valor da posição do comando 1.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedPosicaoComando2">
+            <summary>
+            Campo privado para armazenar o valor da posição do comando 2.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedComandoTexto">
+            <summary>
+            Campo privado para armazenar o valor do comando de texto.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedComandoBarras">
+            <summary>
+            Campo privado para armazenar o valor do comando de barras.
+            </summary>
+        </member>
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedComandoCopias">
+            <summary>
+            Campo privado para armazenar o valor do comando de cópias.
             </summary>
         </member>
         <member name="P:Etiquetas.Domain.Modelo.ComandosLinguagem.TipoLinguagem">
@@ -293,7 +310,7 @@
             Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ComandosLinguagem"/>.
             </summary>
         </member>
-        <member name="M:Etiquetas.Domain.Modelo.ComandosLinguagem.#ctor(Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao)">
+        <member name="M:Etiquetas.Domain.Modelo.ComandosLinguagem.#ctor(Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao)">
             <summary>
             Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ComandosLinguagem"/> class.
             Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ComandosLinguagem"/>.
@@ -315,7 +332,7 @@
             Gets or sets - Lista de campos da etiqueta.
             </summary>
         </member>
-        <member name="M:Etiquetas.Domain.Modelo.ExtracaoSpooler.#ctor(Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao)">
+        <member name="M:Etiquetas.Domain.Modelo.ExtracaoSpooler.#ctor(Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao)">
             <summary>
             Initializes a new instance of the <see cref="T:Etiquetas.Domain.Modelo.ExtracaoSpooler"/> class.
             Inicializa uma nova instância da classe <see cref="T:Etiquetas.Domain.Modelo.ExtracaoSpooler"/>.
@@ -324,6 +341,11 @@
         <member name="T:Etiquetas.Domain.Modelo.ListaComandosCampos">
             <summary>
             Container para lista de comandos de campos.
+            </summary>
+        </member>
+        <member name="P:Etiquetas.Domain.Modelo.ListaComandosCampos.IndiceComandos">
+            <summary>
+            Gets or sets - Índice de comandos para acesso rápido.
             </summary>
         </member>
         <member name="P:Etiquetas.Domain.Modelo.ListaComandosCampos.Comandos">

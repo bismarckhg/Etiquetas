@@ -1,9 +1,5 @@
-using Etiquetas.Bibliotecas.SATO;
-using Etiquetas.Bibliotecas.TaskCore;
-using Etiquetas.Bibliotecas.Xml;
-using Etiquetas.Core.Interfaces;
-using Etiquetas.Domain.Modelo;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -11,6 +7,11 @@ using System.Net.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Etiquetas.Bibliotecas.SATO;
+using Etiquetas.Bibliotecas.TaskCore;
+using Etiquetas.Bibliotecas.Xml;
+using Etiquetas.Core.Interfaces;
+using Etiquetas.Domain.Modelo;
 
 namespace Etiquetas.Domain.Configuracao
 {
@@ -42,7 +43,6 @@ namespace Etiquetas.Domain.Configuracao
         /// </summary>
         public async Task CarregarConfiguracoes()
         {
-
             var parametrosLeitura = new TaskParametros();
             parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
 
@@ -51,69 +51,66 @@ namespace Etiquetas.Domain.Configuracao
             await XmlStream.FecharAsync().ConfigureAwait(false);
             Console.WriteLine($"\nCarregados {this.ConfiguracaoSpooler.Campos.Comandos.Count} campos do arquivo.");
 
-            // Carrega configurações de cada campo
-
-            CodigoMaterial = CarregarCampo("CodigoMaterial");
-            DescricaoMedicamento = CarregarCampo("DescricaoMedicamento");
-            DescricaoMedicamento2 = CarregarCampo("DescricaoMedicamento2");
-            PrincipioAtivo = CarregarCampo("PrincipioAtivo");
-            PrincipioAtivo2 = CarregarCampo("PrincipioAtivo2");
-            Embalagem = CarregarCampo("Embalagem");
-            Lote = CarregarCampo("Lote");
-            Validade = CarregarCampo("Validade");
-            CodigoUsuario = CarregarCampo("CodigoUsuario");
-            CodigoBarras = CarregarCampo("CodigoBarras");
-            Copias = CarregarCampo("Copias");
+            // Construir índice para acesso rápido aos comandos dos campos
+            await ConstruirIndice().ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Carrega a configuração de um campo específico do appsettings.xml.
+        /// Constrói o índice para acesso rápido aos comandos dos campos.
         /// </summary>
-        /// <param name="nomeCampo">Nome do campo a ser carregado</param>
-        /// <returns>Objeto ConfiguracaoCampo com os dados carregados</returns>
-        private ConfiguracaoCampo CarregarCampo(string nomeCampo)
+        /// <returns>Task async.</returns>
+        protected async Task ConstruirIndice()
         {
-            var cmd1 = $"Campo_{nomeCampo}_Cmd1";
-            var cmd2 = $"Campo_{nomeCampo}_Cmd2";
-            var comando1 = ObterConfiguracao(cmd1, null);
-            var comando2 = ObterConfiguracao(cmd2, null);
-            var obrigatorio = ObterConfiguracaoBoolean($"Campo_{nomeCampo}_Obrigatorio", false);
-            return new ConfiguracaoCampo
+            // Construir índice para acesso rápido aos comandos dos campos
+            var indiceCampos = new ConcurrentDictionary<string, ComandosCampo>(StringComparer.OrdinalIgnoreCase);
+
+            var posicao = -1;
+
+            foreach (var comando in this.ConfiguracaoSpooler.Campos.Comandos)
             {
-                Comando1 = comando1,
-                Comando2 = comando2,
-                Obrigatorio = obrigatorio,
-            };
-        }
-
-        /// <summary>
-        /// Obtém uma configuração string do appsettings.xml.
-        /// </summary>
-        /// <param name="chave">Chave da configuração</param>
-        /// <param name="valorPadrao">Valor padrão se a chave não existir</param>
-        /// <returns>Valor da configuração ou valor padrão</returns>
-        private string ObterConfiguracao(string chave, string valorPadrao)
-        {
-            var valor = ConfigurationManager.AppSettings[chave];
-            return string.IsNullOrWhiteSpace(valor) ? valorPadrao : valor;
-        }
-
-        /// <summary>
-        /// Obtém uma configuração booleana do appsettings.xml.
-        /// </summary>
-        /// <param name="chave">Chave da configuração</param>
-        /// <param name="valorPadrao">Valor padrão se a chave não existir.</param>
-        /// <returns>Valor da configuração ou valor padrão</returns>
-        private bool ObterConfiguracaoBoolean(string chave, bool valorPadrao)
-        {
-            var valor = ConfigurationManager.AppSettings[chave];
-            if (string.IsNullOrWhiteSpace(valor))
-            {
-                return valorPadrao;
+                posicao++;
+                this.ConfiguracaoSpooler.Campos.IndiceComandos.TryAdd(comando.NomeCampo, posicao);
             }
 
-            bool resultado;
-            return bool.TryParse(valor, out resultado) ? resultado : valorPadrao;
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Obtém o comando do campo com base no nome do campo.
+        /// </summary>
+        /// <param name="nome">Nome do campo a procurar a posicao.</param>
+        /// <returns>Retorna a posicao na Coleção de Comandos.</returns>
+        protected async Task<IComandosCampo> ObterComandoCampoPeloNome(string nome)
+        {
+            int posicao = await PosicaoNomeDicionario(nome).ConfigureAwait(false);
+            return await ObterComandoCampoPorPosicao(posicao).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Obtém a posição do campo no dicionário de comandos com base no nome do campo.
+        /// </summary>
+        /// <param name="nome">Nome do campo a procurar a posicao.</param>
+        /// <returns>Retorna a posicao na Coleção de Comandos.</returns>
+        protected async Task<int> PosicaoNomeDicionario(string nome)
+        {
+            if (this.ConfiguracaoSpooler.Campos.IndiceComandos.TryGetValue(nome, out int posicao))
+            {
+                return await Task.FromResult(posicao).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"O campo '{nome}' não foi encontrado na configuração de posições de campos da etiqueta.");
+            }
+        }
+
+        /// <summary>
+        /// Obtém o comando do campo com base na posição fornecida.
+        /// </summary>
+        /// <param name="posicao">Posicao na Coleção de Campos.</param>
+        /// <returns>Retorna o Campo selecionado pela posição.</returns>
+        protected async Task<IComandosCampo> ObterComandoCampoPorPosicao(int posicao)
+        {
+            return await Task.FromResult(this.ConfiguracaoSpooler.Campos.Comandos[posicao]).ConfigureAwait(false);
         }
     }
 }

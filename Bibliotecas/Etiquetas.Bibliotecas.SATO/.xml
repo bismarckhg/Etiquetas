@@ -15,6 +15,13 @@
             </summary>
             <param name="mensagem">Mensagem descrevendo o erro</param>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.SATO.ComandosPadraoImpressora">
+            <summary>
+            Interface para comandos padrão de linguagem Codigo Barras da impressora.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.ComandosPadraoImpressora.MarcadoresComCaracteresEspeciais(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.ComandosPadraoImpressora.RemoverMarcadoresComCaracteresEspeciais(System.String)" -->
         <member name="T:Etiquetas.Bibliotecas.SATO.ControlCharConvert">
             <summary>
             Converte caracteres de controle para suas representações em string.
@@ -117,37 +124,37 @@
             </code>
             </example>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.SATO.TipoCampo">
+        <member name="T:Etiquetas.Bibliotecas.SATO.EnumTipoCampo">
             <summary>
             Enumeração interna que identifica o campo sendo processado na etiqueta.
             </summary>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao">
+        <member name="T:Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao">
             <summary>
             Enumeração que define os tipos de linguagem de impressão suportados.
             </summary>
         </member>
-        <member name="F:Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao.ZPL">
+        <member name="F:Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao.ZPL">
             <summary>Zebra Programming Language (ZPL)</summary>
         </member>
-        <member name="F:Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao.SBPL">
+        <member name="F:Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao.SBPL">
             <summary>Simplified Barcode Printer Language (SBPL)</summary>
         </member>
-        <member name="F:Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao.EPL">
+        <member name="F:Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao.EPL">
             <summary>Eltron Programming Language (EPL)</summary>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.SATO.TipoPosicionamento">
+        <member name="T:Etiquetas.Bibliotecas.SATO.EnumTipoPosicionamento">
             <summary>
             Enumeração que define o tipo de posicionamento dos campos na etiqueta.
             </summary>
         </member>
-        <member name="F:Etiquetas.Bibliotecas.SATO.TipoPosicionamento.ComandoUnico">
+        <member name="F:Etiquetas.Bibliotecas.SATO.EnumTipoPosicionamento.ComandoUnico">
             <summary>Posição definida em um único comando (ex: ZPL ^FO10,20)</summary>
         </member>
-        <member name="F:Etiquetas.Bibliotecas.SATO.TipoPosicionamento.HorizontalVertical">
+        <member name="F:Etiquetas.Bibliotecas.SATO.EnumTipoPosicionamento.HorizontalVertical">
             <summary>Posição dividida em dois comandos: Horizontal primeiro, Vertical depois</summary>
         </member>
-        <member name="F:Etiquetas.Bibliotecas.SATO.TipoPosicionamento.VerticalHorizontal">
+        <member name="F:Etiquetas.Bibliotecas.SATO.EnumTipoPosicionamento.VerticalHorizontal">
             <summary>Posição dividida em dois comandos: Vertical primeiro, Horizontal depois</summary>
         </member>
         <member name="T:Etiquetas.Bibliotecas.SATO.EstadoCampo">
@@ -185,19 +192,25 @@
             <param name="comandoCopias"></param>
             <returns></returns>
         </member>
-        <member name="T:Etiquetas.Bibliotecas.SATO.IComandosPadraoImpressora">
+        <member name="T:Etiquetas.Bibliotecas.SATO.Interfaces.IComandosPadraoImpressora">
             <summary>
             Interface para comandos padrão de linguagem Codigo Barras da impressora.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.IComandosPadraoImpressora.MarcadoresComCaracteresEspeciais(System.String)" -->
-        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.IComandosPadraoImpressora.RemoverMarcadoresComCaracteresEspeciais(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:Etiquetas.Bibliotecas.SATO.Interfaces.IComandosPadraoImpressora.MarcadoresComCaracteresEspeciais(System.String)" -->
+        <member name="M:Etiquetas.Bibliotecas.SATO.Interfaces.IComandosPadraoImpressora.RemoverMarcadoresComCaracteresEspeciais(System.String)">
+            <summary>
+            Remove sequências de caracteres especiais por seus textos na forma KEY ou [KEY] correspondentes ao caractere.
+            </summary>
+            <returns>string convertido.</returns>
+            <param name="texto">string a ser convertido.</param>
+        </member>
         <member name="T:Etiquetas.Bibliotecas.SATO.QuebraComandosEmLinhasIndividuais">
             <summary>
             Quebra comandos impressora em linhas individuais.
             </summary>
         </member>
-        <member name="M:Etiquetas.Bibliotecas.SATO.QuebraComandosEmLinhasIndividuais.Execute(System.String,Etiquetas.Bibliotecas.SATO.TipoLinguagemImpressao)">
+        <member name="M:Etiquetas.Bibliotecas.SATO.QuebraComandosEmLinhasIndividuais.Execute(System.String,Etiquetas.Bibliotecas.SATO.EnumTipoLinguagemImpressao)">
             <summary>
             Quebra comandos impressora em linhas individuais.
             </summary>
