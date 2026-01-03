@@ -15,55 +15,63 @@
     <Comandos>
       <Comando>
         <NomeCampo>CodigoMaterial</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>12,68</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>true</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>DescricaoMedicamento</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>12,23</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>true</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>DescricaoMedicamento2</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>12,36</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>PrincipioAtivo</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>12,39</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>PrincipioAtivo2</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>12,52</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>Lote</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>12,85</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>Validade</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>135,68</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>CodigoUsuario</NomeCampo>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>170,85</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>
       </Comando>
       <Comando>
         <NomeCampo>CodigoBarras</NomeCampo>
-        <ComandoEspecifico>B</ComandoEspecifico>
+        <ComandoEspecifico>FO</ComandoEspecifico>
         <PosicaoComando1>25,100</PosicaoComando1>
         <PosicaoComando2 />
         <Obrigatorio>false</Obrigatorio>

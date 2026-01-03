@@ -153,7 +153,7 @@
             <param name="quantidadeSolicitada">Quantidade de etiquetas solicitadas para impressão. Maior do que zero.</param>
             <returns>An <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> Uma instancia contendo EtiquetaImpressaoDto contendo os detalhes do material para impressão da etiqueta.</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.SpolerToDto(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.SpolerToDto(System.String,Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta)">
             <summary>
             Extrai os dados da etiqueta baseado na configuração fornecida.
             O método é inteligente e detecta automaticamente se o posicionamento
@@ -165,7 +165,7 @@
             <exception cref="T:System.ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
             <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ProcessarComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Application.DTOs.EtiquetaImpressaoDto,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ProcessarComando(System.String,Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta,Etiquetas.Application.DTOs.EtiquetaImpressaoDto,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
             <summary>
             Processa um comando individual, identificando o campo e extraindo o texto.
             </summary>
@@ -174,7 +174,7 @@
             <param name="dados">Objeto onde os dados serão armazenados</param>
             <param name="estado">Estado atual do processamento</param>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.IdentificarCampo(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.IdentificarCampo(System.String,Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta,Etiquetas.Bibliotecas.SATO.EstadoCampo)">
             <summary>
             Identifica qual campo está sendo processado no comando atual.
             Atualiza o estado conforme encontra Cmd1 e Cmd2.
@@ -184,7 +184,7 @@
             <param name="estado">Estado atual</param>
             <returns>Tipo do campo identificado</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Domain.Modelo.IComandosLinguagem)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Domain.Modelo.ComandosLinguagem)">
             <summary>
             Extrai o texto de um comando baseado nos marcadores de início e fim.
             </summary>
@@ -215,7 +215,7 @@
             <param name="codigo">Código extraído</param>
             <returns>Código completo com dígito verificador.</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Domain.Modelo.IListaComandosCampos)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Domain.Modelo.ListaComandosCampos)">
             <summary>
             Valida se todos os campos obrigatórios foram preenchidos.
             </summary>
@@ -223,11 +223,11 @@
             <param name="config">Configuração com indicação de obrigatoriedade</param>
             <exception cref="T:Etiquetas.Bibliotecas.SATO.CampoObrigatorioException">Se algum campo obrigatório estiver vazio</exception>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCampo(Etiquetas.Core.Interfaces.IConfiguracaoCampo,System.String,System.String)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCampo(Etiquetas.Domain.Modelo.ComandosCampo,System.String,System.String)">
             <summary>
             Valida um campo individual.
             </summary>
-            <param name="configCampo">Configuração do campo</param>
+            <param name="comandosCampo">Configuração do campo</param>
             <param name="valor">Valor extraído</param>
             <param name="nomeCampo">Nome do campo para mensagem de erro</param>
         </member>

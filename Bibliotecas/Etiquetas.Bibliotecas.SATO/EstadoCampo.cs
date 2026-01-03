@@ -14,6 +14,16 @@ namespace Etiquetas.Bibliotecas.SATO
         /// <summary>Tipo do campo identificado</summary>
         public EnumTipoCampo Tipo { get; set; }
 
+        /// <summary>
+        /// Comando de posicionamento do início do campo 1.
+        /// </summary>
+        public string Cmd1 { get; set; }
+
+        /// <summary>
+        /// Comando de posicionamento do início do campo 2.
+        /// </summary>
+        public string Cmd2 { get; set; }
+
         /// <summary>Indica se o primeiro comando de posicionamento foi encontrado</summary>
         public bool Cmd1Encontrado { get; set; }
 

@@ -18,23 +18,6 @@
             <param name="chave">A chave da configuração do aplicativo a ser recuperada. Não pode ser nula.</param>
             <returns>O valor associado à chave especificada ou nulo se a chave não existir.</returns>
         </member>
-        <member name="T:Etiquetas.Domain.Configuracao.ConfiguracaoCampo">
-            <summary>
-            Representa a configuração completa de um campo específico na etiqueta.
-            </summary>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.Comando1">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.Comando2">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.Obrigatorio">
-            <inheritdoc/>
-        </member>
-        <member name="P:Etiquetas.Domain.Configuracao.ConfiguracaoCampo.TipoPosicionamento">
-            <inheritdoc/>
-        </member>
         <member name="T:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta">
             <summary>
             Implementação concreta da configuração de posições de campos em etiquetas,
@@ -225,42 +208,42 @@
             Comandos padrão para uma linguagem de impressão.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedMarcadorComando">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privateMarcadorComando">
             <summary>
             Campo privado para armazenar o valor do marcador de comando.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedMarcadorInicioTexto">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privateMarcadorInicioTexto">
             <summary>
             Campo privado para armazenar o valor do marcador de início de texto.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedMarcadorFimTexto">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privateMarcadorFimTexto">
             <summary>
             Campo privado para armazenar o valor do marcador de fim de texto.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedPosicaoComando1">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privatePosicaoComando1">
             <summary>
             Campo privado para armazenar o valor da posição do comando 1.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedPosicaoComando2">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privatePosicaoComando2">
             <summary>
             Campo privado para armazenar o valor da posição do comando 2.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedComandoTexto">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privateComandoTexto">
             <summary>
             Campo privado para armazenar o valor do comando de texto.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedComandoBarras">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privateComandoBarras">
             <summary>
             Campo privado para armazenar o valor do comando de barras.
             </summary>
         </member>
-        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.ProtectedComandoCopias">
+        <member name="F:Etiquetas.Domain.Modelo.ComandosLinguagem.privateComandoCopias">
             <summary>
             Campo privado para armazenar o valor do comando de cópias.
             </summary>

@@ -19,10 +19,10 @@ namespace Etiquetas.Domain.Configuracao
     /// Implementação concreta da configuração de posições de campos em etiquetas,
     /// carregando os valores do arquivo de configuração (appsettings.xml).
     /// </summary>
-    public class PosicaoCamposEtiqueta : IPosicaoCamposEtiqueta
+    public class PosicaoCamposEtiqueta
     {
         /// <inehritdoc/>
-        public IExtracaoSpooler ConfiguracaoSpooler { get; set; }
+        public ExtracaoSpooler ConfiguracaoSpooler { get; set; }
 
         /// <inehritdoc/>
         public StreamXml XmlStream { get; set; }
@@ -43,8 +43,16 @@ namespace Etiquetas.Domain.Configuracao
         /// </summary>
         public async Task CarregarConfiguracoes()
         {
+            XmlStream = new StreamXml();
+
+            string caminhoArquivo = @".\Configuracao\Configuracao.xml";
+
             var parametrosLeitura = new TaskParametros();
+            parametrosLeitura.Armazena<string>(caminhoArquivo, "NomeCaminhoArquivo");
             parametrosLeitura.ArmazenaCancellationTokenSource(new CancellationTokenSource());
+            
+            Console.WriteLine($"Conectado ao arquivo XML:{caminhoArquivo}");
+            await XmlStream.ConectarAsync(parametrosLeitura).ConfigureAwait(false);
 
             // Deserializar de arquivo
             this.ConfiguracaoSpooler = await XmlStream.LerAsync<ExtracaoSpooler>(parametrosLeitura).ConfigureAwait(false);
@@ -60,7 +68,7 @@ namespace Etiquetas.Domain.Configuracao
         /// </summary>
         /// <param name="nome">Nome do campo a procurar a posicao.</param>
         /// <returns>Retorna a posicao na Coleção de Comandos.</returns>
-        public async Task<IComandosCampo> ObterComandoCampoPeloNome(string nome)
+        public async Task<ComandosCampo> ObterComandoCampoPeloNome(string nome)
         {
             int posicao = await PosicaoNomeDicionario(nome).ConfigureAwait(false);
             return await ObterComandoCampoPorPosicao(posicao).ConfigureAwait(false);
@@ -108,7 +116,7 @@ namespace Etiquetas.Domain.Configuracao
         /// </summary>
         /// <param name="posicao">Posicao na Coleção de Campos.</param>
         /// <returns>Retorna o Campo selecionado pela posição.</returns>
-        protected async Task<IComandosCampo> ObterComandoCampoPorPosicao(int posicao)
+        protected async Task<ComandosCampo> ObterComandoCampoPorPosicao(int posicao)
         {
             return await Task.FromResult(this.ConfiguracaoSpooler.Campos.Comandos[posicao]).ConfigureAwait(false);
         }

@@ -11,55 +11,55 @@ namespace Etiquetas.Domain.Modelo
     /// <summary>
     /// Comandos padrão para uma linguagem de impressão.
     /// </summary>
-    public class ComandosLinguagem : ComandosPadraoImpressora, IComandosLinguagem
+    public class ComandosLinguagem : ComandosPadraoImpressora
     {
         /// <summary>
         /// Campo privado para armazenar o valor do marcador de comando.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedMarcadorComando;
+        private string privateMarcadorComando;
 
         /// <summary>
         /// Campo privado para armazenar o valor do marcador de início de texto.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedMarcadorInicioTexto;
+        private string privateMarcadorInicioTexto;
 
         /// <summary>
         /// Campo privado para armazenar o valor do marcador de fim de texto.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedMarcadorFimTexto;
+        private string privateMarcadorFimTexto;
 
         /// <summary>
         /// Campo privado para armazenar o valor da posição do comando 1.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedPosicaoComando1;
+        private string privatePosicaoComando1;
 
         /// <summary>
         /// Campo privado para armazenar o valor da posição do comando 2.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedPosicaoComando2;
+        private string privatePosicaoComando2;
 
         /// <summary>
         /// Campo privado para armazenar o valor do comando de texto.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedComandoTexto;
+        private string privateComandoTexto;
 
         /// <summary>
         /// Campo privado para armazenar o valor do comando de barras.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedComandoBarras;
+        private string privateComandoBarras;
 
         /// <summary>
         /// Campo privado para armazenar o valor do comando de cópias.
         /// </summary>
         [XmlIgnore]
-        protected string ProtectedComandoCopias;
+        private string privateComandoCopias;
 
         /// <summary>
         /// Gets or sets - Enum que indica o tipo de linguagem de impressão.
@@ -72,8 +72,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("MarcadorComando")]
         public string MarcadorComando
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedMarcadorComando);
-            set => this.ProtectedMarcadorComando = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privateMarcadorComando);
+            set => this.privateMarcadorComando = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("MarcadorInicioTexto")]
         public string MarcadorInicioTexto
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedMarcadorInicioTexto);
-            set => this.ProtectedMarcadorInicioTexto = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privateMarcadorInicioTexto);
+            set => this.privateMarcadorInicioTexto = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -92,8 +92,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("MarcadorFimTexto")]
         public string MarcadorFimTexto
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedMarcadorFimTexto);
-            set => this.ProtectedMarcadorFimTexto = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privateMarcadorFimTexto);
+            set => this.privateMarcadorFimTexto = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("ComandoPosicao1")]
         public string ComandoPosicao1
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedPosicaoComando1);
-            set => this.ProtectedPosicaoComando1 = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privatePosicaoComando1);
+            set => this.privatePosicaoComando1 = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -112,8 +112,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("ComandoPosicao2")]
         public string ComandoPosicao2
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedPosicaoComando2);
-            set => this.ProtectedPosicaoComando2 = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privatePosicaoComando2);
+            set => this.privatePosicaoComando2 = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -122,8 +122,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("ComandoTexto")]
         public string ComandoTexto
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedComandoTexto);
-            set => this.ProtectedComandoTexto = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privateComandoTexto);
+            set => this.privateComandoTexto = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -132,8 +132,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("ComandoBarras")]
         public string ComandoBarras
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedComandoBarras);
-            set => this.ProtectedComandoBarras = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privateComandoBarras);
+            set => this.privateComandoBarras = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>
@@ -142,8 +142,8 @@ namespace Etiquetas.Domain.Modelo
         [XmlElement("ComandoCopias")]
         public string ComandoCopias
         {
-            get => MarcadoresComCaracteresEspeciais(ProtectedComandoCopias);
-            set => this.ProtectedComandoCopias = RemoverMarcadoresComCaracteresEspeciais(value);
+            get => MarcadoresComCaracteresEspeciais(privateComandoCopias);
+            set => this.privateComandoCopias = RemoverMarcadoresComCaracteresEspeciais(value);
         }
 
         /// <summary>

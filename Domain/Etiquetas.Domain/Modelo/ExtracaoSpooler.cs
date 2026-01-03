@@ -14,18 +14,18 @@ namespace Etiquetas.Domain.Modelo
     /// </summary>
     [Serializable]
     [XmlRoot("ExtracaoSpooler")]
-    public class ExtracaoSpooler : IExtracaoSpooler
+    public class ExtracaoSpooler
     {
         /// <summary>
         /// Gets or sets - Configurações de comandos da linguagem de impressão.
         /// </summary>
-        public IComandosLinguagem ComandosImpressao { get; set; }
+        public ComandosLinguagem ComandosImpressao { get; set; }
 
         /// <summary>
         /// Gets or sets - Lista de campos da etiqueta.
         /// </summary>
         [XmlElement("Campos")]
-        public IListaComandosCampos Campos { get; set; }
+        public ListaComandosCampos Campos { get; set; }
 
         public ExtracaoSpooler()
         {

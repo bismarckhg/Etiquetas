@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Etiquetas.Application.DTOs;
+using Etiquetas.Bibliotecas.Comum.Arrays;
 using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Comum.Numericos;
 using Etiquetas.Bibliotecas.ControleFilaDados;
@@ -25,7 +26,7 @@ namespace Etiquetas.Application.Mappers
         /// <summary>
         /// Dicionário estático de campos e seus comandos associados.
         /// </summary>
-        public static ConcurrentDictionary<EnumTipoCampo, IComandosCampo> Campos { get; set; } = new ConcurrentDictionary<EnumTipoCampo, IComandosCampo>();
+        public static ConcurrentDictionary<EnumTipoCampo, ComandosCampo> Campos { get; set; } = new ConcurrentDictionary<EnumTipoCampo, ComandosCampo>();
 
         /// <summary>
         /// Creates a new <see cref="IEtiquetaImpressaoDto"/> instance.
@@ -88,7 +89,7 @@ namespace Etiquetas.Application.Mappers
         /// <exception cref="CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
         public static async Task<IEtiquetaImpressaoDto> SpolerToDto(
             string conteudoEtiqueta,
-            IPosicaoCamposEtiqueta configuracao)
+            PosicaoCamposEtiqueta configuracao)
         {
             if (string.IsNullOrWhiteSpace(conteudoEtiqueta))
             {
@@ -118,11 +119,11 @@ namespace Etiquetas.Application.Mappers
                     }
 
                     // Processa o comando atual
-                    ProcessarComando(comando, configuracao, dados, estado);
+                    await ProcessarComando(comando, configuracao, dados, estado).ConfigureAwait(false);
                 }
 
                 // Valida campos obrigatórios
-                ValidarCamposObrigatorios(dados, configuracao.ConfiguracaoSpooler.Campos);
+                await ValidarCamposObrigatorios(dados, configuracao.ConfiguracaoSpooler.Campos).ConfigureAwait(false);
 
                 return dados;
             }
@@ -145,7 +146,7 @@ namespace Etiquetas.Application.Mappers
         /// <param name="estado">Estado atual do processamento</param>
         private static async Task ProcessarComando(
             string comando,
-            IPosicaoCamposEtiqueta config,
+            PosicaoCamposEtiqueta config,
             EtiquetaImpressaoDto dados,
             EstadoCampo estado)
         {
@@ -162,7 +163,7 @@ namespace Etiquetas.Application.Mappers
 
                 if (configCampo != null)
                 {
-                    var precisaCmd2 = !string.IsNullOrWhiteSpace(configCampo.Comando2);
+                    var precisaCmd2 = !string.IsNullOrWhiteSpace(configCampo.PosicaoComando2);
 
                     if (!precisaCmd2 || (estado.Cmd1Encontrado && estado.Cmd2Encontrado))
                     {
@@ -179,7 +180,7 @@ namespace Etiquetas.Application.Mappers
             }
         }
 
-        private static async Task PreencheDicionarioCampos(IPosicaoCamposEtiqueta config)
+        private static async Task PreencheDicionarioCampos(PosicaoCamposEtiqueta config)
         {
             // Lista de todos os campos possíveis
             foreach (EnumTipoCampo valor in ObtemValoresEnum<EnumTipoCampo>.ObtemEnum())
@@ -190,7 +191,11 @@ namespace Etiquetas.Application.Mappers
                 }
 
                 var nomeCampo = ObtemValoresEnum<EnumTipoCampo>.ObtemNome(valor);
-                Campos.TryAdd(valor, await config.ObterComandoCampoPeloNome(nomeCampo).ConfigureAwait(false));
+                var configCampo = await ObterConfiguracaoCampo(valor).ConfigureAwait(false);
+                if (configCampo != new ComandosCampo())
+                {
+                    Campos.TryAdd(valor, configCampo);
+                }
             }
         }
 
@@ -204,24 +209,53 @@ namespace Etiquetas.Application.Mappers
         /// <returns>Tipo do campo identificado</returns>
         private static async Task<EnumTipoCampo> IdentificarCampo(
             string comando,
-            IPosicaoCamposEtiqueta config,
-            EstadoCampo estado)
+            ComandosLinguagem comandosLinguagem)
         {
+            var estado = new EstadoCampo();
+
+
+            var Cmd1 = string.Empty;
+            var Cmd2 = string.Empty;
+
+            // Normaliza os comandos de configuração também
+            var CmdPosicao1 = $"{comandosLinguagem.MarcadorComando}{comandosLinguagem.ComandoPosicao1}";
+            var CmdPosicao2 = $"{comandosLinguagem.MarcadorComando}{comandosLinguagem.ComandoPosicao2}";
+
             foreach (var kvp in Campos)
             {
                 var tipo = kvp.Key;
                 var configCampo = kvp.Value;
 
-                if (configCampo == null || string.IsNullOrWhiteSpace(configCampo.PosicaoComando1))
+                Cmd1 = $"{CmdPosicao1}{configCampo.PosicaoComando1}";
+
+                if (configCampo == null || StringEhNuloVazioComEspacosBranco.Execute(configCampo.PosicaoComando1))
                 {
                     continue;
                 }
 
-                // Normaliza os comandos de configuração também
-                var cmd1Normalizado = NormalizarComando(configCampo.PosicaoComando1);
-                var cmd2Normalizado = string.IsNullOrWhiteSpace(configCampo.PosicaoComando2)
-                    ? string.Empty
-                    : NormalizarComando(configCampo.PosicaoComando2);
+                if (StringEhNuloVazioComEspacosBranco.Execute(configCampo.ComandoEspecifico) && Cmd1.StartsWith(configCampo.ComandoEspecifico))
+                {
+                    var cmd1Normalizado = NormalizarComando(configCampo.PosicaoComando1, configCampo.ComandoEspecifico);
+                    if (Cmd1 == cmd1Normalizado)
+                    {
+                        estado.Cmd1Encontrado = true;
+                    }
+                }
+
+                if (!StringEhNuloVazioComEspacosBranco.Execute(comandosLinguagem.ComandoPosicao2) && !StringEhNuloVazioComEspacosBranco.Execute(configCampo.PosicaoComando2))
+                {
+                    Cmd2 = $"{CmdPosicao2}{configCampo.PosicaoComando2}";
+                    var cmd2Normalizado = $"{comandosLinguagem.MarcadorComando}{comandosLinguagem.ComandoPosicao2}{configCampo.PosicaoComando2}";
+                    if (Cmd2 == cmd2Normalizado)
+                    {
+                        estado.Cmd2Encontrado = true;
+                    }
+                }
+
+                
+                //var cmd2Normalizado = string.IsNullOrWhiteSpace(configCampo.PosicaoComando2)
+                //    ? string.Empty
+                //    : NormalizarComando(configCampo.PosicaoComando2);
 
                 // Verifica Cmd1
                 if (comando.StartsWith(cmd1Normalizado, StringComparison.OrdinalIgnoreCase))
@@ -270,7 +304,7 @@ namespace Etiquetas.Application.Mappers
         /// <returns>Texto extraído ou string vazia</returns>
         private static string ExtrairTextoDoComando(
             string comando,
-            IComandosLinguagem config)
+            ComandosLinguagem config)
         {
             var inicio = config.MarcadorInicioTexto;
             var fim = config.MarcadorFimTexto;
@@ -337,20 +371,20 @@ namespace Etiquetas.Application.Mappers
         /// <param name="tipo">Tipo do campo</param>
         /// <param name="config">Configuração completa</param>
         /// <returns>Configuração do campo ou null</returns>
-        private static async Task<IConfiguracaoCampo> ObterConfiguracaoCampo(EnumTipoCampo tipo)
+        private static async Task<ComandosCampo> ObterConfiguracaoCampo(EnumTipoCampo tipo)
         {
-            Campos.TryGetValue(tipo, out var comandoCampo);
-            if (comandoCampo != null)
+            if (Campos.TryGetValue(tipo, out var comandoCampo))
             {
-                return new ConfiguracaoCampo
-                {
-                    Comando1 = comandoCampo.PosicaoComando1,
-                    Comando2 = comandoCampo.PosicaoComando2,
-                    Obrigatorio = comandoCampo.Obrigatorio,
-                };
+                return comandoCampo;
+                //return new ConfiguracaoCampo
+                //{
+                //    Comando1 = comandoCampo.PosicaoComando1,
+                //    Comando2 = comandoCampo.PosicaoComando2,
+                //    Obrigatorio = comandoCampo.Obrigatorio,
+                //};
             }
 
-            return new ConfiguracaoCampo();
+            return new ComandosCampo();
         }
 
         /// <summary>
@@ -429,7 +463,7 @@ namespace Etiquetas.Application.Mappers
         /// <param name="dados">Dados extraídos</param>
         /// <param name="config">Configuração com indicação de obrigatoriedade</param>
         /// <exception cref="CampoObrigatorioException">Se algum campo obrigatório estiver vazio</exception>
-        private static async Task ValidarCamposObrigatorios(IEtiquetaImpressaoDto dados, IListaComandosCampos comandos)
+        private static async Task ValidarCamposObrigatorios(IEtiquetaImpressaoDto dados, ListaComandosCampos comandos)
         {
             foreach (EnumTipoCampo valor in ObtemValoresEnum<EnumTipoCampo>.ObtemEnum())
             {
@@ -478,12 +512,12 @@ namespace Etiquetas.Application.Mappers
         /// <summary>
         /// Valida um campo individual.
         /// </summary>
-        /// <param name="configCampo">Configuração do campo</param>
+        /// <param name="comandosCampo">Configuração do campo</param>
         /// <param name="valor">Valor extraído</param>
         /// <param name="nomeCampo">Nome do campo para mensagem de erro</param>
-        private static void ValidarCampo(IConfiguracaoCampo configCampo, string valor, string nomeCampo)
+        private static void ValidarCampo(ComandosCampo comandosCampo, string valor, string nomeCampo)
         {
-            if (configCampo != null && configCampo.Obrigatorio && string.IsNullOrWhiteSpace(valor))
+            if (comandosCampo != null && comandosCampo.Obrigatorio && string.IsNullOrWhiteSpace(valor))
             {
                 throw new CampoObrigatorioException($"O campo '{nomeCampo}' é obrigatório e não foi encontrado na etiqueta.");
             }
@@ -495,61 +529,32 @@ namespace Etiquetas.Application.Mappers
         /// </summary>
         /// <param name="comando">Comando original</param>
         /// <returns>Comando normalizado</returns>
-        private static string NormalizarComando(string comando)
+        private static string NormalizarComando(string comando, string comandoEspecifico)
         {
             if (string.IsNullOrWhiteSpace(comando))
             {
                 return comando;
             }
 
-            // Detecta padrões numéricos e remove zeros à esquerda
-            var sb = new StringBuilder();
-            var dentroDeNumero = false;
-            var zerosAcumulados = 0;
+            var inicio = comandoEspecifico.Length;
+            var valoresString = StringEmArrayStringPorSeparador.Execute(comando.Substring(inicio), ",", true);
+            var valores = new int[valoresString.Length];
 
-            for (int i = 0; i < comando.Length; i++)
+            for (int i = 0; i < valores.Length; i++)
             {
-                var c = comando[i];
+                valores[i] = StringParaInt.Execute(valoresString[i]);
+            }
 
-                if (char.IsDigit(c))
+            var sb = new StringBuilder();
+            if (valores.Length > 0)
+            {
+                sb.Append(comandoEspecifico);
+                sb.Append(valores[0].ToString());
+
+                if (valores.Length > 1)
                 {
-                    if (!dentroDeNumero)
-                    {
-                        dentroDeNumero = true;
-                        zerosAcumulados = 0;
-                    }
-
-                    if (c == '0' && zerosAcumulados >= 0)
-                    {
-                        zerosAcumulados++;
-                    }
-                    else
-                    {
-                        // Encontrou dígito diferente de zero
-                        if (zerosAcumulados > 0)
-                        {
-                            // Se era apenas zeros, mantém um
-                            if (i + 1 >= comando.Length || !char.IsDigit(comando[i + 1]))
-                            {
-                                sb.Append('0');
-                            }
-                        }
-
-                        zerosAcumulados = -1; // Desativa contagem
-                        sb.Append(c);
-                    }
-                }
-                else
-                {
-                    if (dentroDeNumero && zerosAcumulados > 0)
-                    {
-                        // Terminou número só com zeros, mantém um
-                        sb.Append('0');
-                    }
-
-                    dentroDeNumero = false;
-                    zerosAcumulados = 0;
-                    sb.Append(c);
+                    sb.Append(",");
+                    sb.Append(valores[1].ToString());
                 }
             }
 
