@@ -56,6 +56,17 @@ namespace Etiquetas.Domain.Configuracao
         }
 
         /// <summary>
+        /// Obtém o comando do campo com base no nome do campo.
+        /// </summary>
+        /// <param name="nome">Nome do campo a procurar a posicao.</param>
+        /// <returns>Retorna a posicao na Coleção de Comandos.</returns>
+        public async Task<IComandosCampo> ObterComandoCampoPeloNome(string nome)
+        {
+            int posicao = await PosicaoNomeDicionario(nome).ConfigureAwait(false);
+            return await ObterComandoCampoPorPosicao(posicao).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Constrói o índice para acesso rápido aos comandos dos campos.
         /// </summary>
         /// <returns>Task async.</returns>
@@ -73,17 +84,6 @@ namespace Etiquetas.Domain.Configuracao
             }
 
             await Task.CompletedTask.ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Obtém o comando do campo com base no nome do campo.
-        /// </summary>
-        /// <param name="nome">Nome do campo a procurar a posicao.</param>
-        /// <returns>Retorna a posicao na Coleção de Comandos.</returns>
-        protected async Task<IComandosCampo> ObterComandoCampoPeloNome(string nome)
-        {
-            int posicao = await PosicaoNomeDicionario(nome).ConfigureAwait(false);
-            return await ObterComandoCampoPorPosicao(posicao).ConfigureAwait(false);
         }
 
         /// <summary>

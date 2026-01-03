@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Etiquetas.Application.DTOs;
 using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Comum.Numericos;
@@ -11,6 +13,7 @@ using Etiquetas.Bibliotecas.SATO;
 using Etiquetas.Core.Interfaces;
 using Etiquetas.Domain.Configuracao;
 using Etiquetas.Domain.Entities;
+using Etiquetas.Domain.Modelo;
 
 namespace Etiquetas.Application.Mappers
 {
@@ -19,6 +22,11 @@ namespace Etiquetas.Application.Mappers
     /// </summary>
     public static class EtiquetaMapper
     {
+        /// <summary>
+        /// Dicionário estático de campos e seus comandos associados.
+        /// </summary>
+        public static Dictionary<EnumTipoCampo, IComandosCampo> Campos { get; set; } = new Dictionary<EnumTipoCampo, IComandosCampo>();
+
         /// <summary>
         /// Creates a new <see cref="IEtiquetaImpressaoDto"/> instance.
         /// Cria uma nova instância de <see cref="IEtiquetaImpressaoDto"/> preenchida com o material especificado e
@@ -78,7 +86,9 @@ namespace Etiquetas.Application.Mappers
         /// <returns>Objeto com os dados extraídos ou null se houver erro</returns>
         /// <exception cref="ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
         /// <exception cref="CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
-        public static IEtiquetaImpressaoDto SpolerToDto(this string conteudoEtiqueta, IPosicaoCamposEtiqueta configuracao)
+        public static IEtiquetaImpressaoDto SpolerToDto(
+            this string conteudoEtiqueta,
+            IPosicaoCamposEtiqueta configuracao)
         {
             if (string.IsNullOrWhiteSpace(conteudoEtiqueta))
             {
@@ -168,6 +178,35 @@ namespace Etiquetas.Application.Mappers
             }
         }
 
+        private static async Task PreencheDicionarioCampos(IPosicaoCamposEtiqueta config)
+        {
+            // Lista de todos os campos possíveis
+            var codigoMaterial = await config.ObterComandoCampoPeloNome("CodigoMaterial").ConfigureAwait(false);
+            var descricaoMedicamento = await config.ObterComandoCampoPeloNome("Descricao").ConfigureAwait(false);
+            foreach (EnumTipoCampo valor in ObtemValoresEnum)
+            {
+            }
+
+
+
+
+
+            {
+                { EnumTipoCampo.CodigoMaterial, codigoMaterial },
+                { EnumTipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
+                { EnumTipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
+                { EnumTipoCampo.PrincipioAtivo, config.PrincipioAtivo },
+                { EnumTipoCampo.PrincipioAtivo2, config.PrincipioAtivo2 },
+                { EnumTipoCampo.Embalagem, config.Embalagem },
+                { EnumTipoCampo.Lote, config.Lote },
+                { EnumTipoCampo.Validade, config.Validade },
+                { EnumTipoCampo.CodigoUsuario, config.CodigoUsuario },
+                { EnumTipoCampo.CodigoBarras, config.CodigoBarras },
+                { EnumTipoCampo.Copias, config.Copias }
+            };
+
+        }
+
         /// <summary>
         /// Identifica qual campo está sendo processado no comando atual.
         /// Atualiza o estado conforme encontra Cmd1 e Cmd2.
@@ -176,16 +215,18 @@ namespace Etiquetas.Application.Mappers
         /// <param name="config">Configuração dos campos</param>
         /// <param name="estado">Estado atual</param>
         /// <returns>Tipo do campo identificado</returns>
-        private static EnumTipoCampo IdentificarCampo(
+        private static async EnumTipoCampo IdentificarCampo(
             string comando,
             IPosicaoCamposEtiqueta config,
             EstadoCampo estado)
         {
             // Lista de todos os campos possíveis
-            
-            var campos = new Dictionary<EnumTipoCampo, IConfiguracaoCampo>
+            var codigoMaterial = await config.ObterComandoCampoPeloNome("").ConfigureAwait(false);
+
+
+            var campos = new Dictionary<EnumTipoCampo, IComandosCampo>
             {
-                { EnumTipoCampo.CodigoMaterial, arrayCampos["CodigoMaterial"] },
+                { EnumTipoCampo.CodigoMaterial, codigoMaterial },
                 { EnumTipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
                 { EnumTipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
                 { EnumTipoCampo.PrincipioAtivo, config.PrincipioAtivo },
@@ -204,7 +245,9 @@ namespace Etiquetas.Application.Mappers
                 var configCampo = kvp.Value;
 
                 if (configCampo == null || string.IsNullOrWhiteSpace(configCampo.Comando1))
+                {
                     continue;
+                }
 
                 // Normaliza os comandos de configuração também
                 var cmd1Normalizado = NormalizarComando(configCampo.Comando1);
@@ -267,8 +310,11 @@ namespace Etiquetas.Application.Mappers
                 // SBPL: texto vem após o comando de posição
                 // Extrai tudo após os primeiros 5 caracteres (ex: ESC + H0010)
                 if (comando.Length > 5)
+                {
                     return comando.Substring(5).Trim();
-                return "";
+                }
+
+                return string.Empty;
             }
 
             int idxInicio = -1;
@@ -278,7 +324,9 @@ namespace Etiquetas.Application.Mappers
             {
                 idxInicio = comando.IndexOf(inicio, StringComparison.Ordinal);
                 if (idxInicio >= 0)
+                {
                     idxInicio += inicio.Length;
+                }
             }
             else
             {
@@ -286,7 +334,9 @@ namespace Etiquetas.Application.Mappers
             }
 
             if (idxInicio < 0 || idxInicio >= comando.Length)
-                return "";
+            {
+                return string.Empty;
+            }
 
             if (!string.IsNullOrEmpty(fim))
             {
@@ -298,11 +348,15 @@ namespace Etiquetas.Application.Mappers
             }
 
             if (idxFim < 0)
+            {
                 idxFim = comando.Length;
+            }
 
             var tamanho = idxFim - idxInicio;
             if (tamanho <= 0)
+            {
                 return "";
+            }
 
             return comando.Substring(idxInicio, tamanho).Trim();
         }
@@ -343,7 +397,7 @@ namespace Etiquetas.Application.Mappers
             switch (tipo)
             {
                 case EnumTipoCampo.CodigoMaterial:
-                    dados.CodigoMaterial = ExtrairApenasDigitos(valor);
+                    dados.CodigoMaterial = Etiquetas.Bibliotecas.Comum.Numericos.StringExtrairSomenteDigitosNumericos.Execute(valor);
                     break;
                 case EnumTipoCampo.DescricaoMedicamento:
                     dados.DescricaoMedicamento = valor;
@@ -379,34 +433,10 @@ namespace Etiquetas.Application.Mappers
         }
 
         /// <summary>
-        /// Extrai apenas dígitos numéricos de uma string.
-        /// </summary>
-        /// <param name="texto">Texto original</param>
-        /// <returns>String contendo apenas dígitos</returns>
-        private static string ExtrairApenasDigitos(string texto)
-        {
-            if (string.IsNullOrWhiteSpace(texto))
-            {
-                return string.Empty;
-            }
-
-            var sb = new StringBuilder();
-            foreach (var c in texto)
-            {
-                if (char.IsDigit(c))
-                {
-                    sb.Append(c);
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
         /// Processa código de barras, calculando dígito verificador EAN-13 se necessário.
         /// </summary>
         /// <param name="codigo">Código extraído</param>
-        /// <returns>Código completo com dígito verificador</returns>
+        /// <returns>Código completo com dígito verificador.</returns>
         private static string ProcessarCodigoBarras(string codigo)
         {
             if (string.IsNullOrWhiteSpace(codigo))

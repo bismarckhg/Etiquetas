@@ -27,5 +27,12 @@ namespace Etiquetas.Core.Interfaces
         /// </summary>
         /// <returns>Task.</returns>
         Task CarregarConfiguracoes();
+
+        /// <summary>
+        /// Obtém o comando do campo pelo nome.
+        /// </summary>
+        /// <param name="nome"></param>
+        /// <returns></returns>
+        Task<IComandosCampo> ObterComandoCampoPeloNome(string nome);
     }
 }
