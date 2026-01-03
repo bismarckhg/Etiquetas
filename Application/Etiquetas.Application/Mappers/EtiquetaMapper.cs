@@ -182,10 +182,13 @@ namespace Etiquetas.Application.Mappers
         private static async Task PreencheDicionarioCampos(IPosicaoCamposEtiqueta config)
         {
             // Lista de todos os campos possíveis
-            var codigoMaterial = await config.ObterComandoCampoPeloNome("CodigoMaterial").ConfigureAwait(false);
-            var descricaoMedicamento = await config.ObterComandoCampoPeloNome("Descricao").ConfigureAwait(false);
             foreach (EnumTipoCampo valor in ObtemValoresEnum<EnumTipoCampo>.ObtemEnum())
             {
+                if (valor == EnumTipoCampo.Nenhum)
+                {
+                    continue;
+                }
+
                 var nomeCampo = ObtemValoresEnum<EnumTipoCampo>.ObtemNome(valor);
                 Campos.TryAdd(valor, await config.ObterComandoCampoPeloNome(nomeCampo).ConfigureAwait(false));
             }

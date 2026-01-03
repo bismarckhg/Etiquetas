@@ -130,6 +130,11 @@
             Classe de mapeamento entre EtiquetaImpressao e EtiquetaImpressaoDto.
             </summary>
         </member>
+        <member name="P:Etiquetas.Application.Mappers.EtiquetaMapper.Campos">
+            <summary>
+            Dicionário estático de campos e seus comandos associados.
+            </summary>
+        </member>
         <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.CriaDTO(System.Int64,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
             Creates a new <see cref="T:Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto"/> instance.
@@ -179,7 +184,7 @@
             <param name="estado">Estado atual</param>
             <returns>Tipo do campo identificado</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairTextoDoComando(System.String,Etiquetas.Domain.Modelo.IComandosLinguagem)">
             <summary>
             Extrai o texto de um comando baseado nos marcadores de início e fim.
             </summary>
@@ -187,7 +192,7 @@
             <param name="config">Configuração com os marcadores</param>
             <returns>Texto extraído ou string vazia</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ObterConfiguracaoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ObterConfiguracaoCampo(Etiquetas.Bibliotecas.SATO.EnumTipoCampo)">
             <summary>
             Obtém a configuração de um campo específico.
             </summary>
@@ -195,7 +200,7 @@
             <param name="config">Configuração completa</param>
             <returns>Configuração do campo ou null</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.AtribuirValorAoCampo(Etiquetas.Bibliotecas.SATO.TipoCampo,System.String,Etiquetas.Application.DTOs.EtiquetaImpressaoDto)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.AtribuirValorAoCampo(Etiquetas.Bibliotecas.SATO.EnumTipoCampo,System.String,Etiquetas.Application.DTOs.EtiquetaImpressaoDto)">
             <summary>
             Atribui o valor extraído ao campo correspondente no DTO.
             </summary>
@@ -203,21 +208,14 @@
             <param name="valor">Valor a ser atribuído</param>
             <param name="dados">Objeto DTO</param>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ExtrairApenasDigitos(System.String)">
-            <summary>
-            Extrai apenas dígitos numéricos de uma string.
-            </summary>
-            <param name="texto">Texto original</param>
-            <returns>String contendo apenas dígitos</returns>
-        </member>
         <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ProcessarCodigoBarras(System.String)">
             <summary>
             Processa código de barras, calculando dígito verificador EAN-13 se necessário.
             </summary>
             <param name="codigo">Código extraído</param>
-            <returns>Código completo com dígito verificador</returns>
+            <returns>Código completo com dígito verificador.</returns>
         </member>
-        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta)">
+        <member name="M:Etiquetas.Application.Mappers.EtiquetaMapper.ValidarCamposObrigatorios(Etiquetas.Core.Interfaces.IEtiquetaImpressaoDto,Etiquetas.Domain.Modelo.IListaComandosCampos)">
             <summary>
             Valida se todos os campos obrigatórios foram preenchidos.
             </summary>

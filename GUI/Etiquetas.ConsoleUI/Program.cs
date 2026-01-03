@@ -21,7 +21,7 @@ namespace Etiquetas.ConsoleUI
         {
             // await TesteEtiquetaPipeline.Teste();
 
-            TesteEtiqueta.ProcessarEtiqueta();
+            await TesteEtiqueta.ProcessarEtiqueta().ConfigureAwait(false);
 
             // await ExemploUsoExtracaoSpooler.Exemplo().ConfigureAwait(false);
 
