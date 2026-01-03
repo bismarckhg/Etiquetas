@@ -2,9 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Etiquetas.Application.DTOs;
 using Etiquetas.Bibliotecas.Comum.Caracteres;
 using Etiquetas.Bibliotecas.Comum.Numericos;
@@ -25,7 +25,7 @@ namespace Etiquetas.Application.Mappers
         /// <summary>
         /// Dicionário estático de campos e seus comandos associados.
         /// </summary>
-        public static Dictionary<EnumTipoCampo, IComandosCampo> Campos { get; set; } = new Dictionary<EnumTipoCampo, IComandosCampo>();
+        public static ConcurrentDictionary<EnumTipoCampo, IComandosCampo> Campos { get; set; } = new ConcurrentDictionary<EnumTipoCampo, IComandosCampo>();
 
         /// <summary>
         /// Creates a new <see cref="IEtiquetaImpressaoDto"/> instance.
@@ -86,8 +86,8 @@ namespace Etiquetas.Application.Mappers
         /// <returns>Objeto com os dados extraídos ou null se houver erro</returns>
         /// <exception cref="ArgumentNullException">Se conteudoEtiqueta ou configuracao forem nulos</exception>
         /// <exception cref="CampoObrigatorioException">Se um campo obrigatório estiver vazio</exception>
-        public static IEtiquetaImpressaoDto SpolerToDto(
-            this string conteudoEtiqueta,
+        public static async Task<IEtiquetaImpressaoDto> SpolerToDto(
+            string conteudoEtiqueta,
             IPosicaoCamposEtiqueta configuracao)
         {
             if (string.IsNullOrWhiteSpace(conteudoEtiqueta))
@@ -102,6 +102,7 @@ namespace Etiquetas.Application.Mappers
 
             try
             {
+                await PreencheDicionarioCampos(configuracao).ConfigureAwait(false);
                 // Quebra em linhas/comandos individuais
                 var comandos = QuebraComandosEmLinhasIndividuais.Execute(conteudoEtiqueta, configuracao.ConfiguracaoSpooler.ComandosImpressao.TipoLinguagem);
 
@@ -121,7 +122,7 @@ namespace Etiquetas.Application.Mappers
                 }
 
                 // Valida campos obrigatórios
-                ValidarCamposObrigatorios(dados, configuracao);
+                ValidarCamposObrigatorios(dados, configuracao.ConfiguracaoSpooler.Campos);
 
                 return dados;
             }
@@ -142,7 +143,7 @@ namespace Etiquetas.Application.Mappers
         /// <param name="config">Configuração dos campos</param>
         /// <param name="dados">Objeto onde os dados serão armazenados</param>
         /// <param name="estado">Estado atual do processamento</param>
-        private static void ProcessarComando(
+        private static async Task ProcessarComando(
             string comando,
             IPosicaoCamposEtiqueta config,
             EtiquetaImpressaoDto dados,
@@ -152,12 +153,12 @@ namespace Etiquetas.Application.Mappers
             var comandoNormalizado = NormalizarComando(comando);
 
             // Tenta identificar qual campo é este comando
-            var campoIdentificado = IdentificarCampo(comandoNormalizado, config, estado);
+            var campoIdentificado = await IdentificarCampo(comandoNormalizado, config, estado).ConfigureAwait(false);
 
             if (campoIdentificado != EnumTipoCampo.Nenhum)
             {
                 // Verifica se já temos todos os comandos de posição necessários
-                var configCampo = ObterConfiguracaoCampo(campoIdentificado, config);
+                var configCampo = await ObterConfiguracaoCampo(campoIdentificado).ConfigureAwait(false);
 
                 if (configCampo != null)
                 {
@@ -166,7 +167,7 @@ namespace Etiquetas.Application.Mappers
                     if (!precisaCmd2 || (estado.Cmd1Encontrado && estado.Cmd2Encontrado))
                     {
                         // Tenta extrair o texto
-                        var texto = ExtrairTextoDoComando(comando, config);
+                        var texto = ExtrairTextoDoComando(comando, config.ConfiguracaoSpooler.ComandosImpressao);
 
                         if (!string.IsNullOrWhiteSpace(texto))
                         {
@@ -183,28 +184,11 @@ namespace Etiquetas.Application.Mappers
             // Lista de todos os campos possíveis
             var codigoMaterial = await config.ObterComandoCampoPeloNome("CodigoMaterial").ConfigureAwait(false);
             var descricaoMedicamento = await config.ObterComandoCampoPeloNome("Descricao").ConfigureAwait(false);
-            foreach (EnumTipoCampo valor in ObtemValoresEnum)
+            foreach (EnumTipoCampo valor in ObtemValoresEnum<EnumTipoCampo>.ObtemEnum())
             {
+                var nomeCampo = ObtemValoresEnum<EnumTipoCampo>.ObtemNome(valor);
+                Campos.TryAdd(valor, await config.ObterComandoCampoPeloNome(nomeCampo).ConfigureAwait(false));
             }
-
-
-
-
-
-            {
-                { EnumTipoCampo.CodigoMaterial, codigoMaterial },
-                { EnumTipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
-                { EnumTipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
-                { EnumTipoCampo.PrincipioAtivo, config.PrincipioAtivo },
-                { EnumTipoCampo.PrincipioAtivo2, config.PrincipioAtivo2 },
-                { EnumTipoCampo.Embalagem, config.Embalagem },
-                { EnumTipoCampo.Lote, config.Lote },
-                { EnumTipoCampo.Validade, config.Validade },
-                { EnumTipoCampo.CodigoUsuario, config.CodigoUsuario },
-                { EnumTipoCampo.CodigoBarras, config.CodigoBarras },
-                { EnumTipoCampo.Copias, config.Copias }
-            };
-
         }
 
         /// <summary>
@@ -215,45 +199,26 @@ namespace Etiquetas.Application.Mappers
         /// <param name="config">Configuração dos campos</param>
         /// <param name="estado">Estado atual</param>
         /// <returns>Tipo do campo identificado</returns>
-        private static async EnumTipoCampo IdentificarCampo(
+        private static async Task<EnumTipoCampo> IdentificarCampo(
             string comando,
             IPosicaoCamposEtiqueta config,
             EstadoCampo estado)
         {
-            // Lista de todos os campos possíveis
-            var codigoMaterial = await config.ObterComandoCampoPeloNome("").ConfigureAwait(false);
-
-
-            var campos = new Dictionary<EnumTipoCampo, IComandosCampo>
-            {
-                { EnumTipoCampo.CodigoMaterial, codigoMaterial },
-                { EnumTipoCampo.DescricaoMedicamento, config.DescricaoMedicamento },
-                { EnumTipoCampo.DescricaoMedicamento2, config.DescricaoMedicamento2 },
-                { EnumTipoCampo.PrincipioAtivo, config.PrincipioAtivo },
-                { EnumTipoCampo.PrincipioAtivo2, config.PrincipioAtivo2 },
-                { EnumTipoCampo.Embalagem, config.Embalagem },
-                { EnumTipoCampo.Lote, config.Lote },
-                { EnumTipoCampo.Validade, config.Validade },
-                { EnumTipoCampo.CodigoUsuario, config.CodigoUsuario },
-                { EnumTipoCampo.CodigoBarras, config.CodigoBarras },
-                { EnumTipoCampo.Copias, config.Copias }
-            };
-
-            foreach (var kvp in campos)
+            foreach (var kvp in Campos)
             {
                 var tipo = kvp.Key;
                 var configCampo = kvp.Value;
 
-                if (configCampo == null || string.IsNullOrWhiteSpace(configCampo.Comando1))
+                if (configCampo == null || string.IsNullOrWhiteSpace(configCampo.PosicaoComando1))
                 {
                     continue;
                 }
 
                 // Normaliza os comandos de configuração também
-                var cmd1Normalizado = NormalizarComando(configCampo.Comando1);
-                var cmd2Normalizado = string.IsNullOrWhiteSpace(configCampo.Comando2)
-                    ? ""
-                    : NormalizarComando(configCampo.Comando2);
+                var cmd1Normalizado = NormalizarComando(configCampo.PosicaoComando1);
+                var cmd2Normalizado = string.IsNullOrWhiteSpace(configCampo.PosicaoComando2)
+                    ? string.Empty
+                    : NormalizarComando(configCampo.PosicaoComando2);
 
                 // Verifica Cmd1
                 if (comando.StartsWith(cmd1Normalizado, StringComparison.OrdinalIgnoreCase))
@@ -300,10 +265,12 @@ namespace Etiquetas.Application.Mappers
         /// <param name="comando">Comando contendo o texto</param>
         /// <param name="config">Configuração com os marcadores</param>
         /// <returns>Texto extraído ou string vazia</returns>
-        private static string ExtrairTextoDoComando(string comando, IPosicaoCamposEtiqueta config)
+        private static string ExtrairTextoDoComando(
+            string comando,
+            IComandosLinguagem config)
         {
-            var inicio = config.MarcadorInicialTexto;
-            var fim = config.MarcadorFinalTexto;
+            var inicio = config.MarcadorInicioTexto;
+            var fim = config.MarcadorFimTexto;
 
             if (string.IsNullOrEmpty(inicio) && string.IsNullOrEmpty(fim))
             {
@@ -355,7 +322,7 @@ namespace Etiquetas.Application.Mappers
             var tamanho = idxFim - idxInicio;
             if (tamanho <= 0)
             {
-                return "";
+                return string.Empty;
             }
 
             return comando.Substring(idxInicio, tamanho).Trim();
@@ -367,23 +334,20 @@ namespace Etiquetas.Application.Mappers
         /// <param name="tipo">Tipo do campo</param>
         /// <param name="config">Configuração completa</param>
         /// <returns>Configuração do campo ou null</returns>
-        private static IConfiguracaoCampo ObterConfiguracaoCampo(EnumTipoCampo tipo, IPosicaoCamposEtiqueta config)
+        private static async Task<IConfiguracaoCampo> ObterConfiguracaoCampo(EnumTipoCampo tipo)
         {
-            switch (tipo)
+            Campos.TryGetValue(tipo, out var comandoCampo);
+            if (comandoCampo != null)
             {
-                case EnumTipoCampo.CodigoMaterial: return config.CodigoMaterial;
-                case EnumTipoCampo.DescricaoMedicamento: return config.DescricaoMedicamento;
-                case EnumTipoCampo.DescricaoMedicamento2: return config.DescricaoMedicamento2;
-                case EnumTipoCampo.PrincipioAtivo: return config.PrincipioAtivo;
-                case EnumTipoCampo.PrincipioAtivo2: return config.PrincipioAtivo2;
-                case EnumTipoCampo.Embalagem: return config.Embalagem;
-                case EnumTipoCampo.Lote: return config.Lote;
-                case EnumTipoCampo.Validade: return config.Validade;
-                case EnumTipoCampo.CodigoUsuario: return config.CodigoUsuario;
-                case EnumTipoCampo.CodigoBarras: return config.CodigoBarras;
-                case EnumTipoCampo.Copias: return config.Copias;
-                default: return null;
+                return new ConfiguracaoCampo
+                {
+                    Comando1 = comandoCampo.PosicaoComando1,
+                    Comando2 = comandoCampo.PosicaoComando2,
+                    Obrigatorio = comandoCampo.Obrigatorio,
+                };
             }
+
+            return new ConfiguracaoCampo();
         }
 
         /// <summary>
@@ -462,18 +426,50 @@ namespace Etiquetas.Application.Mappers
         /// <param name="dados">Dados extraídos</param>
         /// <param name="config">Configuração com indicação de obrigatoriedade</param>
         /// <exception cref="CampoObrigatorioException">Se algum campo obrigatório estiver vazio</exception>
-        private static void ValidarCamposObrigatorios(IEtiquetaImpressaoDto dados, IPosicaoCamposEtiqueta config)
+        private static async Task ValidarCamposObrigatorios(IEtiquetaImpressaoDto dados, IListaComandosCampos comandos)
         {
-            ValidarCampo(config.CodigoMaterial, dados.CodigoMaterial, "Código do Material");
-            ValidarCampo(config.DescricaoMedicamento, dados.DescricaoMedicamento, "Descrição do Medicamento");
-            ValidarCampo(config.DescricaoMedicamento2, dados.DescricaoMedicamento2, "Descrição do Medicamento 2");
-            ValidarCampo(config.PrincipioAtivo, dados.PrincipioAtivo, "Princípio Ativo 1");
-            ValidarCampo(config.PrincipioAtivo2, dados.PrincipioAtivo2, "Princípio Ativo 2");
-            ValidarCampo(config.Embalagem, dados.Embalagem, "Embalagem");
-            ValidarCampo(config.Lote, dados.Lote, "Lote");
-            ValidarCampo(config.Validade, dados.Validade, "Validade");
-            ValidarCampo(config.CodigoUsuario, dados.CodigoUsuario, "Código do Usuário");
-            ValidarCampo(config.CodigoBarras, dados.CodigoBarras, "Código de Barras");
+            foreach (EnumTipoCampo valor in ObtemValoresEnum<EnumTipoCampo>.ObtemEnum())
+            {
+                var comandosCampo = await ObterConfiguracaoCampo(valor).ConfigureAwait(false);
+                var nomeCampo = ObtemValoresEnum<EnumTipoCampo>.ObtemNome(valor);
+                ValidarCampo(
+                    comandosCampo,
+                    await ObtemConteudoCampo(dados, valor).ConfigureAwait(false),
+                    nomeCampo);
+            }
+        }
+
+        private static async Task<string> ObtemConteudoCampo(IEtiquetaImpressaoDto dados, EnumTipoCampo tipoCampo)
+        {
+            switch (tipoCampo)
+            {
+                case EnumTipoCampo.Nenhum:
+                    return string.Empty;
+                case EnumTipoCampo.CodigoMaterial:
+                    return dados.CodigoMaterial;
+                case EnumTipoCampo.DescricaoMedicamento:
+                    return dados.DescricaoMedicamento;
+                case EnumTipoCampo.DescricaoMedicamento2:
+                    return dados.DescricaoMedicamento2;
+                case EnumTipoCampo.PrincipioAtivo:
+                    return dados.PrincipioAtivo;
+                case EnumTipoCampo.PrincipioAtivo2:
+                    return dados.PrincipioAtivo2;
+                case EnumTipoCampo.Embalagem:
+                    return dados.Embalagem;
+                case EnumTipoCampo.Lote:
+                    return dados.Lote;
+                case EnumTipoCampo.Validade:
+                    return dados.Validade;
+                case EnumTipoCampo.CodigoUsuario:
+                    return dados.CodigoUsuario;
+                case EnumTipoCampo.CodigoBarras:
+                    return dados.CodigoBarras;
+                case EnumTipoCampo.Copias:
+                    return dados.QuantidadeSolicitada;
+                default:
+                    return string.Empty;
+            }
         }
 
         /// <summary>

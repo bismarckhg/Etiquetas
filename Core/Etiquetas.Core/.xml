@@ -418,6 +418,13 @@
             </summary>
             <returns>Task.</returns>
         </member>
+        <member name="M:Etiquetas.Core.Interfaces.IPosicaoCamposEtiqueta.ObterComandoCampoPeloNome(System.String)">
+            <summary>
+            Obtém o comando do campo pelo nome.
+            </summary>
+            <param name="nome"></param>
+            <returns></returns>
+        </member>
         <member name="T:Etiquetas.Core.IEtiquetaImpressaoRepository">
             <summary>
             Repositório para operações CRUD de Etiqueta de Impressão.

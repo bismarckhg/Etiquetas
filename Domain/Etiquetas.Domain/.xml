@@ -67,6 +67,12 @@
             <param name="nome">Nome do campo a procurar a posicao.</param>
             <returns>Retorna a posicao na Coleção de Comandos.</returns>
         </member>
+        <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.ConstruirIndice">
+            <summary>
+            Constrói o índice para acesso rápido aos comandos dos campos.
+            </summary>
+            <returns>Task async.</returns>
+        </member>
         <member name="M:Etiquetas.Domain.Configuracao.PosicaoCamposEtiqueta.PosicaoNomeDicionario(System.String)">
             <summary>
             Obtém a posição do campo no dicionário de comandos com base no nome do campo.

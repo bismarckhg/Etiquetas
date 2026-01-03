@@ -1129,6 +1129,25 @@
             UTF-8 sem BOM (recomendado p/ JSON, ZPL etc.)
             </summary>
         </member>
+        <member name="T:Etiquetas.Bibliotecas.Comum.Numericos.ObtemValoresEnum`1">
+            <summary>
+            Classe utilitária para obter os valores de um enum.
+            </summary>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Numericos.ObtemValoresEnum`1.ObtemEnum">
+            <summary>
+            Obtém os valores de um enum genérico.
+            </summary>
+            <typeparam name="T">Tipo enum a ser obtido.</typeparam>
+            <returns>retorna Array de enum.</returns>
+        </member>
+        <member name="M:Etiquetas.Bibliotecas.Comum.Numericos.ObtemValoresEnum`1.ObtemNome(`0)">
+            <summary>
+            Obtém o nome do valor do enum.
+            </summary>
+            <param name="valor">Valore Enum.</param>
+            <returns>string do nome.</returns>
+        </member>
         <member name="T:Etiquetas.Bibliotecas.Comum.Numericos.StringExtrairSomenteDigitosNumericos">
             <summary>
             Extrai somente os dígitos numéricos de uma string.
